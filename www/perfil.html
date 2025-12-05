@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <title>Faguáslandia</title>
+</head>
+<body data-theme="default">
+  <h2>Faguáslandia</h2>
+
+  <header>
+    <nav class="menu">
+      <a href="index.html">Biblioteca</a>
+      <a href="tienda.html">Tienda</a>
+      <a href="perfil.html">Perfil</a>
+      <a>Soporte</a>
+      <img src="#" alt="lupa">
+      <input type="text" id="nombre" placeholder="Buscar">
+
+      <!-- Selector de tema -->
+      <select id="themeSelector" style="margin-left:auto; border-radius:5px; padding:3px;">
+        <option value="default">🌙 Predeterminado</option>
+        <option value="neon">💜 Neón</option>
+        <option value="zafiro">💎 Zafiro</option>
+      </select>
+    </nav>
+  </header>
+
+  <main>
+    <div class="perfil">
+
+      <div class="usuario">
+        <div class="nombreUs">
+          <img id="fotoPerfil" src="algo.png" alt="Foto usuario">
+          <h1 id="nombreUsuario">Cargando...</h1>
+        </div>
+
+        <div class="nivel">
+          <h1>Nivel 7</h1>
+        </div>
+      </div>
+
+      <!-- Info del usuario -->
+      <div class="infoUsuario" style="margin-top: 20px; text-align:center;">
+        <p><strong>Correo electrónico:</strong> <span id="emailUsuario">Cargando...</span></p>
+        <p><strong>Código amigo:</strong> <span id="nombreAmigo">Cargando...</span>#<span id="idAmigo">Cargando...</span></p>
+      </div>
+
+      <button id="editarPerfilBtn" class="btnEditar">Editar perfil</button>
+    </div>
+  </main>
+
+  <!-- Modal editar perfil -->
+  <div id="editarPerfilModal" 
+       style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+              background:rgba(0,0,0,0.7); backdrop-filter:blur(3px);
+              justify-content:center; align-items:center;">
+      
+    <div style="background:var(--color-bg); padding:20px; border-radius:10px;
+                width:300px; border:2px solid var(--color-border);">
+
+      <h2>Editar Perfil</h2>
+
+      <label>Nombre:</label>
+      <input type="text" id="editarNombre" style="width:100%; margin-bottom:10px;">
+
+      <label>Correo:</label>
+      <input type="text" id="editarCorreo" style="width:100%; margin-bottom:10px;">
+
+      <label>Foto de perfil:</label>
+      <input type="file" id="editarFoto" accept="image/*" style="margin-bottom:10px;">
+
+      <button id="guardarCambios">Guardar cambios</button>
+      <button id="cerrarModal">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Script cambiar tema -->
+  <script>
+    const selector = document.getElementById('themeSelector');
+    const body = document.body;
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      body.dataset.theme = savedTheme;
+      selector.value = savedTheme;
+    }
+
+    selector.addEventListener('change', () => {
+      const theme = selector.value;
+      body.dataset.theme = theme;
+      localStorage.setItem('theme', theme);
+    });
+  </script>
+
+  <!-- Script usuario -->
+<script>
+const usuario = JSON.parse(localStorage.getItem('usuario'));
+if (!usuario) {
+    alert("Debes iniciar sesión");
+    window.location.href = "login.html";
+}
+
+const modal = document.getElementById("editarPerfilModal");
+const btnEditar = document.getElementById("editarPerfilBtn");
+const btnCerrar = document.getElementById("cerrarModal");
+const btnGuardar = document.getElementById("guardarCambios");
+
+// Mostrar datos
+document.getElementById("nombreUsuario").textContent = usuario.nombre;
+document.getElementById("emailUsuario").textContent = usuario.email;
+document.getElementById("nombreAmigo").textContent = usuario.nombre;
+document.getElementById("idAmigo").textContent = usuario.id;
+if (usuario.foto) document.getElementById("fotoPerfil").src = usuario.foto;
+
+btnEditar.onclick = () => {
+    document.getElementById("editarNombre").value = usuario.nombre;
+    document.getElementById("editarCorreo").value = usuario.email;
+    modal.style.display = "flex";
+};
+
+btnCerrar.onclick = () => modal.style.display = "none";
+
+btnGuardar.onclick = () => {
+
+    let nombreNuevo = document.getElementById("editarNombre").value;
+    let correoNuevo = document.getElementById("editarCorreo").value;
+    let fotoInput = document.getElementById("editarFoto");
+
+    usuario.nombre = nombreNuevo;
+    usuario.email = correoNuevo;
+
+    // SI HAY FOTO
+    if (fotoInput.files.length > 0) {
+        let lector = new FileReader();
+        lector.onload = function(e) {
+
+            usuario.foto = e.target.result;  // <-- BASE64
+            document.getElementById("fotoPerfil").src = usuario.foto;
+
+            // Guardar en localStorage
+            localStorage.setItem("usuario", JSON.stringify(usuario));
+        };
+        lector.readAsDataURL(fotoInput.files[0]);
+    } else {
+        // Solo nombre/correo
+        localStorage.setItem("usuario", JSON.stringify(usuario));
+    }
+
+    // Actualizar texto en pantalla
+    document.getElementById("nombreUsuario").textContent = usuario.nombre;
+    document.getElementById("emailUsuario").textContent = usuario.email;
+
+    // Cerrar modal
+    modal.style.display = "none";
+
+    // OPCIONAL: enviar al servidor
+    const formData = new FormData();
+    formData.append("id", usuario.id);
+    formData.append("nombre", usuario.nombre);
+    formData.append("email", usuario.email);
+    if (fotoInput.files.length > 0) {
+        formData.append("foto", fotoInput.files[0]);
+    }
+
+    fetch("updateUsuario.php", {
+        method: "POST",
+        body: formData
+    }).catch(err => console.error(err));
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: faguaslandia
+      MYSQL_USER: izan
+      MYSQL_PASSWORD: 1234
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - faguas-net
+
+  backend:
+    build: ./backend
+    container_name: springboot-app
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/faguaslandia
+      SPRING_DATASOURCE_USERNAME: izan
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      DB_USER: izan
+      DB_PASSWORD: 1234
+    ports:
+      - "8081:8081"
+    networks:
+      - faguas-net
+
+  apache:
+    image: php:8.2-apache
+    container_name: apache-web
+    volumes:
+      - ./www:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - faguas-net
+
+networks:
+  faguas-net:
+
+volumes:
+  mysql_data:
+

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Faguáslandia</title>
+</head>
+<style>
+    html{
+        height: 99%;
+    }
+</style>
+<header>
+    <nav class="menu">
+      <a href="index.html">Biblioteca</a>
+      <a href="tienda.html">Tienda</a>
+      <a href="perfil.html">Perfil</a>
+      <a>Soporte</a>
+      <img src="#" alt="lupa">
+      <input type="text" id="nombre" placeholder="Buscar"> 
+
+    </nav>
+  </header>    
+<body>
+    <div class="formulario">
+        <form id="registroForm">
+            <h2>Registro de Usuario</h2>
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="email" name="email" placeholder="Correo" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Registrar</button>
+            <div class="mensaje" id="mensaje"></div>
+        </form>
+    </div>
+<script>
+const form = document.getElementById('registroForm');
+const mensajeDiv = document.getElementById('mensaje');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+        const response = await fetch('http://10.116.192.57:8081/usuarios/crear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error('Error al registrar usuario');
+
+        const result = await response.json();
+        mensajeDiv.textContent = `Usuario ${result.nombre} registrado con ID ${result.id}`;
+        mensajeDiv.style.color = 'lime';
+        form.reset();
+    } catch (error) {
+        mensajeDiv.textContent = error.message;
+        mensajeDiv.style.color = 'red';
+    }
+});
+</script>
+
+</body>
+</html>
+
