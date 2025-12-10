@@ -32,7 +32,7 @@
 
       <div class="usuario">
         <div class="nombreUs">
-          <img id="fotoPerfil" src="algo.png" alt="Foto usuario">
+          <img id="fotoPerfil" src="img/default.png" alt="Foto usuario" onerror="this.src='img/default.png'">
           <h1 id="nombreUsuario">Cargando...</h1>
         </div>
 
@@ -96,11 +96,19 @@
 
   <!-- Script usuario -->
 <script>
-const usuario = JSON.parse(localStorage.getItem('usuario'));
-if (!usuario) {
-    alert("Debes iniciar sesión");
+let usuario = null;
+
+try {
+    usuario = JSON.parse(localStorage.getItem("usuario"));
+} catch (e) {
+    console.error("Error leyendo usuario del localStorage:", e);
+}
+
+if (!usuario || !usuario.id) {
+    console.warn("Usuario inválido o no encontrado. Redirigiendo al login...");
     window.location.href = "login.html";
 }
+
 
 const modal = document.getElementById("editarPerfilModal");
 const btnEditar = document.getElementById("editarPerfilBtn");
@@ -112,7 +120,11 @@ document.getElementById("nombreUsuario").textContent = usuario.nombre;
 document.getElementById("emailUsuario").textContent = usuario.email;
 document.getElementById("nombreAmigo").textContent = usuario.nombre;
 document.getElementById("idAmigo").textContent = usuario.id;
-if (usuario.foto) document.getElementById("fotoPerfil").src = usuario.foto;
+if (usuario.foto) {
+    document.getElementById("fotoPerfil").src = "http://localhost:8081/uploads/" + usuario.foto;
+} else {
+    document.getElementById("fotoPerfil").src = "img/default.png"; // opcional
+}
 
 btnEditar.onclick = () => {
     document.getElementById("editarNombre").value = usuario.nombre;
@@ -122,52 +134,65 @@ btnEditar.onclick = () => {
 
 btnCerrar.onclick = () => modal.style.display = "none";
 
-btnGuardar.onclick = () => {
+btnGuardar.onclick = async () => {
 
     let nombreNuevo = document.getElementById("editarNombre").value;
     let correoNuevo = document.getElementById("editarCorreo").value;
     let fotoInput = document.getElementById("editarFoto");
 
+    const idUsuario = usuario.id;
+
+    // 1️⃣ Subir foto si el usuario eligió una
+    let filename = usuario.foto; // mantener la anterior si no sube nada
+
+    if (fotoInput.files.length > 0) {
+        const formData = new FormData();
+        formData.append("file", fotoInput.files[0]);
+
+        let res = await fetch("http://localhost:8081/usuarios/uploadFoto", {
+            method: "POST",
+            body: formData
+        });
+
+        filename = await res.text();
+    }
+
+    // 2️⃣ Actualizar datos del usuario en el backend
+    let body = {
+        nombre: nombreNuevo,
+        email: correoNuevo,
+        foto: filename
+    };
+
+    await fetch(`http://localhost:8081/usuarios/actualizar/${idUsuario}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+
+    // 3️⃣ Actualizar usuario localmente
     usuario.nombre = nombreNuevo;
     usuario.email = correoNuevo;
+    usuario.foto = filename;
+    localStorage.setItem("usuario", JSON.stringify(usuario));
 
-    // SI HAY FOTO
-    if (fotoInput.files.length > 0) {
-        let lector = new FileReader();
-        lector.onload = function(e) {
-
-            usuario.foto = e.target.result;  // <-- BASE64
-            document.getElementById("fotoPerfil").src = usuario.foto;
-
-            // Guardar en localStorage
-            localStorage.setItem("usuario", JSON.stringify(usuario));
-        };
-        lector.readAsDataURL(fotoInput.files[0]);
-    } else {
-        // Solo nombre/correo
-        localStorage.setItem("usuario", JSON.stringify(usuario));
-    }
-
-    // Actualizar texto en pantalla
+    // 4️⃣ Actualizar datos en pantalla
     document.getElementById("nombreUsuario").textContent = usuario.nombre;
     document.getElementById("emailUsuario").textContent = usuario.email;
+    const fotoPerfil = document.getElementById("fotoPerfil");
 
-    // Cerrar modal
-    modal.style.display = "none";
-
-    // OPCIONAL: enviar al servidor
-    const formData = new FormData();
-    formData.append("id", usuario.id);
-    formData.append("nombre", usuario.nombre);
-    formData.append("email", usuario.email);
-    if (fotoInput.files.length > 0) {
-        formData.append("foto", fotoInput.files[0]);
+    if (usuario.foto) {
+        fotoPerfil.src = "http://localhost:8081/uploads/" + usuario.foto;
+    } else {
+        fotoPerfil.src = "img/default.png";
     }
 
-    fetch("updateUsuario.php", {
-        method: "POST",
-        body: formData
-    }).catch(err => console.error(err));
+    fotoPerfil.onerror = () => {
+        fotoPerfil.src = "img/default.png";
+    };
+
+
+    modal.style.display = "none";
 };
 </script>
 
