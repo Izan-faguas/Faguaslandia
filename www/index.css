@@ -1,4 +1,7 @@
-/* 🎨 Tema por defecto */
+/* =========================
+   🎨 TEMAS
+========================= */
+
 :root {
   --color-bg-dark: #0b0f18;
   --color-bg: #0e1621;
@@ -11,7 +14,6 @@
   --color-border: #4cc9f0;
 }
 
-/* Tema Neón */
 [data-theme="neon"] {
   --color-bg-dark: #140627;
   --color-bg: #200e3f;
@@ -24,7 +26,6 @@
   --color-border: #2dd6ff;
 }
 
-/* Tema Zafiro */
 [data-theme="zafiro"] {
   --color-bg-dark: #0f2136;
   --color-bg: #1c2541;
@@ -37,295 +38,209 @@
   --color-border: #5bc0be;
 }
 
+/* =========================
+   🌍 BASE
+========================= */
 
-
-
-body {
-  background-color: var(--color-bg);
+* {
+  box-sizing: border-box;
 }
 
-li, p {
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-dark),
+    var(--color-bg)
+  );
+}
+
+p, li {
   color: var(--color-text-muted);
 }
 
-/* ===== MENU ===== */
-.menu {
-  align-items: center;
-  background: var(--color-bg-light);
-  border: 3px solid var(--color-border);
-  box-shadow: 0 10px 20px var(--color-shadow);
-  margin-top: 20px;
-  margin-bottom: 50px;
-  flex-wrap: wrap;
-  display: flex;
-}
-
 h1 {
-  font-size: 1.5em;
-  font-weight: bold;
   color: var(--color-accent);
-  text-shadow: 6px 6px 6px rgba(0, 229, 255, 0.25);
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
 }
 
 h2 {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
   color: var(--color-text);
-  text-shadow: 6px 6px 6px rgba(0, 229, 255, 0.25);
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
 }
 
-nav {
+/* =========================
+   🔝 CABECERA
+========================= */
+
+header h2 {
+  padding: 10px 20px;
+}
+
+/* =========================
+   🔝 MENÚ
+========================= */
+
+.menu {
   display: flex;
+  align-items: center;
   gap: 20px;
-  width: 100%;
-  padding: 5px 0;
-  flex-wrap: wrap;
+  padding: 10px;
+  background-color: var(--color-bg-light);
+  border: 3px solid var(--color-border);
+  box-shadow: 0 6px 15px var(--color-shadow);
 }
 
-a {
+.menu a {
   color: var(--color-accent);
-  font-weight: 600;
-  font-size: 20px;
-  padding-right: 10px;
-  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-a:hover {
+.menu a:hover {
   color: var(--color-accent-dark);
 }
 
-input {
-  background-color: var(--color-bg-light);
-  border: solid var(--color-bg-light);
+.menu img {
+  height: 20px;
+}
+
+.menu input {
+  padding: 5px;
   border-radius: 5px;
+  border: none;
+  background-color: var(--color-bg);
   color: var(--color-text);
 }
 
-/* ===== JUEGOS ===== */
-.juego {
-  background-color: var(--color-bg-light);
-  align-content: center;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  width: 95%;
-  height: auto;
-  flex: 3;
+#themeSelector {
+  margin-left: auto;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
-.juegos {
-  background-color: color-mix(in srgb, var(--color-bg-dark) 95%, white 5%);
+/* =========================
+   👤 PERFIL
+========================= */
 
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4,25%);
-  grid-template-rows: auto;
-  justify-items: center;
-}
-
-.juegos img {
-  width: 80%;
-  margin: 10px 0;
-}
-
-.amigo {
-  background-color: color-mix(in srgb, var(--color-bg-dark) 97%, white 3%);
-  width: 90%;
-  flex: 1;
-}
-
-.amigop {
-  background-color: var(--color-bg-light);
-  margin-left: 5%;
-  width: 90%;
-}
-
-.catalogo {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-/* ===== TIENDA ===== */
-.menu_tienda {
-  max-width: 950px;
-  align-items: center;
-  background: var(--color-bg-light);
-  border: 3px solid var(--color-border);
-  box-shadow: 0 10px 20px var(--color-shadow);
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 50px;
-  flex-wrap: wrap;
-  display: flex;
-}
-
-.tienda {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 950px;
-}
-
-.juego_oferta {
-  background: linear-gradient(var(--color-bg-light), var(--color-bg-dark));
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  display: grid;
-  grid-template-columns: 70% 30%;
-  grid-template-areas: 'Foto Info';
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-
-.foto {
-  display: flex;
-  background-color: var(--color-accent-dark);
-  justify-content: center;
-  align-items: center;
-}
-
-.foto img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-.info {
-  display: grid;
-  grid-template-rows: 20% 60% 20%;
-  grid-template-areas:'nombre' 'fotos' 'precio';
-}
-
-.nombre { grid-area: nombre; }
-
-.fotos {
-  grid-area: fotos;
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  grid-template-rows: repeat(2, auto);
-  justify-content: center;
-  align-content: center;
-  gap: 15px;
-  place-items: center;
-}
-
-.fotos img {
-  height: auto;
-  width: 90%;
-}
-
-.precio {
-  grid-area: precio;
-}
-
-.lista_juegos {
-  display: grid;
-  grid-template-columns: repeat(3,33%);
-  justify-content: center;
-  justify-items: center;
-  margin-top: 100px;
-  gap: 20px;
-}
-
-.lista_juegos img {
-  height: 90%;
-  width: 90%;
-}
-
-.juego_tienda {
-  background: linear-gradient(var(--color-bg-light), var(--color-bg-dark));
-  width: 90%;
-  height: 300px;
-}
-
-.juego_tienda img {
-  height: auto;
-  width: 100%;
-}
-
-.publicidad {
-  height: 100px;
-  margin-top: 100px;
-}
-
-.publicidad img {
-  height: 100%;
-  width: 100%;
-}
-
-/* ===== PERFIL ===== */
 .perfil {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
   background-color: var(--color-bg-light);
-  border: 10px solid var(--color-bg-light);
-  max-width: 1000px;
-  height: 500px;
-  margin: 0 auto;
+  border-radius: 10px;
 }
 
 .usuario {
-  background-color: var(--color-bg);
-  width: 100%;
-  display: grid;
-  grid-template-columns: 65% 35%;
-  grid-template-rows: 100%;
-  grid-template-areas: 'nombre nivel';
+  display: flex;
   align-items: center;
-}
-
-.usuario h1 {
-  color: var(--color-accent);
-  font-size: 300%;
-  margin-right: 20px;
-}
-
-.usuario img {
-  margin: 30px;
-  height: 100px;
-  width: 100px;
-  border: 5px solid var(--color-accent-dark);
+  justify-content: space-between;
+  background-color: var(--color-bg);
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .nombreUs {
   display: flex;
   align-items: center;
-  width: 100%;
-  grid-area: nombre;
+  gap: 20px;
 }
 
-.nivel {
-  width: 100%;
-  justify-items: end;
-  grid-area: nivel;
+.usuario img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  border: 4px solid var(--color-accent-dark);
 }
 
-/* ===== Iniciar sesion / Registro ===== */
+.usuario h1 {
+  font-size: 2.5em;
+}
 
-form{
+.nivel h1 {
+  font-size: 2em;
+  color: var(--color-accent);
+}
+
+.infoUsuario {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btnEditar {
+  display: block;
+  margin: 20px auto 0 auto;
+  padding: 10px 20px;
+  background-color: var(--color-accent);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btnEditar:hover {
+  background-color: var(--color-accent-dark);
+}
+
+/* =========================
+   🪟 MODAL
+========================= */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  padding: 20px;
+  width: 320px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  height: 300px;
-  width: 300px;
-  background-color: color-mix(in srgb, var(--color-bg) 70%, white 10%);
-  border: 5px solid var(--color-border) ;
-  border-radius: 10px;
-  box-shadow: 0px 0px 100px 10px var(--color-border) ;
-
+  gap: 10px;
 }
 
-.formulario{
-  height: 100%;
+.modal-content input {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--color-bg-light);
+  color: var(--color-text);
+}
+
+.modal-content button {
+  margin-top: 5px;
+}
+
+/* =========================
+   🔐 FORMULARIOS
+========================= */
+
+.formulario {
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: center;
-  
+  align-items: center;
+  height: 100vh;
 }
 
-
-
+form {
+  background-color: var(--color-bg-light);
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid var(--color-border);
+  box-shadow: 0 0 30px var(--color-shadow);
+}

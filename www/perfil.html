@@ -19,7 +19,7 @@
       <input type="text" id="nombre" placeholder="Buscar">
 
       <!-- Selector de tema -->
-      <select id="themeSelector" style="margin-left:auto; border-radius:5px; padding:3px;">
+      <select id="themeSelector">
         <option value="default">🌙 Predeterminado</option>
         <option value="neon">💜 Neón</option>
         <option value="zafiro">💎 Zafiro</option>
@@ -52,24 +52,20 @@
   </main>
 
   <!-- Modal editar perfil -->
-  <div id="editarPerfilModal" 
-       style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-              background:rgba(0,0,0,0.7); backdrop-filter:blur(3px);
-              justify-content:center; align-items:center;">
+  <div id="editarPerfilModal">
       
-    <div style="background:var(--color-bg); padding:20px; border-radius:10px;
-                width:300px; border:2px solid var(--color-border);">
+    <div class="modal-content">
 
       <h2>Editar Perfil</h2>
 
       <label>Nombre:</label>
-      <input type="text" id="editarNombre" style="width:100%; margin-bottom:10px;">
+      <input type="text" id="editarNombre">
 
       <label>Correo:</label>
-      <input type="text" id="editarCorreo" style="width:100%; margin-bottom:10px;">
+      <input type="text" id="editarCorreo">
 
       <label>Foto de perfil:</label>
-      <input type="file" id="editarFoto" accept="image/*" style="margin-bottom:10px;">
+      <input type="file" id="editarFoto" accept="image/*">
 
       <button id="guardarCambios">Guardar cambios</button>
       <button id="cerrarModal">Cancelar</button>
