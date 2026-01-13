@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 ) ENGINE=InnoDB;
 
 -- ==============================
--- TABLA VIDEOJUEGOS
+-- TABLA JUEGOS
 -- ==============================
-CREATE TABLE IF NOT EXISTS videojuegos (
+CREATE TABLE IF NOT EXISTS juegos (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT,
@@ -38,13 +38,13 @@ CREATE TABLE IF NOT EXISTS videojuegos (
 CREATE TABLE IF NOT EXISTS compras (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT UNSIGNED NOT NULL,
-    id_videojuego INT UNSIGNED NOT NULL,
+    id_juego INT UNSIGNED NOT NULL,
     fecha_compra DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (id_videojuego) REFERENCES videojuegos(id)
+    FOREIGN KEY (id_juego) REFERENCES juegos(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE (id_usuario, id_videojuego)
+    UNIQUE (id_usuario, id_juego)
 ) ENGINE=InnoDB;
 
 -- ==============================
@@ -88,8 +88,8 @@ CREATE TABLE IF NOT EXISTS logros (
     descripcion TEXT,
     icono_url VARCHAR(255),
     tipo ENUM('compra', 'amistad', 'chat', 'reseña', 'puntuacion', 'especial') DEFAULT 'especial',
-    id_videojuego INT UNSIGNED NULL,
-    FOREIGN KEY (id_videojuego) REFERENCES videojuegos(id)
+    id_juego INT UNSIGNED NULL,
+    FOREIGN KEY (id_juego) REFERENCES juegos(id)
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -114,15 +114,15 @@ CREATE TABLE IF NOT EXISTS logros_usuarios (
 CREATE TABLE IF NOT EXISTS resenas (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT UNSIGNED NOT NULL,
-    id_videojuego INT UNSIGNED NOT NULL,
+    id_juego INT UNSIGNED NOT NULL,
     puntuacion INT NOT NULL,
     comentario TEXT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (id_videojuego) REFERENCES videojuegos(id)
+    FOREIGN KEY (id_juego) REFERENCES juegos(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE (id_usuario, id_videojuego)
+    UNIQUE (id_usuario, id_juego)
 ) ENGINE=InnoDB;
 
 -- ==============================

@@ -1,127 +1,277 @@
 /* =========================
-   🎨 TEMAS
+   🎨 VARIABLES Y TEMAS
 ========================= */
 
 :root {
-  --color-bg-dark: #0b0f18;
-  --color-bg: #0e1621;
-  --color-bg-light: #1d3557;
-  --color-accent: #4cc9f0;
-  --color-accent-dark: #3a86ff;
-  --color-text: #d9e6f2;
-  --color-text-muted: #a5b9cc;
-  --color-shadow: rgba(76, 201, 240, 0.3);
-  --color-border: #4cc9f0;
+  --bg-dark: #0b0f18;
+  --bg-main: #0e1621;
+  --bg-light: #1d3557;
+
+  --accent: #4cc9f0;
+  --accent-dark: #3a86ff;
+
+  --text-main: #d9e6f2;
+  --text-muted: #a5b9cc;
+
+  --border: #4cc9f0;
+  --shadow: rgba(76, 201, 240, 0.3);
 }
 
 [data-theme="neon"] {
-  --color-bg-dark: #140627;
-  --color-bg: #200e3f;
-  --color-bg-light: #2a1f45;
-  --color-accent: #00e5ff;
-  --color-accent-dark: #00bcd4;
-  --color-text: #cfcfe6;
-  --color-text-muted: #a0a0c0;
-  --color-shadow: rgba(0, 229, 255, 0.3);
-  --color-border: #2dd6ff;
+  --bg-dark: #140627;
+  --bg-main: #200e3f;
+  --bg-light: #2a1f45;
+  --accent: #00e5ff;
+  --accent-dark: #00bcd4;
 }
 
 [data-theme="zafiro"] {
-  --color-bg-dark: #0f2136;
-  --color-bg: #1c2541;
-  --color-bg-light: #3a506b;
-  --color-accent: #5bc0be;
-  --color-accent-dark: #3aafa9;
-  --color-text: #d9e2ec;
-  --color-text-muted: #9fb3c8;
-  --color-shadow: rgba(91, 192, 190, 0.3);
-  --color-border: #5bc0be;
+  --bg-dark: #0f2136;
+  --bg-main: #1c2541;
+  --bg-light: #3a506b;
+  --accent: #5bc0be;
+  --accent-dark: #3aafa9;
 }
 
 /* =========================
-   🌍 BASE
+   🌍 RESET Y BASE
 ========================= */
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(
-    180deg,
-    var(--color-bg-dark),
-    var(--color-bg)
-  );
+  background: linear-gradient(180deg, var(--bg-dark), var(--bg-main));
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  color: var(--accent);
 }
 
 p, li {
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 
-h1 {
-  color: var(--color-accent);
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-}
-
-h2 {
-  color: var(--color-text);
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+img {
+  max-width: 100%;
+  display: block;
 }
 
 /* =========================
-   🔝 CABECERA
+   🔝 HEADER Y MENÚ
 ========================= */
 
-header h2 {
-  padding: 10px 20px;
+header {
+  background-color: var(--bg-light);
+  border-bottom: 3px solid var(--border);
+  box-shadow: 0 4px 15px var(--shadow);
 }
 
-/* =========================
-   🔝 MENÚ
-========================= */
-
-.menu {
+.menu,
+.menu_tienda {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 10px;
-  background-color: var(--color-bg-light);
-  border: 3px solid var(--color-border);
-  box-shadow: 0 6px 15px var(--color-shadow);
+  padding: 12px 20px;
 }
 
-.menu a {
-  color: var(--color-accent);
-  font-size: 18px;
-  font-weight: bold;
+.menu a,
+.menu_tienda a {
   text-decoration: none;
+  font-weight: bold;
+  color: var(--accent);
 }
 
-.menu a:hover {
-  color: var(--color-accent-dark);
+.menu a:hover,
+.menu_tienda a:hover {
+  color: var(--accent-dark);
 }
 
-.menu img {
-  height: 20px;
-}
-
-.menu input {
-  padding: 5px;
-  border-radius: 5px;
-  border: none;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+.menu input,
+.menu_tienda input,
+select {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 6px;
+  border-radius: 6px;
 }
 
 #themeSelector {
   margin-left: auto;
-  padding: 5px;
-  border-radius: 5px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+}
+
+/* =========================
+   📚 BIBLIOTECA
+========================= */
+
+.catalogo {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+  padding: 30px;
+}
+
+.juegos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.juegos img {
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  transition: transform 0.2s;
+}
+
+.juegos img:hover {
+  transform: scale(1.05);
+}
+
+.amigos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.amigop {
+  background-color: var(--bg-light);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* =========================
+   🛒 TIENDA CENTRAL (STEAM)
+========================= */
+
+.store {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ⭐ JUEGO DESTACADO */
+
+.featured-game {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  background: linear-gradient(135deg, #1b2838, #0e1621);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.featured-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.featured-info h2 {
+  font-size: 28px;
+}
+
+.featured-info p {
+  color: var(--text-muted);
+}
+
+.featured-thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.featured-thumbs img {
+  width: 65px;
+  border-radius: 6px;
+  opacity: 0.7;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.featured-thumbs img:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* 💸 PRECIO */
+
+.featured-price {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.discount {
+  background-color: #4c6b22;
+  color: #c6e0a6;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 🎮 GRID DE JUEGOS */
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.game-card {
+  background-color: #16202d;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+}
+
+.game-card img {
+  height: 240px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.game-info {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-info h3 {
+  font-size: 14px;
+}
+
+.game-info span {
+  color: var(--accent);
+  font-weight: bold;
 }
 
 /* =========================
@@ -132,15 +282,15 @@ header h2 {
   max-width: 900px;
   margin: 40px auto;
   padding: 20px;
-  background-color: var(--color-bg-light);
-  border-radius: 10px;
+  background-color: var(--bg-light);
+  border-radius: 12px;
 }
 
 .usuario {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background-color: var(--color-bg);
+  align-items: center;
+  background-color: var(--bg-main);
   padding: 20px;
   border-radius: 10px;
 }
@@ -155,29 +305,14 @@ header h2 {
   width: 100px;
   height: 100px;
   border-radius: 10px;
-  border: 4px solid var(--color-accent-dark);
-}
-
-.usuario h1 {
-  font-size: 2.5em;
-}
-
-.nivel h1 {
-  font-size: 2em;
-  color: var(--color-accent);
-}
-
-.infoUsuario {
-  margin-top: 20px;
-  text-align: center;
+  border: 3px solid var(--accent);
 }
 
 .btnEditar {
+  margin: 20px auto 0;
   display: block;
-  margin: 20px auto 0 auto;
   padding: 10px 20px;
-  background-color: var(--color-accent);
-  color: #000;
+  background-color: var(--accent);
   border: none;
   border-radius: 6px;
   font-weight: bold;
@@ -185,14 +320,14 @@ header h2 {
 }
 
 .btnEditar:hover {
-  background-color: var(--color-accent-dark);
+  background-color: var(--accent-dark);
 }
 
 /* =========================
-   🪟 MODAL
+   🪟 MODAL PERFIL
 ========================= */
 
-.modal {
+#editarPerfilModal {
   display: none;
   position: fixed;
   inset: 0;
@@ -200,47 +335,54 @@ header h2 {
   backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 
 .modal-content {
-  background-color: var(--color-bg);
-  border: 2px solid var(--color-border);
-  border-radius: 10px;
+  background-color: var(--bg-main);
   padding: 20px;
-  width: 320px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.modal-content input {
-  padding: 5px;
-  border-radius: 5px;
-  border: none;
-  background-color: var(--color-bg-light);
-  color: var(--color-text);
-}
-
-.modal-content button {
-  margin-top: 5px;
-}
-
 /* =========================
-   🔐 FORMULARIOS
+   🔐 LOGIN / REGISTRO
 ========================= */
 
 .formulario {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding-top: 100px;
 }
 
 form {
-  background-color: var(--color-bg-light);
-  padding: 20px;
+  background-color: var(--bg-light);
+  padding: 25px;
   border-radius: 10px;
-  border: 2px solid var(--color-border);
-  box-shadow: 0 0 30px var(--color-shadow);
+  width: 320px;
+  box-shadow: 0 0 20px var(--shadow);
+}
+
+form input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+}
+
+form button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: var(--accent-dark);
 }

@@ -6,17 +6,14 @@
     <link rel="stylesheet" href="index.css">
     <title>Faguáslandia</title>
 </head>
-<header>
-    <nav class="menu">
-      <a href="index.html">Biblioteca</a>
-      <a href="tienda.html">Tienda</a>
-      <a href="perfil.html">Perfil</a>
-      <a>Soporte</a>
-      <img src="#" alt="lupa">
-      <input type="text" id="nombre" placeholder="Buscar"> 
-
-    </nav>
-  </header>    
+    <header>
+        <nav class="menu">
+            <a href="index.html">Biblioteca</a>
+            <a href="tienda.html">Tienda</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="registro.html">Registro</a>
+        </nav>
+    </header>   
 <body>
     <div class="formulario">
         <form id="registroForm">
@@ -39,7 +36,7 @@ form.addEventListener('submit', async (e) => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch('http://10.116.192.57:8081/usuarios/crear', {
+        const response = await fetch('http://192.168.1.159:8081/usuarios/crear', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

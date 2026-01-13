@@ -1,60 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
-    <title>Faguáslandia</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda - Faguáslandia</title>
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <header>
-        <nav class="menu_tienda">
-            <a href="index.html">Biblioteca</a>
-            <a href="tienda.html">Tienda</a>
-            <a href="perfil.html">Perfil</a>
-            <a>Soporte</a>
-            <img src="#" alt="lupa">
-            <input type="text" id="nombre" placeholder="Buscar"> 
-        </nav>
-    </header>
-    <main>
-        <div class="tienda">
-            <div class="juego_oferta"><!--Juego el cual va a aparecer a primera vista, va a tener varias imagenes y 
-                    descripción grande para llamar la atencion ademas estara en oferta porq asi mola mas-->
-                <div class="foto">
-                    <img src="algo.png" alt="pruba">
-                </div>
-                <div class="info">
-                    <div class="nombre">
-                        <h2>MIMIMI</h2>
-                    </div>
-                    <div class="fotos">
-                        <img src="algo.png" alt="pruba">
-                        <img src="algo.png" alt="pruba">
-                        <img src="algo.png" alt="pruba">
-                        <img src="algo.png" alt="pruba">
-                    </div>
-                    <div class="precio">
 
-                    </div>
-                </div>
-            </div>
-            <div class="lista_juegos">
-                <div class="juego_tienda">
-                    <img src="algo.png" alt="pruba">
-                </div>
-                <div class="juego_tienda">
-                    <img src="algo.png" alt="pruba">
-                </div>
-                <div class="juego_tienda">
-                    <img src="algo.png" alt="pruba">
-                </div>
-            </div>
-            <div class="publicidad">
-                    <img src="publicidad.png" alt="publicidad">
-            </div>
-        </div>
-    </main>
-<script src="theme.js"></script>
+<header>
+  <nav class="menu">
+    <a href="index.html">Biblioteca</a>
+    <a href="tienda.html">Tienda</a>
+    <a href="perfil.html">Perfil</a>
+  </nav>
+</header>
+
+<main class="store">
+
+  <!-- JUEGO DESTACADO (SE RELLENA CON JS) -->
+  <section class="featured-game" id="featuredGame"></section>
+
+  <!-- GRID DE JUEGOS (SE RELLENA CON JS) -->
+  <section class="game-grid" id="gameGrid"></section>
+
+</main>
+
+<!-- JS DE LA TIENDA -->
+<script src="tienda.js"></script>
 </body>
 </html>
