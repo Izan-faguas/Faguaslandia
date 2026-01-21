@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
 ) ENGINE=InnoDB;
 
 -- ==============================
--- TABLA JUEGOS
+-- TABLA JUEGO
 -- ==============================
-CREATE TABLE IF NOT EXISTS juegos (
+CREATE TABLE IF NOT EXISTS juego (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     precio DECIMAL(10,2) NOT NULL,
     imagen_url VARCHAR(255),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS compras (
     fecha_compra DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (id_juego) REFERENCES juegos(id)
+    FOREIGN KEY (id_juego) REFERENCES juego(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (id_usuario, id_juego)
 ) ENGINE=InnoDB;
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS logros (
     icono_url VARCHAR(255),
     tipo ENUM('compra', 'amistad', 'chat', 'reseña', 'puntuacion', 'especial') DEFAULT 'especial',
     id_juego INT UNSIGNED NULL,
-    FOREIGN KEY (id_juego) REFERENCES juegos(id)
+    FOREIGN KEY (id_juego) REFERENCES juego(id)
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS resenas (
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (id_juego) REFERENCES juegos(id)
+    FOREIGN KEY (id_juego) REFERENCES juego(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (id_usuario, id_juego)
 ) ENGINE=InnoDB;
@@ -134,3 +134,7 @@ VALUES
 ('esparrago', 'esparragoalvapor@yahoo.es', 'esparrago'),
 ('Victor', 'v.plasoler@edu.gva.es', 'Abcd1234'),
 ('MR_WORKBOOK', 'TONI@GMAIL.CUM', 'tonito123');
+
+
+
+

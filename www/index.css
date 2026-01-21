@@ -1,36 +1,20 @@
 /* =========================
-   🎨 VARIABLES Y TEMAS
+   🎮 VARIABLES STEAM
 ========================= */
 
 :root {
-  --bg-dark: #0b0f18;
-  --bg-main: #0e1621;
-  --bg-light: #1d3557;
+  --bg-dark: #0b1118;
+  --bg-main: #121a24;
+  --bg-light: #1b2838;
 
-  --accent: #4cc9f0;
-  --accent-dark: #3a86ff;
+  --accent: #66c0f4;
+  --accent-hover: #4aa3df;
 
-  --text-main: #d9e6f2;
-  --text-muted: #a5b9cc;
+  --text-main: #e6f0f8;
+  --text-muted: #9fb3c8;
 
-  --border: #4cc9f0;
-  --shadow: rgba(76, 201, 240, 0.3);
-}
-
-[data-theme="neon"] {
-  --bg-dark: #140627;
-  --bg-main: #200e3f;
-  --bg-light: #2a1f45;
-  --accent: #00e5ff;
-  --accent-dark: #00bcd4;
-}
-
-[data-theme="zafiro"] {
-  --bg-dark: #0f2136;
-  --bg-main: #1c2541;
-  --bg-light: #3a506b;
-  --accent: #5bc0be;
-  --accent-dark: #3aafa9;
+  --border: rgba(102,192,244,0.25);
+  --shadow: rgba(0,0,0,0.6);
 }
 
 /* =========================
@@ -44,10 +28,15 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
   background: linear-gradient(180deg, var(--bg-dark), var(--bg-main));
   color: var(--text-main);
+  font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }
 
 h1, h2, h3 {
@@ -58,18 +47,12 @@ p, li {
   color: var(--text-muted);
 }
 
-img {
-  max-width: 100%;
-  display: block;
-}
-
 /* =========================
    🔝 HEADER Y MENÚ
 ========================= */
 
 header {
   background-color: var(--bg-light);
-  border-bottom: 3px solid var(--border);
   box-shadow: 0 4px 15px var(--shadow);
 }
 
@@ -78,33 +61,30 @@ header {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 12px 20px;
+  padding: 14px 28px;
 }
 
 .menu a,
 .menu_tienda a {
+  color: var(--accent);
   text-decoration: none;
   font-weight: bold;
-  color: var(--accent);
+  font-size: 16px;
 }
 
 .menu a:hover,
 .menu_tienda a:hover {
-  color: var(--accent-dark);
+  color: var(--accent-hover);
 }
 
 .menu input,
-.menu_tienda input,
-select {
+.menu_tienda input {
+  margin-left: auto;
   background-color: var(--bg-main);
   border: 1px solid var(--border);
   color: var(--text-main);
-  padding: 6px;
-  border-radius: 6px;
-}
-
-#themeSelector {
-  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: 4px;
 }
 
 /* =========================
@@ -114,164 +94,169 @@ select {
 .catalogo {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  gap: 20px;
+  gap: 30px;
   padding: 30px;
+}
+
+.juego h1,
+.amigo h1 {
+  margin-bottom: 15px;
 }
 
 .juegos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
 }
 
 .juegos img {
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  transition: transform 0.2s;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .juegos img:hover {
   transform: scale(1.05);
+  box-shadow: 0 10px 20px var(--shadow);
 }
+
+/* =========================
+   👥 AMIGOS
+========================= */
 
 .amigos {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .amigop {
   background-color: var(--bg-light);
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
 }
 
 /* =========================
-   🛒 TIENDA CENTRAL (STEAM)
+   🛒 TIENDA
 ========================= */
 
-.store {
+.tienda {
   max-width: 1200px;
-  margin: 30px auto;
-  padding: 0 20px;
-
+  margin: auto;
+  padding: 30px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 50px;
 }
 
-/* ⭐ JUEGO DESTACADO */
+/* =========================
+   ⭐ HERO (JUEGO DESTACADO)
+========================= */
 
-.featured-game {
+.hero {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  background: linear-gradient(135deg, #1b2838, #0e1621);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  gap: 30px;
+  background: linear-gradient(135deg, #1b2838, #16202d);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 15px 40px var(--shadow);
 }
 
-.featured-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.hero-media img {
+  border-radius: 8px;
 }
 
-.featured-info {
-  padding: 20px;
+.hero-info {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.featured-info h2 {
-  font-size: 28px;
-}
-
-.featured-info p {
+.hero-info p {
   color: var(--text-muted);
+  line-height: 1.4;
 }
 
-.featured-thumbs {
+.hero-thumbs {
   display: flex;
   gap: 10px;
 }
 
-.featured-thumbs img {
-  width: 65px;
+.hero-thumbs img {
+  width: 70px;
   border-radius: 6px;
+  border: 1px solid var(--border);
   opacity: 0.7;
-  transition: transform 0.2s, opacity 0.2s;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.featured-thumbs img:hover {
+.hero-thumbs img:hover {
   opacity: 1;
   transform: scale(1.05);
 }
 
-/* 💸 PRECIO */
-
-.featured-price {
-  margin-top: auto;
+.hero-price {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  margin-top: auto;
 }
 
 .discount {
   background-color: #4c6b22;
-  color: #c6e0a6;
-  padding: 6px 8px;
+  color: #a4d007;
+  padding: 6px 10px;
   border-radius: 4px;
   font-weight: bold;
 }
 
 .price {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
 }
 
-/* 🎮 GRID DE JUEGOS */
+/* =========================
+   🧩 GRID DE JUEGOS
+========================= */
 
-.game-grid {
+.store-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
+  gap: 25px;
 }
 
-.game-card {
-  background-color: #16202d;
+.store-card {
+  background-color: var(--bg-light);
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform 0.25s, box-shadow 0.25s;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.game-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+.store-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px var(--shadow);
 }
 
-.game-card img {
-  height: 240px;
-  width: 100%;
-  object-fit: cover;
-}
-
-.game-info {
+.store-info {
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.game-info h3 {
+.store-info h3 {
   font-size: 14px;
+  color: var(--text-main);
 }
 
-.game-info span {
-  color: var(--accent);
+.store-info span {
   font-weight: bold;
+  color: var(--accent);
 }
 
 /* =========================
@@ -281,9 +266,9 @@ select {
 .perfil {
   max-width: 900px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 25px;
   background-color: var(--bg-light);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .usuario {
@@ -304,13 +289,13 @@ select {
 .usuario img {
   width: 100px;
   height: 100px;
-  border-radius: 10px;
-  border: 3px solid var(--accent);
+  border-radius: 6px;
+  border: 2px solid var(--accent);
 }
 
 .btnEditar {
-  margin: 20px auto 0;
   display: block;
+  margin: 25px auto 0;
   padding: 10px 20px;
   background-color: var(--accent);
   border: none;
@@ -320,18 +305,18 @@ select {
 }
 
 .btnEditar:hover {
-  background-color: var(--accent-dark);
+  background-color: var(--accent-hover);
 }
 
 /* =========================
-   🪟 MODAL PERFIL
+   🪟 MODAL
 ========================= */
 
 #editarPerfilModal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.75);
   backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
@@ -339,9 +324,10 @@ select {
 
 .modal-content {
   background-color: var(--bg-main);
+  border: 1px solid var(--border);
   padding: 20px;
   border-radius: 10px;
-  border: 2px solid var(--border);
+  width: 320px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -354,7 +340,8 @@ select {
 .formulario {
   display: flex;
   justify-content: center;
-  padding-top: 100px;
+  align-items: center;
+  height: 100vh;
 }
 
 form {
@@ -362,14 +349,14 @@ form {
   padding: 25px;
   border-radius: 10px;
   width: 320px;
-  box-shadow: 0 0 20px var(--shadow);
+  box-shadow: 0 0 25px var(--shadow);
 }
 
 form input {
   width: 100%;
   margin-bottom: 10px;
   padding: 8px;
-  border-radius: 6px;
+  border-radius: 4px;
   border: none;
 }
 
@@ -384,5 +371,5 @@ form button {
 }
 
 form button:hover {
-  background-color: var(--accent-dark);
+  background-color: var(--accent-hover);
 }

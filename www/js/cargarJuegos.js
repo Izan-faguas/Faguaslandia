@@ -1,59 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda - Faguáslandia</title>
-  <link rel="stylesheet" href="index.css">
-</head>
-<body>
-
-<header>
-  <nav class="menu_tienda">
-    <a href="index.html">Biblioteca</a>
-    <a href="tienda.html">Tienda</a>
-    <a href="perfil.html">Perfil</a>
-  </nav>
-</header>
-
-<main class="tienda">
-
-  <!-- JUEGO DESTACADO -->
-  <section class="hero">
-
-    <div class="hero-media">
-      <img src="algo.png" alt="Juego destacado">
-    </div>
-
-    <div class="hero-info">
-      <h2>Mini Golf</h2>
-      <p>
-        Un juego de minigolf relajante en 2D donde la paciencia
-        y la precisión lo son todo.
-      </p>
-
-      <div class="hero-thumbs">
-        <img src="algo.png">
-        <img src="algo.png">
-        <img src="algo.png">
-        <img src="algo.png">
-      </div>
-
-      <div class="hero-price">
-        <span class="discount">-40%</span>
-        <span class="price">4,99€</span>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- LISTA DE JUEGOS -->
-  <section id="listaJuegos">
-
-
-  </section>
-<script>
-    const listaJuegosDiv = document.getElementById('listaJuegos');
+const listaJuegosDiv = document.getElementById('listaJuegos');
 
 async function cargarJuegos() {
     try {
@@ -102,9 +47,3 @@ async function cargarJuegos() {
 
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', cargarJuegos);
-
-</script>
-</main>
-
-</body>
-</html>
