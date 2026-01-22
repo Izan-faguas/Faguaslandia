@@ -1,4 +1,4 @@
-package com.tu_paquete.faguaslandia.model;
+package com.faguaslandia.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

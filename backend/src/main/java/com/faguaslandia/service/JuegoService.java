@@ -9,46 +9,28 @@ import java.util.List;
 @Service
 public class JuegoService {
 
-    private final JuegoRepository juegoRepository;
+    private final JuegoRepository repo;
 
-    public JuegoService(JuegoRepository juegoRepository) {
-        this.juegoRepository = juegoRepository;
+    public JuegoService(JuegoRepository repo) {
+        this.repo = repo;
     }
 
-    // Obtener todos los juegos
     public List<Juego> obtenerTodos() {
-        return juegoRepository.findAll();
+        return repo.findAll();
     }
 
-    // Obtener un juego por id
-    public Juego obtenerPorId(Long id) {
-        return juegoRepository.findById(id).orElse(null);
-    }
-
-    // Crear un nuevo juego
     public Juego crearJuego(Juego juego) {
-        return juegoRepository.save(juego);
+        return repo.save(juego);
     }
 
-    // Actualizar juego
     public Juego actualizarJuego(Long id, Juego datos) {
-        Juego juego = juegoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Juego no encontrado"));
-
-        if (datos.getNombre() != null) juego.setNombre(datos.getNombre());
-        if (datos.getDescripcion() != null) juego.setDescripcion(datos.getDescripcion());
-        if (datos.getPrecio() != null) juego.setPrecio(datos.getPrecio());
-        if (datos.getImagen_url() != null) juego.setImagen_url(datos.getImagen_url());
-        if (datos.getCategoria() != null) juego.setCategoria(datos.getCategoria());
-        if (datos.getDesarrollador() != null) juego.setDesarrollador(datos.getDesarrollador());
-        if (datos.getFecha_lanzamiento() != null) juego.setFecha_lanzamiento(datos.getFecha_lanzamiento());
-        if (datos.getValoracion_promedio() != null) juego.setValoracion_promedio(datos.getValoracion_promedio());
-
-        return juegoRepository.save(juego);
+        Juego juego = repo.findById(id).orElseThrow();
+        juego.setTitulo(datos.getTitulo());
+        juego.setPrecio(datos.getPrecio());
+        return repo.save(juego);
     }
 
-    // Eliminar juego
     public void eliminarJuego(Long id) {
-        juegoRepository.deleteById(id);
+        repo.deleteById(id);
     }
 }

@@ -135,6 +135,19 @@ VALUES
 ('Victor', 'v.plasoler@edu.gva.es', 'Abcd1234'),
 ('MR_WORKBOOK', 'TONI@GMAIL.CUM', 'tonito123');
 
+INSERT INTO juego (
+    nombre, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
+) VALUES (
+    'Mini Golf', 
+    'Un juego de minigolf 2D.', 
+    7.99, 
+    'algo.png', 
+    'Estrategia', 
+    'FaguasStudio', 
+    '2026-01-22', 
+    3.7
+);
+
 
 
 
