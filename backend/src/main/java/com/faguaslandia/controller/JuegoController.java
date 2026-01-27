@@ -11,7 +11,8 @@ import java.util.List;
 @CrossOrigin(
         origins = "http://10.116.192.57:8080",
         allowCredentials = "true"
-)public class JuegoController {
+)
+public class JuegoController {
 
     private final JuegoService juegoService;
 

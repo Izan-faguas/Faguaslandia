@@ -8,7 +8,7 @@ form.addEventListener('submit', async (e) => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch('http://10.116.192.57:8081/usuarios/login', {
+        const response = await fetch('${CONFIG.API_BASE_URL}:8081/usuarios/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

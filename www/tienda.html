@@ -20,7 +20,6 @@
 
   <!-- JUEGO DESTACADO -->
   <section class="hero">
-
     <div class="hero-media">
       <img src="algo.png" alt="Juego destacado">
     </div>
@@ -44,67 +43,63 @@
         <span class="price">4,99€</span>
       </div>
     </div>
-
   </section>
 
   <!-- LISTA DE JUEGOS -->
-  <section id="listaJuegos">
+  <section id="listaJuegos"></section>
 
+</main>
 
-  </section>
-<script>
-    const listaJuegosDiv = document.getElementById('listaJuegos');
+<script type="module">
+  import CONFIG from "./config.js";
 
-async function cargarJuegos() {
+  const listaJuegosDiv = document.getElementById('listaJuegos');
+
+  async function cargarJuegos() {
     try {
-        // Fetch al backend
-        const response = await fetch('http://10.116.192.57:8081/juegos'); 
-        if (!response.ok) {
-            throw new Error('No se pudieron cargar los juegos');
-        }
+      const response = await fetch(`${CONFIG.API_BASE_URL}/juegos`);
 
-        const juegos = await response.json();
+      if (!response.ok) {
+        throw new Error('No se pudieron cargar los juegos');
+      }
 
-        if (!juegos || juegos.length === 0) {
-            listaJuegosDiv.textContent = 'No hay juegos disponibles';
-            return;
-        }
+      const juegos = await response.json();
 
-        // Limpiar contenido previo
-        listaJuegosDiv.innerHTML = '';
+      if (!juegos || juegos.length === 0) {
+        listaJuegosDiv.textContent = 'No hay juegos disponibles';
+        return;
+      }
 
-        // Crear contenedor de tarjetas
-        const contenedor = document.createElement('div');
-        contenedor.className = 'juegos-contenedor';
+      listaJuegosDiv.innerHTML = '';
 
-        juegos.forEach(juego => {
-            // Crear tarjeta
-            const tarjeta = document.createElement('div');
-            tarjeta.className = 'juego-tarjeta';
+      const contenedor = document.createElement('div');
+      contenedor.className = 'juegos-contenedor';
 
-            tarjeta.innerHTML = `
-                <img src="${juego.imagen_url || 'default.png'}" alt="${juego.nombre}" class="juego-img">
-                <h3>${juego.nombre}</h3>
-                <p>${juego.descripcion || 'Sin descripción'}</p>
-                <p class="precio">${juego.precio ? juego.precio + '€' : 'Gratis'}</p>
-            `;
+      juegos.forEach(juego => {
+        const tarjeta = document.createElement('div');
+        tarjeta.className = 'juego-tarjeta';
 
-            contenedor.appendChild(tarjeta);
-        });
+        tarjeta.innerHTML = `
+          <img src="${juego.imagen_url ?? 'default.png'}" alt="${juego.titulo}">
+          <h3>${juego.titulo}</h3>
+          <p>${juego.descripcion ?? 'Sin descripción'}</p>
+          <p class="precio">${juego.precio ? juego.precio + '€' : 'Gratis'}</p>
+        `;
 
-        listaJuegosDiv.appendChild(contenedor);
+        contenedor.appendChild(tarjeta);
+      });
+
+      listaJuegosDiv.appendChild(contenedor);
 
     } catch (error) {
-        listaJuegosDiv.textContent = error.message;
-        listaJuegosDiv.style.color = 'red';
+      listaJuegosDiv.textContent = error.message;
+      listaJuegosDiv.style.color = 'red';
     }
-}
+  }
 
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', cargarJuegos);
-
+  document.addEventListener('DOMContentLoaded', cargarJuegos);
 </script>
-</main>
+
 
 </body>
 </html>

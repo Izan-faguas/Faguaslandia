@@ -6,188 +6,117 @@
   <link rel="stylesheet" href="index.css">
   <title>Faguáslandia</title>
 </head>
+
 <body data-theme="default">
-  <h2>Faguáslandia</h2>
 
-  <header>
-    <nav class="menu">
-      <a href="index.html">Biblioteca</a>
-      <a href="tienda.html">Tienda</a>
-      <a href="perfil.html">Perfil</a>
-      <a href="registro.html">Registro</a>
+<h2>Faguáslandia</h2>
 
+<header>
+  <nav class="menu">
+    <a href="index.html">Biblioteca</a>
+    <a href="tienda.html">Tienda</a>
+    <a href="perfil.html">Perfil</a>
+    <a href="registro.html">Registro</a>
 
-      <!-- Selector de tema -->
-      <select id="themeSelector">
-        <option value="default">🌙 Predeterminado</option>
-        <option value="neon">💜 Neón</option>
-        <option value="zafiro">💎 Zafiro</option>
-      </select>
-    </nav>
-  </header>
+    <select id="themeSelector">
+      <option value="default">🌙 Predeterminado</option>
+      <option value="neon">💜 Neón</option>
+      <option value="zafiro">💎 Zafiro</option>
+    </select>
+  </nav>
+</header>
 
-  <main>
-    <div class="perfil">
+<main>
+  <div class="perfil">
 
-      <div class="usuario">
-        <div class="nombreUs">
-          <img id="fotoPerfil" src="img/default.png" alt="Foto usuario" onerror="this.src='img/default.png'">
-          <h1 id="nombreUsuario">Cargando...</h1>
-        </div>
-
-        <div class="nivel">
-          <h1>Nivel 7</h1>
-        </div>
+    <div class="usuario">
+      <div class="nombreUs">
+        <img id="fotoPerfil" src="img/default.png">
+        <h1 id="nombreUsuario">Cargando...</h1>
       </div>
 
-      <!-- Info del usuario -->
-      <div class="infoUsuario" style="margin-top: 20px; text-align:center;">
-        <p><strong>Correo electrónico:</strong> <span id="emailUsuario">Cargando...</span></p>
-        <p><strong>Código amigo:</strong> <span id="nombreAmigo">Cargando...</span>#<span id="idAmigo">Cargando...</span></p>
+      <div class="nivel">
+        <h1>Nivel 7</h1>
       </div>
-
-      <button id="editarPerfilBtn" class="btnEditar">Editar perfil</button>
     </div>
-  </main>
 
-  <!-- Modal editar perfil -->
-  <div id="editarPerfilModal">
-      
-    <div class="modal-content">
-
-      <h2>Editar Perfil</h2>
-
-      <label>Nombre:</label>
-      <input type="text" id="editarNombre">
-
-      <label>Correo:</label>
-      <input type="text" id="editarCorreo">
-
-      <label>Foto de perfil:</label>
-      <input type="file" id="editarFoto" accept="image/*">
-
-      <button id="guardarCambios">Guardar cambios</button>
-      <button id="cerrarModal">Cancelar</button>
+    <div class="infoUsuario">
+      <p><strong>Correo:</strong> <span id="emailUsuario"></span></p>
+      <p><strong>Código amigo:</strong> <span id="nombreAmigo"></span>#<span id="idAmigo"></span></p>
     </div>
+
+    <button id="editarPerfilBtn" class="btnEditar">Editar perfil</button>
   </div>
+</main>
 
-  <!-- Script cambiar tema -->
-  <script>
-    const selector = document.getElementById('themeSelector');
-    const body = document.body;
+<div id="editarPerfilModal">
+  <div class="modal-content">
+    <h2>Editar Perfil</h2>
 
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      body.dataset.theme = savedTheme;
-      selector.value = savedTheme;
-    }
+    <label>Nombre</label>
+    <input type="text" id="editarNombre">
 
-    selector.addEventListener('change', () => {
-      const theme = selector.value;
-      body.dataset.theme = theme;
-      localStorage.setItem('theme', theme);
-    });
-  </script>
+    <label>Correo</label>
+    <input type="text" id="editarCorreo">
 
-  <!-- Script usuario -->
-<script>
-let usuario = null;
+    <label>Foto</label>
+    <input type="file" id="editarFoto">
 
-try {
-    usuario = JSON.parse(localStorage.getItem("usuario"));
-} catch (e) {
-    console.error("Error leyendo usuario del localStorage:", e);
-}
+    <button id="guardarCambios">Guardar</button>
+    <button id="cerrarModal">Cancelar</button>
+  </div>
+</div>
 
-if (!usuario || !usuario.id) {
-    console.warn("Usuario inválido o no encontrado. Redirigiendo al login...");
-    window.location.href = "login.html";
-}
+<script type="module">
+import CONFIG from "./config.js";
 
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) window.location.href = "login.html";
 
-const modal = document.getElementById("editarPerfilModal");
-const btnEditar = document.getElementById("editarPerfilBtn");
-const btnCerrar = document.getElementById("cerrarModal");
-const btnGuardar = document.getElementById("guardarCambios");
-
-// Mostrar datos
 document.getElementById("nombreUsuario").textContent = usuario.nombre;
 document.getElementById("emailUsuario").textContent = usuario.email;
 document.getElementById("nombreAmigo").textContent = usuario.nombre;
 document.getElementById("idAmigo").textContent = usuario.id;
-if (usuario.foto) {
-    document.getElementById("fotoPerfil").src = "http://localhost:8081/uploads/" + usuario.foto;
-} else {
-    document.getElementById("fotoPerfil").src = "img/default.png"; // opcional
-}
 
-btnEditar.onclick = () => {
-    document.getElementById("editarNombre").value = usuario.nombre;
-    document.getElementById("editarCorreo").value = usuario.email;
-    modal.style.display = "flex";
-};
+const fotoPerfil = document.getElementById("fotoPerfil");
+fotoPerfil.src = usuario.foto
+    ? `${CONFIG.API_BASE_URL}/uploads/${usuario.foto}`
+    : "img/default.png";
 
-btnCerrar.onclick = () => modal.style.display = "none";
+const modal = document.getElementById("editarPerfilModal");
+document.getElementById("editarPerfilBtn").onclick = () => modal.style.display = "flex";
+document.getElementById("cerrarModal").onclick = () => modal.style.display = "none";
 
-btnGuardar.onclick = async () => {
+document.getElementById("guardarCambios").onclick = async () => {
 
-    let nombreNuevo = document.getElementById("editarNombre").value;
-    let correoNuevo = document.getElementById("editarCorreo").value;
-    let fotoInput = document.getElementById("editarFoto");
+    let nombre = editarNombre.value;
+    let email = editarCorreo.value;
+    let foto = usuario.foto;
 
-    const idUsuario = usuario.id;
+    if (editarFoto.files.length > 0) {
+        const fd = new FormData();
+        fd.append("file", editarFoto.files[0]);
 
-    // 1️⃣ Subir foto si el usuario eligió una
-    let filename = usuario.foto; // mantener la anterior si no sube nada
-
-    if (fotoInput.files.length > 0) {
-        const formData = new FormData();
-        formData.append("file", fotoInput.files[0]);
-
-        let res = await fetch("http://localhost:8081/usuarios/uploadFoto", {
+        const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/uploadFoto`, {
             method: "POST",
-            body: formData
+            body: fd
         });
 
-        filename = await res.text();
+        foto = await res.text();
     }
 
-    // 2️⃣ Actualizar datos del usuario en el backend
-    let body = {
-        nombre: nombreNuevo,
-        email: correoNuevo,
-        foto: filename
-    };
-
-    await fetch(`http://localhost:8081/usuarios/actualizar/${idUsuario}`, {
+    await fetch(`${CONFIG.API_BASE_URL}/usuarios/actualizar/${usuario.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ nombre, email, foto })
     });
 
-    // 3️⃣ Actualizar usuario localmente
-    usuario.nombre = nombreNuevo;
-    usuario.email = correoNuevo;
-    usuario.foto = filename;
+    usuario.nombre = nombre;
+    usuario.email = email;
+    usuario.foto = foto;
     localStorage.setItem("usuario", JSON.stringify(usuario));
 
-    // 4️⃣ Actualizar datos en pantalla
-    document.getElementById("nombreUsuario").textContent = usuario.nombre;
-    document.getElementById("emailUsuario").textContent = usuario.email;
-    const fotoPerfil = document.getElementById("fotoPerfil");
-
-    if (usuario.foto) {
-        fotoPerfil.src = "http://localhost:8081/uploads/" + usuario.foto;
-    } else {
-        fotoPerfil.src = "img/default.png";
-    }
-
-    fotoPerfil.onerror = () => {
-        fotoPerfil.src = "img/default.png";
-    };
-
-
-    modal.style.display = "none";
+    location.reload();
 };
 </script>
 

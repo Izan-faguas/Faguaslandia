@@ -10,7 +10,8 @@ public class Juego {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
 
     private String titulo;
 
@@ -30,7 +31,7 @@ public class Juego {
     private BigDecimal valoracion_promedio;
 
     // --- GETTERS Y SETTERS ---
-    public Long getId() { return id; }
+    public Integer getId() { return id; }
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }

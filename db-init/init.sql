@@ -1,14 +1,15 @@
 -- ==============================
 -- BASE DE DATOS
 -- ==============================
-CREATE DATABASE IF NOT EXISTS faguaslandia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+DROP DATABASE IF EXISTS faguaslandia;
+CREATE DATABASE faguaslandia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE faguaslandia;
 
 -- ==============================
 -- TABLA USUARIOS
 -- ==============================
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE usuarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255),
@@ -20,8 +21,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
 -- ==============================
 -- TABLA JUEGOS
 -- ==============================
-CREATE TABLE IF NOT EXISTS juegos (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE juegos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     precio DECIMAL(10,2) NOT NULL,
@@ -35,10 +36,10 @@ CREATE TABLE IF NOT EXISTS juegos (
 -- ==============================
 -- TABLA COMPRAS
 -- ==============================
-CREATE TABLE IF NOT EXISTS compras (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT UNSIGNED NOT NULL,
-    id_juego INT UNSIGNED NOT NULL,
+CREATE TABLE compras (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT NOT NULL,
+    id_juego BIGINT NOT NULL,
     fecha_compra DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
@@ -50,10 +51,10 @@ CREATE TABLE IF NOT EXISTS compras (
 -- ==============================
 -- TABLA AMIGOS
 -- ==============================
-CREATE TABLE IF NOT EXISTS amigos (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_usuario1 INT UNSIGNED NOT NULL,
-    id_usuario2 INT UNSIGNED NOT NULL,
+CREATE TABLE amigos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario1 BIGINT NOT NULL,
+    id_usuario2 BIGINT NOT NULL,
     estado ENUM('pendiente', 'aceptado', 'bloqueado') DEFAULT 'pendiente',
     fecha_solicitud DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario1) REFERENCES usuarios(id)
@@ -66,10 +67,10 @@ CREATE TABLE IF NOT EXISTS amigos (
 -- ==============================
 -- TABLA MENSAJES
 -- ==============================
-CREATE TABLE IF NOT EXISTS mensajes (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_emisor INT UNSIGNED NOT NULL,
-    id_receptor INT UNSIGNED NOT NULL,
+CREATE TABLE mensajes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_emisor BIGINT NOT NULL,
+    id_receptor BIGINT NOT NULL,
     contenido TEXT NOT NULL,
     fecha_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
     leido BOOLEAN DEFAULT FALSE,
@@ -82,13 +83,13 @@ CREATE TABLE IF NOT EXISTS mensajes (
 -- ==============================
 -- TABLA LOGROS
 -- ==============================
-CREATE TABLE IF NOT EXISTS logros (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE logros (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     icono_url VARCHAR(255),
     tipo ENUM('compra', 'amistad', 'chat', 'reseña', 'puntuacion', 'especial') DEFAULT 'especial',
-    id_juego INT UNSIGNED NULL,
+    id_juego BIGINT NULL,
     FOREIGN KEY (id_juego) REFERENCES juegos(id)
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
@@ -96,10 +97,10 @@ CREATE TABLE IF NOT EXISTS logros (
 -- ==============================
 -- TABLA LOGROS_USUARIOS
 -- ==============================
-CREATE TABLE IF NOT EXISTS logros_usuarios (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT UNSIGNED NOT NULL,
-    id_logro INT UNSIGNED NOT NULL,
+CREATE TABLE logros_usuarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT NOT NULL,
+    id_logro BIGINT NOT NULL,
     fecha_desbloqueo DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
@@ -111,10 +112,10 @@ CREATE TABLE IF NOT EXISTS logros_usuarios (
 -- ==============================
 -- TABLA RESEÑAS
 -- ==============================
-CREATE TABLE IF NOT EXISTS resenas (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT UNSIGNED NOT NULL,
-    id_juego INT UNSIGNED NOT NULL,
+CREATE TABLE resenas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT NOT NULL,
+    id_juego BIGINT NOT NULL,
     puntuacion INT NOT NULL,
     comentario TEXT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -147,7 +148,4 @@ INSERT INTO juegos (
     '2026-01-22', 
     3.7
 );
-
-
-
 
