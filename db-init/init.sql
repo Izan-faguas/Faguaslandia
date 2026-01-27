@@ -23,7 +23,7 @@ CREATE TABLE usuarios (
 -- ==============================
 CREATE TABLE juegos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    titulo VARCHAR(100) NOT NULL,
     descripcion TEXT,
     precio DECIMAL(10,2) NOT NULL,
     imagen_url VARCHAR(255),
@@ -137,7 +137,7 @@ VALUES
 ('MR_WORKBOOK', 'TONI@GMAIL.CUM', 'tonito123');
 
 INSERT INTO juegos (
-    nombre, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
+    titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
 ) VALUES (
     'Mini Golf', 
     'Un juego de minigolf 2D.', 
@@ -148,4 +148,3 @@ INSERT INTO juegos (
     '2026-01-22', 
     3.7
 );
-
