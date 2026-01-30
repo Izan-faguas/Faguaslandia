@@ -1,0 +1,12 @@
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/model/Usuario.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/controller/AuthController.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/repository/UsuarioRepository.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/config/CorsConfig.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/dto/LoginRequest.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/controller/JuegoController.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/service/AuthService.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/repository/JuegoRepository.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/FaguaslandiaApplication.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/service/JuegoService.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/model/Juego.java
+/home/izan/Faguaslandia/backend/src/main/java/com/faguaslandia/controller/UsuarioController.java

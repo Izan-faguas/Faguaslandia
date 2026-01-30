@@ -36,4 +36,6 @@ public class Usuario {
 
     public String getFoto() { return foto; }
     public void setFoto(String foto) { this.foto = foto; }
+
+    public void setId(Long id) {this.id = id;}
 }
