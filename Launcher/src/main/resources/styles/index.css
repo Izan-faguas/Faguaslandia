@@ -1,0 +1,70 @@
+.root {
+    -fx-background-color: #121a24;
+    -fx-font-family: "Segoe UI";
+}
+
+.label {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 13px;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.text-field, .password-field {
+    -fx-background-color: #1b2838;
+    -fx-text-fill: white;
+    -fx-border-color: rgba(102,192,244,0.25);
+    -fx-border-radius: 5;
+}
+
+.button {
+    -fx-background-color: #66c0f4;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+}
+
+.button:hover {
+    -fx-background-color: #2563eb;
+}
+
+.message {
+    -fx-text-fill: #aaaaaa;
+}
+
+.menu {
+    -fx-background-color: #1b2838;
+    -fx-spacing: 20;
+}
+
+.menu .label {
+    -fx-text-fill: #66c0f4;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+.section-title {
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.game-cover {
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.game-cover:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.amigop {
+    -fx-background-color: #1b2838;
+    -fx-padding: 12;
+    -fx-border-radius: 6;
+}

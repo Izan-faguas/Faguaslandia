@@ -1,8 +1,11 @@
 package com.faguaslandia.launcher;
 
+import com.faguaslandia.launcher.model.Usuario;
 import com.faguaslandia.launcher.service.AuthService;
 import com.faguaslandia.launcher.service.DownloaderService;
+import com.faguaslandia.launcher.view.BibliotecaView;
 import com.faguaslandia.launcher.view.LoginView;
+import com.faguaslandia.launcher.view.TiendaView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -10,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javax.swing.tree.DefaultTreeModel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -17,6 +21,8 @@ public class LauncherApp extends Application {
 
     private AuthService authService;
     private DownloaderService downloader;
+    private Scene scene;
+
 
     @Override
     public void start(Stage stage) {
@@ -46,18 +52,40 @@ public class LauncherApp extends Application {
             loginView.getMensaje().setText("Conectando...");
 
             new Thread(() -> {
-                boolean ok = authService.login(email, pass);
+                try {
+                    Usuario usuario = authService.login(email, pass); // devuelve Usuario o null
+                    Platform.runLater(() -> {
+                        if (usuario != null) {
+                            // Creamos las vistas **después de loguearse**
+                            BibliotecaView bibliotecaView = new BibliotecaView(usuario);
+                            TiendaView tiendaView = new TiendaView(usuario);
 
-                Platform.runLater(() -> {
-                    if (ok) {
-                        loginView.getMensaje().setText("Login correcto ✔");
-                        instalarBtn.setVisible(true); // mostramos botón
-                    } else {
-                        loginView.getMensaje().setText("Credenciales incorrectas ❌");
-                    }
-                });
+                            // Configuramos los menús para cambiar de pantalla
+                            bibliotecaView.setMenuActions(
+                                    () -> scene.setRoot(bibliotecaView),
+                                    () -> scene.setRoot(tiendaView),
+                                    () -> System.out.println("Perfil (pendiente)")
+                            );
+
+                            tiendaView.setMenuActions(
+                                    () -> scene.setRoot(bibliotecaView),
+                                    () -> scene.setRoot(tiendaView),
+                                    () -> System.out.println("Perfil (pendiente)")
+                            );
+
+                            // Mostramos la biblioteca al iniciar sesión
+                            scene.setRoot(bibliotecaView);
+                        } else {
+                            loginView.getMensaje().setText("Credenciales incorrectas ❌");
+                        }
+                    });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Platform.runLater(() -> loginView.getMensaje().setText("Error conectando al servidor"));
+                }
             }).start();
         });
+
 
         // Acción de instalar juego
         instalarBtn.setOnAction(e -> {
@@ -82,9 +110,13 @@ public class LauncherApp extends Application {
             }).start();
         });
 
-        Scene scene = new Scene(root, 400, 350);
+        this.scene = new Scene(root);
+        this.scene.getStylesheets().add(
+                getClass().getResource("/styles/index.css").toExternalForm()
+        );
         stage.setTitle("Faguaslandia Launcher");
-        stage.setScene(scene);
+        stage.setScene(this.scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
