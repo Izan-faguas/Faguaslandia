@@ -3,12 +3,16 @@ package com.faguaslandia.launcher.service;
 import com.faguaslandia.launcher.model.Juego;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+
+import static jdk.javadoc.doclet.DocletEnvironment.ModuleMode.API;
 
 public class JuegoService {
 
@@ -17,9 +21,11 @@ public class JuegoService {
     private final HttpClient client;
     private final ObjectMapper mapper;
 
+
     public JuegoService() {
         this.client = HttpClient.newHttpClient();
         this.mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
     }
 
     public List<Juego> obtenerTodos() throws Exception {
@@ -41,4 +47,27 @@ public class JuegoService {
                 .build();
         client.send(request, HttpResponse.BodyHandlers.ofString());
     }
+
+    public boolean estaComprado(Long usuarioId, Long juegoId) throws Exception {
+        URL url = new URL(API + "/compras/usuario/" + usuarioId);
+        List<Juego> juegos = mapper.readValue(
+                url, new TypeReference<List<Juego>>() {}
+        );
+
+        return juegos.stream().anyMatch(j -> j.getId().equals(juegoId));
+    }
+
+    public List<Juego> obtenerBiblioteca(Long usuarioId) throws Exception {
+        URL url = new URL(API + "/compras/usuario/" + usuarioId);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        return mapper.readValue(
+                url,
+                new TypeReference<List<Juego>>() {}
+        );
+    }
+
+
 }

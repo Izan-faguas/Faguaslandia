@@ -1,31 +1,39 @@
 package com.faguaslandia.launcher.view;
 
+import com.faguaslandia.launcher.model.Juego;
 import com.faguaslandia.launcher.model.Usuario;
+import com.faguaslandia.launcher.service.JuegoService;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
+import java.util.List;
+
 public class BibliotecaView extends BorderPane {
 
     private Label lblBiblioteca;
     private Label lblTienda;
     private Label lblPerfil;
+    private JuegoService juegoService;
 
     public BibliotecaView(Usuario usuario) {
+        this.juegoService = new JuegoService();
 
-        // ===== MENÚ SUPERIOR =====
         HBox menu = new HBox(20);
         menu.getStyleClass().add("menu");
         menu.setPadding(new Insets(14));
 
-        menu.getChildren().addAll(
-                new Label("Biblioteca"),
-                new Label("Tienda"),
-                new Label("Perfil")
-        );
+        lblBiblioteca = new Label("Biblioteca");
+        lblTienda = new Label("Tienda");
+        lblPerfil = new Label("Perfil");
 
+        menu.getChildren().addAll(
+                lblBiblioteca,
+                lblTienda,
+                lblPerfil
+        );
 
 
         // ===== ZONA CENTRAL =====
@@ -42,11 +50,16 @@ public class BibliotecaView extends BorderPane {
         juegosGrid.setVgap(20);
         juegosGrid.setPrefColumns(3);
 
-        juegosGrid.getChildren().addAll(
-                crearJuego("algo.png"),
-                crearJuego("algo.png"),
-                crearJuego("algo.png")
-        );
+        try {
+            List<Juego> juegos = juegoService.obtenerBiblioteca(usuario.getId());
+
+            for (Juego j : juegos) {
+                juegosGrid.getChildren().add(crearJuego(j.getImagen_url()));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         juegosBox.getChildren().addAll(tituloJuegos, juegosGrid);
         HBox.setHgrow(juegosBox, Priority.ALWAYS);
