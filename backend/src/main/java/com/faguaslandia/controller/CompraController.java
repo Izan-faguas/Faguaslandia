@@ -1,29 +1,32 @@
 package com.faguaslandia.controller;
 
-import com.faguaslandia.model.Juego;
 import com.faguaslandia.service.CompraService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/compras")
 @CrossOrigin
 public class CompraController {
 
-    @Autowired
-    private CompraService compraService;
+    private final CompraService compraService;
 
-    @PostMapping("/{usuarioId}/{juegoId}")
-    public void comprar(@PathVariable Long usuarioId,
-                        @PathVariable Long juegoId) {
-        compraService.comprar(usuarioId, juegoId);
+    public CompraController(CompraService compraService) {
+        this.compraService = compraService;
     }
 
-    @GetMapping("/usuario/{usuarioId}")
-    public List<Juego> biblioteca(@PathVariable Long usuarioId) {
-        return compraService.juegosComprados(usuarioId);
+    // ¿Está comprado?
+    @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
+    public boolean estaComprado(@PathVariable Long usuarioId,
+                                @PathVariable Long juegoId) {
+        return compraService.estaComprado(usuarioId, juegoId);
+    }
+
+    // Comprar
+    @PostMapping
+    public ResponseEntity<?> comprar(@RequestParam Long usuarioId,
+                                     @RequestParam Long juegoId) {
+        compraService.comprar(usuarioId, juegoId);
+        return ResponseEntity.ok().build();
     }
 }
-

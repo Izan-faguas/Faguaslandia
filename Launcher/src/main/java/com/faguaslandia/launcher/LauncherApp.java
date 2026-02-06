@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.swing.tree.DefaultTreeModel;
+import java.io.ObjectInputFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -95,7 +96,7 @@ public class LauncherApp extends Application {
                     if (!Files.exists(juegosFolder)) Files.createDirectories(juegosFolder);
 
                     Path zipDestino = juegosFolder.resolve("Smashy Road.zip");
-                    String url = "http://10.116.192.57:8081/juegos_desca/Smashy_Road.zip"; // pon la URL real aquí
+                    String url = Config.API_BASE_URL + "/juegos_desca/Smashy_Road.zip";
 
                     downloader.downloadFile(url, zipDestino);
                     downloader.unzip(zipDestino, juegosFolder);

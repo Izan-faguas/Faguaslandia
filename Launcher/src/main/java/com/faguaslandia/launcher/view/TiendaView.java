@@ -116,6 +116,8 @@ public class TiendaView extends VBox {
         Button comprar = new Button("Comprar"); // Siempre inicializado
 
         try {
+            System.out.println("usuarioId = " + usuarioId);
+            System.out.println("juegoId = " + j.getId());
             boolean comprado = juegoService.estaComprado(usuarioId, j.getId());
             if (comprado) {
                 comprar.setText("Comprado");

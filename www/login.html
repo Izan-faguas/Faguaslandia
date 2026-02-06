@@ -30,51 +30,43 @@
     <div id="mensaje"></div>
 
     <script src="login.js"></script>
-    <script>
-const form = document.getElementById('loginForm');
-const mensajeDiv = document.getElementById('mensaje');
+    <script type="module">
+    import CONFIG from "./config.js";
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    const form = document.getElementById('loginForm');
+    const mensajeDiv = document.getElementById('mensaje');
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    try {
-        const response = await fetch('http://192.168.1.159:8081/usuarios/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
-        // Si no responde OK (200)
-        if (!response.ok) {
-            throw new Error('Usuario o contraseña incorrectos');
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/usuarios/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) throw new Error('Usuario o contraseña incorrectos');
+
+            const usuario = await response.json();
+
+            mensajeDiv.textContent = `Bienvenido, ${usuario.nombre}!`;
+            mensajeDiv.style.color = 'lime';
+
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+
+            setTimeout(() => window.location.href = 'perfil.html', 1500);
+
+        } catch (error) {
+            mensajeDiv.textContent = error.message;
+            mensajeDiv.style.color = 'red';
         }
+    });
+    </script>
 
-        // Si llega aquí, el login fue exitoso
-        const usuario = await response.json();
-
-        // ✅ Mostrar mensaje
-        mensajeDiv.textContent = `Bienvenido, ${usuario.nombre}!`;
-        mensajeDiv.style.color = 'lime';
-
-        // ✅ Guardar sesión localmente (opcional)
-        localStorage.setItem('usuario', JSON.stringify(usuario));
-
-        // ✅ Redirigir tras un pequeño delay (1.5s)
-        setTimeout(() => {
-            window.location.href = 'perfil.html';  // o la página que quieras
-        }, 1500);
-
-    } catch (error) {
-        mensajeDiv.textContent = error.message;
-        mensajeDiv.style.color = 'red';
-    }
-});
-</script>
 
 </body>
 </html>

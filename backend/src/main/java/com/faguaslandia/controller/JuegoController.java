@@ -8,10 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/juegos")
-@CrossOrigin(
-        origins = "http://10.116.192.57:8080",
-        allowCredentials = "true"
-)
+@CrossOrigin
 public class JuegoController {
 
     private final JuegoService juegoService;

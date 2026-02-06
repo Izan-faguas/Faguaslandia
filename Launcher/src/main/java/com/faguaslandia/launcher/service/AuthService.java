@@ -1,8 +1,10 @@
 package com.faguaslandia.launcher.service;
 
+import com.faguaslandia.launcher.Config;
 import com.faguaslandia.launcher.model.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.ObjectInputFilter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,7 +15,8 @@ public class AuthService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public Usuario login(String email, String password) throws Exception {
-        String url = "http://10.116.192.57:8081/auth/login"; // URL de tu backend
+        String url = Config.API_BASE_URL + "/auth/login";
+        // URL de tu backend
 
         // Creamos el JSON para enviar al backend
         String json = String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);

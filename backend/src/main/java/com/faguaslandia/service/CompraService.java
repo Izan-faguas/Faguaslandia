@@ -2,45 +2,51 @@ package com.faguaslandia.service;
 
 import com.faguaslandia.model.Compra;
 import com.faguaslandia.model.Juego;
+import com.faguaslandia.model.Usuario;
 import com.faguaslandia.repository.CompraRepository;
 import com.faguaslandia.repository.JuegoRepository;
 import com.faguaslandia.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class CompraService {
 
-    @Autowired
-    private CompraRepository compraRepo;
+    private final CompraRepository compraRepo;
+    private final UsuarioRepository usuarioRepo;
+    private final JuegoRepository juegoRepo;
 
-    @Autowired
-    private UsuarioRepository usuarioRepo;
+    public CompraService(CompraRepository compraRepo,
+                         UsuarioRepository usuarioRepo,
+                         JuegoRepository juegoRepo) {
+        this.compraRepo = compraRepo;
+        this.usuarioRepo = usuarioRepo;
+        this.juegoRepo = juegoRepo;
+    }
 
-    @Autowired
-    private JuegoRepository juegoRepo;
+    public boolean estaComprado(Long usuarioId, Long juegoId) {
+        return compraRepo.existsByUsuarioIdAndJuegoId(usuarioId, juegoId);
+    }
 
+    @Transactional
     public void comprar(Long usuarioId, Long juegoId) {
-        if (compraRepo.existsByUsuarioIdAndJuegoId(usuarioId, juegoId)) {
-            throw new RuntimeException("Juego ya comprado");
+        if (estaComprado(usuarioId, juegoId)) {
+            throw new RuntimeException("El juego ya está comprado");
         }
 
-        Compra c = new Compra();
-        c.setUsuario(usuarioRepo.findById(usuarioId).orElseThrow());
-        c.setJuego(juegoRepo.findById(juegoId).orElseThrow());
-        c.setFechaCompra(LocalDateTime.now());
+        Usuario usuario = usuarioRepo.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        compraRepo.save(c);
-    }
+        Juego juego = juegoRepo.findById(juegoId)
+                .orElseThrow(() -> new RuntimeException("Juego no encontrado"));
 
-    public List<Juego> juegosComprados(Long usuarioId) {
-        return compraRepo.findByUsuarioId(usuarioId)
-                .stream()
-                .map(Compra::getJuego)
-                .toList();
+        Compra compra = new Compra();
+        compra.setUsuario(usuario);
+        compra.setJuego(juego);
+        compra.setFechaCompra(LocalDateTime.now());
+
+        compraRepo.save(compra);
     }
 }
-

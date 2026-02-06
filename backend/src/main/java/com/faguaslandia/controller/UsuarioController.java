@@ -17,10 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(
-        origins = "http://10.116.192.57:8080",
-        allowCredentials = "true"
-)
+@CrossOrigin
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;

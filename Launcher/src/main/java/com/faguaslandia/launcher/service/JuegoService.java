@@ -1,5 +1,6 @@
 package com.faguaslandia.launcher.service;
 
+import com.faguaslandia.launcher.Config;
 import com.faguaslandia.launcher.model.Juego;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +17,8 @@ import static jdk.javadoc.doclet.DocletEnvironment.ModuleMode.API;
 
 public class JuegoService {
 
-    private static final String API_BASE = "http://10.116.192.57:8081/juegos";
+    private static final String API_BASE = Config.API_BASE_URL + "/juegos";
+
 
     private final HttpClient client;
     private final ObjectMapper mapper;
@@ -40,7 +42,7 @@ public class JuegoService {
 
     public void comprarJuego(Long usuarioId, Long juegoId) throws Exception {
         // Para registrar la compra, deberías tener un endpoint en Spring Boot que reciba usuarioId + juegoId
-        String url = "http://10.116.192.57:8081/compras?usuarioId=" + usuarioId + "&juegoId=" + juegoId;
+        String url = Config.API_BASE_URL + "/compras?usuarioId=" + usuarioId + "&juegoId=" + juegoId;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -49,25 +51,33 @@ public class JuegoService {
     }
 
     public boolean estaComprado(Long usuarioId, Long juegoId) throws Exception {
-        URL url = new URL(API + "/compras/usuario/" + usuarioId);
-        List<Juego> juegos = mapper.readValue(
-                url, new TypeReference<List<Juego>>() {}
-        );
+        String url = Config.API_BASE_URL + "/compras/usuario/" + usuarioId + "/juego/" + juegoId;
 
-        return juegos.stream().anyMatch(j -> j.getId().equals(juegoId));
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(
+                request, HttpResponse.BodyHandlers.ofString());
+
+        return Boolean.parseBoolean(response.body());
     }
+
 
     public List<Juego> obtenerBiblioteca(Long usuarioId) throws Exception {
-        URL url = new URL(API + "/compras/usuario/" + usuarioId);
+        String url = Config.API_BASE_URL + "/compras/usuario/" + usuarioId;
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
 
-        return mapper.readValue(
-                url,
-                new TypeReference<List<Juego>>() {}
-        );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return mapper.readValue(response.body(), new TypeReference<List<Juego>>() {});
     }
+
 
 
 }
