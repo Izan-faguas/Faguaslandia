@@ -1,8 +1,12 @@
 package com.faguaslandia.controller;
 
+import com.faguaslandia.dto.CompraRequest;
+import com.faguaslandia.model.Juego;
 import com.faguaslandia.service.CompraService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/compras")
@@ -24,9 +28,18 @@ public class CompraController {
 
     // Comprar
     @PostMapping
-    public ResponseEntity<?> comprar(@RequestParam Long usuarioId,
-                                     @RequestParam Long juegoId) {
-        compraService.comprar(usuarioId, juegoId);
+    public ResponseEntity<?> comprar(@RequestBody CompraRequest request) {
+        compraService.comprar(request.getUsuarioId(), request.getJuegoId());
         return ResponseEntity.ok().build();
     }
+
+
+    @GetMapping("/usuario/{usuarioId}")
+    public List<Juego> obtenerBiblioteca(@PathVariable Long usuarioId) {
+        return compraService.obtenerBiblioteca(usuarioId);
+    }
+
+
+
+
 }
