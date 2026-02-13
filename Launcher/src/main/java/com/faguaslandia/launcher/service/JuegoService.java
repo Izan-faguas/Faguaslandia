@@ -41,14 +41,29 @@ public class JuegoService {
     }
 
     public void comprarJuego(Long usuarioId, Long juegoId) throws Exception {
-        // Para registrar la compra, deberías tener un endpoint en Spring Boot que reciba usuarioId + juegoId
-        String url = Config.API_BASE_URL + "/compras?usuarioId=" + usuarioId + "&juegoId=" + juegoId;
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.noBody())
-                .build();
-        client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String json = """
+    {
+      "usuarioId": %d,
+      "juegoId": %d
     }
+    """.formatted(usuarioId, juegoId);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8081/compras"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("STATUS COMPRA: " + response.statusCode());
+        System.out.println("RESPUESTA: " + response.body());
+    }
+
+
 
     public boolean estaComprado(Long usuarioId, Long juegoId) throws Exception {
         String url = Config.API_BASE_URL + "/compras/usuario/" + usuarioId + "/juego/" + juegoId;

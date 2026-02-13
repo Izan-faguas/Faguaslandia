@@ -1,3 +1,25 @@
+.header {
+    -fx-background-color: #1b2838;
+    -fx-padding: 10 20 10 20;
+    -fx-spacing: 20;
+    -fx-alignment: center-left;
+    -fx-border-color: rgba(102,192,244,0.25);
+    -fx-border-width: 0 0 1 0; /* línea inferior */
+}
+
+.header-label {
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.header-label:hover {
+    -fx-text-fill: #ffffff;
+    -fx-underline: true;
+}
+
+
 .root {
     -fx-background-color: #121a24;
     -fx-font-family: "Segoe UI";
@@ -39,6 +61,7 @@
 .menu {
     -fx-background-color: #1b2838;
     -fx-spacing: 20;
+    -fx-padding: 10;
 }
 
 .menu .label {
@@ -47,24 +70,33 @@
     -fx-font-size: 16px;
 }
 
-.section-title {
-    -fx-text-fill: #66c0f4;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-}
-
-.game-cover {
+.store-card {
+    -fx-background-color: #1b2838;
+    -fx-padding: 10;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 4, 0.5, 0, 2);
+    -fx-cursor: hand;
+    -fx-pref-width: 200;
 }
 
-.game-cover:hover {
+.store-card:hover {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(102,192,244,0.6), 8, 0.5, 0, 4);
 }
 
-.amigop {
-    -fx-background-color: #1b2838;
-    -fx-padding: 12;
-    -fx-border-radius: 6;
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #66c0f4;
+}
+
+.card-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #cccccc;
+}
+
+.tienda {
+    -fx-background-color: #121a24;
 }

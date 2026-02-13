@@ -4,6 +4,7 @@ import com.faguaslandia.launcher.model.Juego;
 import com.faguaslandia.launcher.model.Usuario;
 import com.faguaslandia.launcher.service.JuegoService;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,30 +14,66 @@ import java.util.List;
 
 public class BibliotecaView extends BorderPane {
 
-    private Label lblBiblioteca;
-    private Label lblTienda;
-    private Label lblPerfil;
-    private JuegoService juegoService;
+    private final JuegoService juegoService;
+    private final Usuario usuario;
+
+    private TilePane juegosGrid;
+    private HeaderView header;
 
     public BibliotecaView(Usuario usuario) {
+        this.usuario = usuario;
         this.juegoService = new JuegoService();
 
-        HBox menu = new HBox(20);
-        menu.getStyleClass().add("menu");
-        menu.setPadding(new Insets(14));
-
-        lblBiblioteca = new Label("Biblioteca");
-        lblTienda = new Label("Tienda");
-        lblPerfil = new Label("Perfil");
-
-        menu.getChildren().addAll(
-                lblBiblioteca,
-                lblTienda,
-                lblPerfil
+        // ===== HEADER =====
+        header = new HeaderView();
+        header.setActions(
+                this::irBiblioteca,
+                this::irTienda,
+                this::irPerfil
         );
+        setTop(header);
+
+        // ===== CONTENIDO INICIAL =====
+        setCenter(crearContenidoBiblioteca());
+    }
+
+    // =====================================================
+    // =============== NAVEGACIÓN ==========================
+    // =====================================================
+
+    private void irBiblioteca() {
+        setCenter(crearContenidoBiblioteca());
+    }
+
+    private void irTienda() {
+        TiendaView tienda = new TiendaView(usuario);
+
+        tienda.setCallbackJuegoDetalle(this::irDetalleJuego);
+
+        setCenter(tienda);
+    }
+
+    private void irDetalleJuego(Juego juego) {
+        JuegoDetailView detalle = new JuegoDetailView(usuario);
+
+        detalle.setJuego(juego);
+        detalle.setCallbackActualizarBiblioteca(this::actualizarBiblioteca);
+
+        detalle.setCallbackVolver(this::irBiblioteca);
+
+        setCenter(detalle);
+    }
 
 
-        // ===== ZONA CENTRAL =====
+    private void irPerfil() {
+        setCenter(new Label("Perfil (pendiente)"));
+    }
+
+    // =====================================================
+    // =============== CONTENIDO BIBLIOTECA ================
+    // =====================================================
+
+    private Node crearContenidoBiblioteca() {
         HBox contenido = new HBox(30);
         contenido.setPadding(new Insets(30));
 
@@ -45,21 +82,12 @@ public class BibliotecaView extends BorderPane {
         Label tituloJuegos = new Label("Biblioteca");
         tituloJuegos.getStyleClass().add("section-title");
 
-        TilePane juegosGrid = new TilePane();
+        juegosGrid = new TilePane();
         juegosGrid.setHgap(20);
         juegosGrid.setVgap(20);
         juegosGrid.setPrefColumns(3);
 
-        try {
-            List<Juego> juegos = juegoService.obtenerBiblioteca(usuario.getId());
-
-            for (Juego j : juegos) {
-                juegosGrid.getChildren().add(crearJuego(j.getImagen_url()));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        actualizarBiblioteca();
 
         juegosBox.getChildren().addAll(tituloJuegos, juegosGrid);
         HBox.setHgrow(juegosBox, Priority.ALWAYS);
@@ -79,23 +107,25 @@ public class BibliotecaView extends BorderPane {
         amigosBox.setPrefWidth(200);
 
         contenido.getChildren().addAll(juegosBox, amigosBox);
-
-        setTop(menu);
-        setCenter(contenido);
-
-
+        return contenido;
     }
 
-    public void setMenuActions(Runnable irBiblioteca, Runnable irTienda, Runnable irPerfil) {
-        lblBiblioteca.setOnMouseClicked(e -> irBiblioteca.run());
-        lblTienda.setOnMouseClicked(e -> irTienda.run());
-        lblPerfil.setOnMouseClicked(e -> irPerfil.run());
-    }
+    // =====================================================
+    // =============== HELPERS ==============================
+    // =====================================================
 
     private ImageView crearJuego(String imagen) {
-        ImageView img = new ImageView(
-                new Image(getClass().getResourceAsStream("/images/" + imagen))
-        );
+        ImageView img;
+        try {
+            img = new ImageView(new Image(
+                    getClass().getResourceAsStream("/images/" + imagen)
+            ));
+        } catch (Exception e) {
+            img = new ImageView(new Image(
+                    getClass().getResourceAsStream("/images/algo.png")
+            ));
+        }
+
         img.setFitWidth(140);
         img.setPreserveRatio(true);
         img.getStyleClass().add("game-cover");
@@ -112,7 +142,15 @@ public class BibliotecaView extends BorderPane {
         return box;
     }
 
-
-
-
+    public void actualizarBiblioteca() {
+        try {
+            List<Juego> juegos = juegoService.obtenerBiblioteca(usuario.getId());
+            juegosGrid.getChildren().clear();
+            for (Juego j : juegos) {
+                juegosGrid.getChildren().add(crearJuego(j.getImagen_url()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

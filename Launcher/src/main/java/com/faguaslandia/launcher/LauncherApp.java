@@ -1,20 +1,21 @@
 package com.faguaslandia.launcher;
 
+import com.faguaslandia.launcher.model.Juego;
 import com.faguaslandia.launcher.model.Usuario;
 import com.faguaslandia.launcher.service.AuthService;
 import com.faguaslandia.launcher.service.DownloaderService;
 import com.faguaslandia.launcher.view.BibliotecaView;
+import com.faguaslandia.launcher.view.JuegoDetailView;
 import com.faguaslandia.launcher.view.LoginView;
 import com.faguaslandia.launcher.view.TiendaView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import javax.swing.tree.DefaultTreeModel;
-import java.io.ObjectInputFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -24,23 +25,29 @@ public class LauncherApp extends Application {
     private DownloaderService downloader;
     private Scene scene;
 
-
     @Override
     public void start(Stage stage) {
         authService = new AuthService();
         downloader = new DownloaderService();
 
+        // ===== LOGIN =====
         LoginView loginView = new LoginView();
+        VBox loginRoot = new VBox(10);
+        loginRoot.getChildren().add(loginView);
 
-        VBox root = new VBox(10);
-        root.getChildren().add(loginView);
-
-        // Botón para instalar juego (aparece después del login correcto)
         Button instalarBtn = new Button("Instalar Juego");
-        instalarBtn.setVisible(false); // invisible hasta login
+        instalarBtn.setVisible(false);
+        loginRoot.getChildren().add(instalarBtn);
 
-        root.getChildren().add(instalarBtn);
+        scene = new Scene(loginRoot, 1000, 700);
+        scene.getStylesheets().add(getClass().getResource("/styles/index.css").toExternalForm());
 
+        stage.setTitle("Faguaslandia Launcher");
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
+
+        // LOGIN
         loginView.getLoginBtn().setOnAction(e -> {
             String email = loginView.getUsuario().getText();
             String pass = loginView.getPassword().getText();
@@ -54,28 +61,10 @@ public class LauncherApp extends Application {
 
             new Thread(() -> {
                 try {
-                    Usuario usuario = authService.login(email, pass); // devuelve Usuario o null
+                    Usuario usuario = authService.login(email, pass);
                     Platform.runLater(() -> {
                         if (usuario != null) {
-                            // Creamos las vistas **después de loguearse**
-                            BibliotecaView bibliotecaView = new BibliotecaView(usuario);
-                            TiendaView tiendaView = new TiendaView(usuario);
-
-                            // Configuramos los menús para cambiar de pantalla
-                            bibliotecaView.setMenuActions(
-                                    () -> scene.setRoot(bibliotecaView),
-                                    () -> scene.setRoot(tiendaView),
-                                    () -> System.out.println("Perfil (pendiente)")
-                            );
-
-                            tiendaView.setMenuActions(
-                                    () -> scene.setRoot(bibliotecaView),
-                                    () -> scene.setRoot(tiendaView),
-                                    () -> System.out.println("Perfil (pendiente)")
-                            );
-
-                            // Mostramos la biblioteca al iniciar sesión
-                            scene.setRoot(bibliotecaView);
+                            mostrarLauncher(usuario);
                         } else {
                             loginView.getMensaje().setText("Credenciales incorrectas ❌");
                         }
@@ -86,39 +75,35 @@ public class LauncherApp extends Application {
                 }
             }).start();
         });
+    }
 
+    private void mostrarLauncher(Usuario usuario) {
+        BorderPane root = new BorderPane();
 
-        // Acción de instalar juego
-        instalarBtn.setOnAction(e -> {
-            new Thread(() -> {
-                try {
-                    Path juegosFolder = Path.of(System.getProperty("user.home"), "Escritorio", "FaguaslandiaGames");
-                    if (!Files.exists(juegosFolder)) Files.createDirectories(juegosFolder);
+        BibliotecaView bibliotecaView = new BibliotecaView(usuario);
+        TiendaView tiendaView = new TiendaView(usuario);
+        JuegoDetailView juegoDetailView = new JuegoDetailView(usuario);
 
-                    Path zipDestino = juegosFolder.resolve("Smashy Road.zip");
-                    String url = Config.API_BASE_URL + "/juegos_desca/Smashy_Road.zip";
+        // Actualizar biblioteca cuando se compra
+        juegoDetailView.setCallbackActualizarBiblioteca(() -> bibliotecaView.actualizarBiblioteca());
 
-                    downloader.downloadFile(url, zipDestino);
-                    downloader.unzip(zipDestino, juegosFolder);
-                    Files.deleteIfExists(zipDestino);
-
-                    Platform.runLater(() -> loginView.getMensaje().setText("Juego instalado en: " + juegosFolder));
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Platform.runLater(() -> loginView.getMensaje().setText("Error descargando el juego"));
-                }
-            }).start();
+        // Callback tienda → detalle
+        tiendaView.setCallbackJuegoDetalle(j -> {
+            juegoDetailView.setJuego(j);
+            root.setCenter(juegoDetailView);
         });
 
-        this.scene = new Scene(root);
-        this.scene.getStylesheets().add(
-                getClass().getResource("/styles/index.css").toExternalForm()
-        );
-        stage.setTitle("Faguaslandia Launcher");
-        stage.setScene(this.scene);
-        stage.setMaximized(true);
-        stage.show();
+        // Volver de detalle a tienda
+        juegoDetailView.getVolverBtn().setOnAction(e -> root.setCenter(tiendaView));
+
+        // Mostrar biblioteca al inicio
+        root.setCenter(bibliotecaView);
+
+
+
+
+
+        scene.setRoot(root);
     }
 
     public static void main(String[] args) {

@@ -28,10 +28,19 @@ public class CompraController {
 
     // Comprar
     @PostMapping
-    public ResponseEntity<?> comprar(@RequestBody CompraRequest request) {
+    public ResponseEntity<?> comprar(@RequestBody(required = false) CompraRequest request) {
+        System.out.println("ENTRA AL CONTROLLER");
+        System.out.println(request);
+
+        if (request == null) {
+            System.out.println("REQUEST ES NULL");
+            return ResponseEntity.badRequest().body("Body no recibido");
+        }
+
         compraService.comprar(request.getUsuarioId(), request.getJuegoId());
         return ResponseEntity.ok().build();
     }
+
 
 
     @GetMapping("/usuario/{usuarioId}")
