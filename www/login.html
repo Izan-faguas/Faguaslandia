@@ -1,75 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Faguáslandia</title>
-    <link rel="stylesheet" href="index.css">
-    <script type="module" src="login.js"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar Sesión - Faguáslandia</title>
+<link rel="stylesheet" href="index.css">
 </head>
+
 <body>
-    <header>
-        <nav class="menu">
-            <a href="index.html">Biblioteca</a>
-            <a href="tienda.html">Tienda</a>
-            <a href="perfil.html">Perfil</a>
-            <a href="registro.html">Registro</a>
-            <a href="login.html">Iniciar sesión</a>
-        </nav>
-    </header>
+<header>
+    <nav class="menu">
+        <a href="index.html">Biblioteca</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="registro.html">Registro</a>
+        <a href="login.html">Iniciar sesión</a>
+    </nav>
+</header>
 
-    <div class="formulario">
-        <form id="loginForm">
-            <h2>Iniciar sesión</h2>
-            <label for="nombre">Usuario:</label>
-            <input type="text" name="nombre" id="nombre" required>
-            <label for="password">Contraseña:</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit">Entrar</button>
-        </form>
-        </div>
-
+<div class="formulario">
+    <form id="loginForm">
+        <h2>Iniciar sesión</h2>
+        <label for="nombre">Usuario:</label>
+        <input type="text" name="nombre" id="nombre" required>
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" required>
+        <button type="submit">Entrar</button>
+    </form>
     <div id="mensaje"></div>
+</div>
 
-    <script src="login.js"></script>
-    <script type="module">
-    import CONFIG from "./config.js";
+<script type="module">
+import CONFIG from "./config.js";
 
-    const form = document.getElementById('loginForm');
-    const mensajeDiv = document.getElementById('mensaje');
+const form = document.getElementById('loginForm');
+const mensajeDiv = document.getElementById('mensaje');
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+    try {
+        // Envío de login
+        const response = await fetch(`${CONFIG.API_BASE_URL}/usuarios/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+            credentials: 'include' // importante: envía la cookie HttpOnly
+        });
 
-        try {
-            const response = await fetch(`${CONFIG.API_BASE_URL}/usuarios/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+        if (!response.ok) throw new Error('Usuario o contraseña incorrectos');
 
-            if (!response.ok) throw new Error('Usuario o contraseña incorrectos');
+        const result = await response.json();
+        mensajeDiv.textContent = `Bienvenido, ${result.nombre}!`;
+        mensajeDiv.style.color = 'lime';
 
-            const usuario = await response.json();
+        setTimeout(() => window.location.href = 'perfil.html', 1500);
 
-            mensajeDiv.textContent = `Bienvenido, ${usuario.nombre}!`;
-            mensajeDiv.style.color = 'lime';
-
-            localStorage.setItem('usuario', JSON.stringify(usuario));
-
-            setTimeout(() => window.location.href = 'perfil.html', 1500);
-
-        } catch (error) {
-            mensajeDiv.textContent = error.message;
-            mensajeDiv.style.color = 'red';
-        }
-    });
-    </script>
-
+    } catch (error) {
+        mensajeDiv.textContent = error.message;
+        mensajeDiv.style.color = 'red';
+    }
+});
+</script>
 
 </body>
 </html>

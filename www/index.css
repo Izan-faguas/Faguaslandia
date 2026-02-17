@@ -150,10 +150,9 @@ header {
   gap: 50px;
 }
 
-
-
 .hero {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
   gap: 30px;
   background: linear-gradient(135deg, #1b2838, #16202d);
   padding: 25px;
@@ -162,6 +161,7 @@ header {
 
   width: 1000px;   
   margin: 0 auto;     
+  margin-bottom: 30px;
   flex-wrap: wrap;      
 }
 

@@ -20,34 +20,6 @@
 </header>
 
 <main class="tienda">
-
-  <!-- JUEGO DESTACADO -->
-  <section class="hero juego" id="juegoDestacado">
-    <div class="hero-media">
-      <img src="algo.png" alt="Juego destacado">
-    </div>
-
-    <div class="hero-info">
-      <h2>Mini Golf</h2>
-      <p>
-        Un juego de minigolf relajante en 2D donde la paciencia
-        y la precisión lo son todo.
-      </p>
-
-      <div class="hero-thumbs">
-        <img src="algo.png">
-        <img src="algo.png">
-        <img src="algo.png">
-        <img src="algo.png">
-      </div>
-
-      <div class="hero-price">
-        <span class="discount">-40%</span>
-        <span class="price">4,99€</span>
-      </div>
-    </div>
-  </section>
-
   <!-- LISTA DE JUEGOS -->
   <section id="listaJuegos" class="juegos-grid"></section>
 
@@ -67,9 +39,6 @@
       listaJuegosDiv.innerHTML = "";
 
       juegos.forEach((juego, index) => {
-        // el primero se considera el destacado
-        if (index === 0) return;
-
         const juegoSection = document.createElement("section");
         juegoSection.className = "hero juego";
 

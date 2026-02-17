@@ -134,7 +134,23 @@ VALUES
 ('Izanfg06', 'izanfaguasgarcia@gmail.com', 'Alcachofa21'),
 ('esparrago', 'esparragoalvapor@yahoo.es', 'esparrago'),
 ('Victor', 'v.plasoler@edu.gva.es', 'Abcd1234'),
-('MR_WORKBOOK', 'TONI@GMAIL.CUM', 'tonito123');
+('RedNex', 'toni@gmail.com', 'Texmex'),
+('a','a@a.com','a');
+
+
+INSERT INTO juegos (
+    titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
+) VALUES (
+    'Eternal Orbit', 
+    'Un juego simple sin mucho esferzo realizado.', 
+    30.00, 
+    'img/Eternal_Orbit.png', 
+    'Rogue-like', 
+    'Antonio Novejarque Escamilla', 
+    '2026-02-17', 
+    4.2
+);
+
 
 INSERT INTO juegos (
     titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
@@ -149,15 +165,4 @@ INSERT INTO juegos (
     3.7
 );
 
-INSERT INTO juegos (
-    titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
-) VALUES (
-    'Eternal Orbit', 
-    'Un juego simple sin mucho esferzo realizado.', 
-    30.00, 
-    'img/Eternal_Orbit.png', 
-    'Rogue-like', 
-    'Antonio Novejarque Escamilla', 
-    '2026-02-17', 
-    4.2
-);
+

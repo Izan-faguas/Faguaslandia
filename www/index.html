@@ -7,47 +7,92 @@
     <title>Faguáslandia</title>
 </head>
 <body>
-    <h2>Faguáslandia</h2>
-    <header>
-        <nav class="menu">
-            <a href="index.html">Biblioteca</a>
-            <a href="tienda.html">Tienda</a>
-            <a href="perfil.html">Perfil</a>
-            <a href="registro.html">Registro</a>
-            <a href="login.html">Iniciar sesión</a>
-        </nav>
-    </header>
-    <main>
-        <div class="catalogo">
-            <div class="juego">
-                <h1>Biblioteca</h1>
-                <div class="juegos">
-                    <img src="algo.png" alt="pruba">
-                    <img src="algo.png" alt="pruba">
-                    <img src="algo.png" alt="pruba">
-                    <img src="algo.png" alt="pruba">
-                </div>
-            </div>
-            <div class="amigo">
-                <h1>Amigos</h1>
-                <div class="amigos">
-                    <div class="amigop">
-                        <h3>toni</h3>
-                        <p>Activo</p>
-                    </div>
-                    <div class="amigop">
-                        <h3>Pau</h3>
-                        <p>Activo</p>
-                    </div>
 
+<h2>Faguáslandia</h2>
+
+<header>
+    <nav class="menu">
+        <a href="index.html">Biblioteca</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="registro.html">Registro</a>
+        <a href="login.html">Iniciar sesión</a>
+    </nav>
+</header>
+
+<main>
+    <div class="catalogo">
+
+        <!-- BIBLIOTECA -->
+        <div class="juego">
+            <h1>Biblioteca</h1>
+            <div class="juegos" id="juegosGrid"></div>
+        </div>
+
+        <!-- AMIGOS -->
+        <div class="amigo">
+            <h1>Amigos</h1>
+            <div class="amigos">
+                <div class="amigop">
+                    <h3>toni</h3>
+                    <p>Activo</p>
+                </div>
+                <div class="amigop">
+                    <h3>Pau</h3>
+                    <p>Activo</p>
                 </div>
             </div>
         </div>
-    </main>
-    <footer>
 
-    </footer>
-<script src="theme.js"></script>
+    </div>
+</main>
 
+<script type="module">
+    import CONFIG from "./config.js";
+
+const usuarioId = localStorage.getItem("usuarioId");
+
+const juegosGrid = document.getElementById("juegosGrid");
+
+async function actualizarBiblioteca() {
+    
+    try {
+        const response = await fetch(
+            `${CONFIG.API_BASE_URL}/biblioteca/${usuarioId}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Error cargando biblioteca");
+        }
+
+        const juegos = await response.json();
+
+        juegosGrid.innerHTML = "";
+
+        juegos.forEach(juego => {
+            const img = document.createElement("img");
+
+            img.src = juego.imagen_url
+                ? juego.imagen_url
+                : "algo.png";
+
+            img.alt = juego.titulo;
+            img.title = juego.titulo;
+            img.classList.add("game-cover");
+
+            img.style.width = "140px";
+
+            juegosGrid.appendChild(img);
+        });
+
+    } catch (error) {
+        console.error(error);
+        juegosGrid.innerHTML = "<p>Error cargando la biblioteca</p>";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", actualizarBiblioteca);
+
+</script>
 </body>
 </html>
