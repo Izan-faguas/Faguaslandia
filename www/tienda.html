@@ -6,20 +6,23 @@
   <title>Tienda - Faguáslandia</title>
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
 
 <header>
-  <nav class="menu_tienda">
-    <a href="index.html">Biblioteca</a>
-    <a href="tienda.html">Tienda</a>
-    <a href="perfil.html">Perfil</a>
+  <nav class="menu">
+      <a href="index.html">Biblioteca</a>
+      <a href="tienda.html">Tienda</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="registro.html">Registro</a>
+      <a href="login.html">Iniciar sesión</a>
   </nav>
 </header>
 
 <main class="tienda">
 
   <!-- JUEGO DESTACADO -->
-  <section class="hero">
+  <section class="hero juego" id="juegoDestacado">
     <div class="hero-media">
       <img src="algo.png" alt="Juego destacado">
     </div>
@@ -46,60 +49,62 @@
   </section>
 
   <!-- LISTA DE JUEGOS -->
-  <section id="listaJuegos"></section>
+  <section id="listaJuegos" class="juegos-grid"></section>
 
 </main>
 
 <script type="module">
   import CONFIG from "./config.js";
 
-  const listaJuegosDiv = document.getElementById('listaJuegos');
+  const listaJuegosDiv = document.getElementById("listaJuegos");
 
   async function cargarJuegos() {
     try {
       const response = await fetch(`${CONFIG.API_BASE_URL}/juegos`);
-
-      if (!response.ok) {
-        throw new Error('No se pudieron cargar los juegos');
-      }
+      if (!response.ok) throw new Error("No se pudieron cargar los juegos");
 
       const juegos = await response.json();
+      listaJuegosDiv.innerHTML = "";
 
-      if (!juegos || juegos.length === 0) {
-        listaJuegosDiv.textContent = 'No hay juegos disponibles';
-        return;
-      }
+      juegos.forEach((juego, index) => {
+        // el primero se considera el destacado
+        if (index === 0) return;
 
-      listaJuegosDiv.innerHTML = '';
+        const juegoSection = document.createElement("section");
+        juegoSection.className = "hero juego";
 
-      const contenedor = document.createElement('div');
-      contenedor.className = 'juegos-contenedor';
+        juegoSection.innerHTML = `
+          <div class="hero-media">
+            <img src="${juego.imagen_url ?? 'default.png'}" alt="${juego.titulo}">
+          </div>
 
-      juegos.forEach(juego => {
-        const tarjeta = document.createElement('div');
-        tarjeta.className = 'juego-tarjeta';
+          <div class="hero-info">
+            <h2>${juego.titulo}</h2>
+            <p>${juego.descripcion ?? 'Sin descripción'}</p>
 
-        tarjeta.innerHTML = `
-          <img src="${juego.imagen_url ?? 'default.png'}" alt="${juego.titulo}">
-          <h3>${juego.titulo}</h3>
-          <p>${juego.descripcion ?? 'Sin descripción'}</p>
-          <p class="precio">${juego.precio ? juego.precio + '€' : 'Gratis'}</p>
+            <div class="hero-thumbs">
+              <img src="${juego.imagen_url ?? 'default.png'}">
+              <img src="${juego.imagen_url ?? 'default.png'}">
+            </div>
+
+            <div class="hero-price">
+              <span class="price">
+                ${juego.precio ? juego.precio + '€' : 'Gratis'}
+              </span>
+            </div>
+          </div>
         `;
 
-        contenedor.appendChild(tarjeta);
+        listaJuegosDiv.appendChild(juegoSection);
       });
-
-      listaJuegosDiv.appendChild(contenedor);
 
     } catch (error) {
       listaJuegosDiv.textContent = error.message;
-      listaJuegosDiv.style.color = 'red';
     }
   }
 
-  document.addEventListener('DOMContentLoaded', cargarJuegos);
+  document.addEventListener("DOMContentLoaded", cargarJuegos);
 </script>
-
 
 </body>
 </html>

@@ -13,16 +13,11 @@
 
 <header>
   <nav class="menu">
-    <a href="index.html">Biblioteca</a>
-    <a href="tienda.html">Tienda</a>
-    <a href="perfil.html">Perfil</a>
-    <a href="registro.html">Registro</a>
-
-    <select id="themeSelector">
-      <option value="default">🌙 Predeterminado</option>
-      <option value="neon">💜 Neón</option>
-      <option value="zafiro">💎 Zafiro</option>
-    </select>
+      <a href="index.html">Biblioteca</a>
+      <a href="tienda.html">Tienda</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="registro.html">Registro</a>
+      <a href="login.html">Iniciar sesión</a>
   </nav>
 </header>
 
@@ -84,7 +79,11 @@ fotoPerfil.src = usuario.foto
     : "img/default.png";
 
 const modal = document.getElementById("editarPerfilModal");
-document.getElementById("editarPerfilBtn").onclick = () => modal.style.display = "flex";
+document.getElementById("editarPerfilBtn").onclick = () => {
+    modal.style.display = "flex";
+    editarNombre.value = usuario.nombre;
+    editarCorreo.value = usuario.email;
+};
 document.getElementById("cerrarModal").onclick = () => modal.style.display = "none";
 
 document.getElementById("guardarCambios").onclick = async () => {

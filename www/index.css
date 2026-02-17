@@ -150,23 +150,44 @@ header {
   gap: 50px;
 }
 
-/* =========================
-   ⭐ HERO (JUEGO DESTACADO)
-========================= */
+
 
 .hero {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
   gap: 30px;
   background: linear-gradient(135deg, #1b2838, #16202d);
   padding: 25px;
   border-radius: 10px;
   box-shadow: 0 15px 40px var(--shadow);
+
+  width: 1000px;   
+  margin: 0 auto;     
+  flex-wrap: wrap;      
+}
+
+.hero-media {
+  width: 100%;
+  max-width: 420px;    
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;      
 }
 
 .hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   
   border-radius: 8px;
 }
+
+
+
+.juegos-grid .hero-media,
+.store-grid .store-card img {
+  width: 100%;
+  height: 100%;       
+  object-fit: cover;   
+}
+
 
 .hero-info {
   display: flex;

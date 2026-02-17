@@ -142,9 +142,22 @@ INSERT INTO juegos (
     'Mini Golf', 
     'Un juego de minigolf 2D.', 
     7.99, 
-    'algo.png', 
+    'img/algo.png', 
     'Estrategia', 
     'FaguasStudio', 
     '2026-01-22', 
     3.7
+);
+
+INSERT INTO juegos (
+    titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio
+) VALUES (
+    'Eternal Orbit', 
+    'Un juego simple sin mucho esferzo realizado.', 
+    30.00, 
+    'img/Eternal_Orbit.png', 
+    'Rogue-like', 
+    'Antonio Novejarque Escamilla', 
+    '2026-02-17', 
+    4.2
 );
