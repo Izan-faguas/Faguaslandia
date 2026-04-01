@@ -1,7 +1,3 @@
-www/js/login.js
-
-www/tienda.html
-
-www/login.html
-
-www/registro.html
+www/config.js
+Faguaslandia/backend/src/main/resources/application.properties
+Faguaslandia/Launcher/src/main/resources/launcher.properties

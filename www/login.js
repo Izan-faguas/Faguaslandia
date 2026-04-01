@@ -1,33 +1,42 @@
 import CONFIG from "./config.js";
 
-const form = document.getElementById('loginForm');
-const mensajeDiv = document.getElementById('mensaje');
+async function login() {
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const data = Object.fromEntries(new FormData(form).entries());
+    const email = document.getElementById("nombre").value;
+    const password = document.getElementById("password").value;
 
     try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/usuarios/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+
+        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
         });
 
-        if (!response.ok) throw new Error('Usuario o contraseña incorrectos');
+        if (!response.ok) {
+            alert("Login incorrecto");
+            return;
+        }
 
-        const result = await response.json();
+        const usuario = await response.json();
 
-        localStorage.setItem('usuario', JSON.stringify(result));
+        console.log("Usuario logueado:", usuario);
 
-        mensajeDiv.textContent = `Bienvenido ${result.nombre}`;
-        mensajeDiv.style.color = 'lime';
-
-        setTimeout(() => window.location.href = 'perfil.html', 1000);
+        window.location.href = "index.html";
 
     } catch (error) {
-        mensajeDiv.textContent = error.message;
-        mensajeDiv.style.color = 'red';
+
+        console.error("Error en login:", error);
     }
+}
+
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    login();
 });

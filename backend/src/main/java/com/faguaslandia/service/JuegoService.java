@@ -33,4 +33,9 @@ public class JuegoService {
     public void eliminarJuego(Long id) {
         repo.deleteById(id);
     }
+
+    public Juego obtenerPorId(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Juego no encontrado"));
+    }
 }

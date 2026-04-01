@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+<header>
+  <nav class="menu">
+    <a href="index.html">Biblioteca</a>
+    <a href="tienda.html">Tienda</a>
+  </nav>
+</header>
+
+<main id="juegoContainer"></main>
+
+<script type="module">
+    
+import CONFIG from "./config.js";
+
+const container = document.getElementById("juegoContainer");
+
+// 🔍 obtener id de la URL
+const params = new URLSearchParams(window.location.search);
+const juegoId = params.get("id");
+
+async function cargarJuego() {
+  try {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}`);
+    const juego = await res.json();
+    console.log(juego);
+
+    container.innerHTML = `
+      <h1>${juego.titulo}</h1>
+
+      <img src="${juego.imagen_url ?? 'default.png'}" width="300">
+
+      <p>${juego.descripcion ?? 'Sin descripción'}</p>
+
+      <h3>${juego.precio ? juego.precio + "€" : "Gratis"}</h3>
+
+      <button id="comprarBtn">Comprar</button>
+    `;
+    document.getElementById("comprarBtn").onclick = comprar;
+
+  } catch (e) {
+    container.innerHTML = "Error cargando juego";
+  }
+}
+
+async function comprar() {
+  try {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/compras`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include", 
+      body: JSON.stringify({
+        juegoId: juegoId
+      })
+    });
+
+    if (res.status === 401) {
+      alert("Tienes que iniciar sesión");
+      return;
+    }
+
+    if (!res.ok) throw new Error();
+
+    alert("Juego comprado ✅");
+
+  } catch {
+    alert("Error al comprar");
+  }
+}
+
+cargarJuego();
+</script>
+
+</body>
+</html>

@@ -26,6 +26,10 @@ public class JuegoController {
     public Juego crearJuego(@RequestBody Juego juego) {
         return juegoService.crearJuego(juego);
     }
+    @GetMapping("/{id}")
+    public Juego obtenerJuego(@PathVariable Long id) {
+        return juegoService.obtenerPorId(id);
+    }
 
     @PutMapping("/actualizar/{id}")
     public Juego actualizarJuego(@PathVariable Long id, @RequestBody Juego datos) {

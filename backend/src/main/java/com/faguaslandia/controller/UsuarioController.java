@@ -49,7 +49,7 @@ public class UsuarioController {
                 HttpStatus.UNAUTHORIZED,
                 "Credenciales incorrectas"
         );
-    }
+    }   
 
     @PostMapping("/uploadFoto")
     public String uploadFoto(@RequestParam("file") MultipartFile file) {

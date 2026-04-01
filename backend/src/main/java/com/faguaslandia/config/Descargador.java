@@ -18,7 +18,6 @@ public class Descargador {
 
         HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
 
-        // Crear directorios si no existen
         if (!Files.exists(destino.getParent())) {
             Files.createDirectories(destino.getParent());
         }

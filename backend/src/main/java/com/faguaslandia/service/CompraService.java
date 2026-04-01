@@ -51,12 +51,7 @@ public class CompraService {
         compraRepo.save(compra);
     }
 
-    public List<Juego> obtenerBiblioteca(Long usuarioId) {
-        return compraRepo.findByUsuarioId(usuarioId)
-                .stream()
-                .map(Compra::getJuego)
-                .toList();
-    }
+
 
 
 }

@@ -19,6 +19,36 @@
       <a href="registro.html">Registro</a>
       <a href="login.html">Iniciar sesión</a>
   </nav>
+      <script type="module">
+        import { getSessionUser, logout } from "./session.js";
+
+        const menu = document.querySelector(".menu");
+
+        const usuarioo = await getSessionUser();
+
+        if (usuarioo) {
+
+            // quitar login/registro
+            menu.innerHTML = `
+                <a href="index.html">Biblioteca</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="perfil.html">Perfil</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            `;
+
+            document.getElementById("logoutBtn").onclick = logout;
+
+        } else {
+
+            // usuario no logueado
+            menu.innerHTML = `
+                <a href="index.html">Biblioteca</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="registro.html">Registro</a>
+                <a href="login.html">Iniciar sesión</a>
+            `;
+        }
+    </script>
 </header>
 
 <main>
@@ -65,58 +95,44 @@
 <script type="module">
 import CONFIG from "./config.js";
 
-const usuario = JSON.parse(localStorage.getItem("usuario"));
-if (!usuario) window.location.href = "login.html";
+let usuario = null;
 
-document.getElementById("nombreUsuario").textContent = usuario.nombre;
-document.getElementById("emailUsuario").textContent = usuario.email;
-document.getElementById("nombreAmigo").textContent = usuario.nombre;
-document.getElementById("idAmigo").textContent = usuario.id;
+async function cargarPerfil(){
 
-const fotoPerfil = document.getElementById("fotoPerfil");
-fotoPerfil.src = usuario.foto
-    ? `${CONFIG.API_BASE_URL}/uploads/${usuario.foto}`
-    : "img/default.png";
+    try{
 
-const modal = document.getElementById("editarPerfilModal");
-document.getElementById("editarPerfilBtn").onclick = () => {
-    modal.style.display = "flex";
-    editarNombre.value = usuario.nombre;
-    editarCorreo.value = usuario.email;
-};
-document.getElementById("cerrarModal").onclick = () => modal.style.display = "none";
-
-document.getElementById("guardarCambios").onclick = async () => {
-
-    let nombre = editarNombre.value;
-    let email = editarCorreo.value;
-    let foto = usuario.foto;
-
-    if (editarFoto.files.length > 0) {
-        const fd = new FormData();
-        fd.append("file", editarFoto.files[0]);
-
-        const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/uploadFoto`, {
-            method: "POST",
-            body: fd
+        const res = await fetch(`${CONFIG.API_BASE_URL}/auth/me`,{
+            method:"GET",
+            credentials:"include"
         });
 
-        foto = await res.text();
+        if(res.status === 401){
+            window.location.href="login.html";
+            return;
+        }
+
+        usuario = await res.json();
+
+        document.getElementById("nombreUsuario").textContent = usuario.nombre;
+        document.getElementById("emailUsuario").textContent = usuario.email;
+        document.getElementById("nombreAmigo").textContent = usuario.nombre;
+        document.getElementById("idAmigo").textContent = usuario.id;
+
+        const fotoPerfil = document.getElementById("fotoPerfil");
+
+        fotoPerfil.src = usuario.foto
+            ? `${CONFIG.API_BASE_URL}/uploads/${usuario.foto}`
+            : "img/default.png";
+
+    }catch(error){
+
+        console.error("Error cargando sesión:", error);
+        window.location.href="login.html";
+
     }
+}
 
-    await fetch(`${CONFIG.API_BASE_URL}/usuarios/actualizar/${usuario.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, email, foto })
-    });
-
-    usuario.nombre = nombre;
-    usuario.email = email;
-    usuario.foto = foto;
-    localStorage.setItem("usuario", JSON.stringify(usuario));
-
-    location.reload();
-};
+await cargarPerfil();
 </script>
 
 </body>

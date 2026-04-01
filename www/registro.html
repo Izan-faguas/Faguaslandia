@@ -17,6 +17,36 @@
         <a href="registro.html">Registro</a>
         <a href="login.html">Iniciar sesión</a>
     </nav>
+    <script type="module">
+        import { getSessionUser, logout } from "./session.js";
+
+        const menu = document.querySelector(".menu");
+
+        const usuario = await getSessionUser();
+
+        if (usuario) {
+
+            // quitar login/registro
+            menu.innerHTML = `
+                <a href="index.html">Biblioteca</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="perfil.html">Perfil</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            `;
+
+            document.getElementById("logoutBtn").onclick = logout;
+
+        } else {
+
+            // usuario no logueado
+            menu.innerHTML = `
+                <a href="index.html">Biblioteca</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="registro.html">Registro</a>
+                <a href="login.html">Iniciar sesión</a>
+            `;
+        }
+    </script>
 </header>   
 
 <div class="formulario">

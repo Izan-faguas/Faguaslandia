@@ -1,98 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
-    <title>Faguáslandia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faguáslandia</title>
+<link rel="stylesheet" href="index.css">
 </head>
+
 <body>
 
-<h2>Faguáslandia</h2>
-
 <header>
-    <nav class="menu">
+<nav class="menu"></nav>
+
+<script type="module">
+import { getSessionUser, logout } from "./session.js";
+
+const menu = document.querySelector(".menu");
+const usuario = await getSessionUser();
+
+if (usuario) {
+    menu.innerHTML = `
         <a href="index.html">Biblioteca</a>
         <a href="tienda.html">Tienda</a>
         <a href="perfil.html">Perfil</a>
+        <a href="#" id="logoutBtn">Cerrar sesión</a>
+    `;
+    document.getElementById("logoutBtn").onclick = logout;
+} else {
+    menu.innerHTML = `
+        <a href="index.html">Biblioteca</a>
+        <a href="tienda.html">Tienda</a>
         <a href="registro.html">Registro</a>
         <a href="login.html">Iniciar sesión</a>
-    </nav>
+    `;
+}
+</script>
 </header>
 
 <main>
-    <div class="catalogo">
+<div class="catalogo">
 
-        <!-- BIBLIOTECA -->
-        <div class="juego">
-            <h1>Biblioteca</h1>
-            <div class="juegos" id="juegosGrid"></div>
-        </div>
-
-        <!-- AMIGOS -->
-        <div class="amigo">
-            <h1>Amigos</h1>
-            <div class="amigos">
-                <div class="amigop">
-                    <h3>toni</h3>
-                    <p>Activo</p>
-                </div>
-                <div class="amigop">
-                    <h3>Pau</h3>
-                    <p>Activo</p>
-                </div>
-            </div>
-        </div>
-
+    <!-- 📚 LISTA -->
+    <div class="juego">
+        <h1>🎮 Biblioteca</h1>
+        <div class="juegos" id="juegosGrid"></div>
     </div>
+
+    <!-- 🎮 DETALLE -->
+    <div class="amigo detalle-juego" id="detalleJuego">
+        <h2>Selecciona un juego</h2>
+    </div>
+
+</div>
 </main>
 
 <script type="module">
-    import CONFIG from "./config.js";
-
-const usuarioId = localStorage.getItem("usuarioId");
+import CONFIG from "./config.js";
+import { getSessionUser } from "./session.js";
 
 const juegosGrid = document.getElementById("juegosGrid");
+const detalle = document.getElementById("detalleJuego");
 
 async function actualizarBiblioteca() {
-    
     try {
-        const response = await fetch(
-            `${CONFIG.API_BASE_URL}/biblioteca/${usuarioId}`
-        );
+        const usuario = await getSessionUser();
 
-        if (!response.ok) {
-            throw new Error("Error cargando biblioteca");
+        if (!usuario) {
+            juegosGrid.innerHTML = "<p>Inicia sesión</p>";
+            return;
         }
 
-        const juegos = await response.json();
+        const res = await fetch(`${CONFIG.API_BASE_URL}/biblioteca`, {
+            credentials: "include"
+        });
+
+        const juegos = await res.json();
 
         juegosGrid.innerHTML = "";
 
-        juegos.forEach(juego => {
+        juegos.forEach((juego, index) => {
             const img = document.createElement("img");
 
-            img.src = juego.imagen_url
-                ? juego.imagen_url
-                : "algo.png";
-
-            img.alt = juego.titulo;
-            img.title = juego.titulo;
+            img.src = juego.imagen_url || "default.png";
             img.classList.add("game-cover");
 
-            img.style.width = "140px";
+            img.addEventListener("click", () => {
+                mostrarJuego(juego);
+                seleccionar(img);
+            });
 
             juegosGrid.appendChild(img);
+
+            if (index === 0) {
+                mostrarJuego(juego);
+                seleccionar(img);
+            }
         });
 
-    } catch (error) {
-        console.error(error);
-        juegosGrid.innerHTML = "<p>Error cargando la biblioteca</p>";
+    } catch (e) {
+        juegosGrid.innerHTML = "Error";
     }
 }
 
-document.addEventListener("DOMContentLoaded", actualizarBiblioteca);
+function seleccionar(elemento) {
+    document.querySelectorAll(".game-cover").forEach(img => {
+        img.classList.remove("game-selected");
+    });
 
+    elemento.classList.add("game-selected");
+}
+
+function mostrarJuego(juego) {
+    detalle.innerHTML = `
+        <div class="detalle-header">
+            <h1>${juego.titulo}</h1>
+        </div>
+
+        <img src="${juego.imagen_url || 'default.png'}" class="detalle-img">
+
+        <p class="detalle-desc">
+            ${juego.descripcion || "Sin descripción disponible"}
+        </p>
+
+        <button class="btn-play">JUGAR</button>
+    `;
+
+    document.querySelector(".btn-play").onclick = () => {
+        alert("Iniciando " + juego.titulo);
+    };
+}
+
+document.addEventListener("DOMContentLoaded", actualizarBiblioteca);
 </script>
+
 </body>
 </html>

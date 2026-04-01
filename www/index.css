@@ -121,6 +121,57 @@ header {
 }
 
 /* =========================
+   🎮 DETALLE JUEGO (STEAM)
+========================= */
+
+.detalle-juego {
+  background: linear-gradient(135deg, #1b2838, #16202d);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 15px 40px var(--shadow);
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detalle-header h1 {
+  font-size: 26px;
+}
+
+.detalle-img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.detalle-desc {
+  line-height: 1.5;
+}
+
+/* botón jugar */
+.btn-play {
+  margin-top: auto;
+  padding: 12px;
+  background-color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-play:hover {
+  background-color: var(--accent-hover);
+}
+
+/* juego seleccionado */
+.game-selected {
+  outline: 2px solid var(--accent);
+  transform: scale(1.05);
+}
+
+
+/* =========================
    👥 AMIGOS
 ========================= */
 
