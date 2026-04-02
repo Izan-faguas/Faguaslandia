@@ -1,5 +1,5 @@
 /* =========================
-   🎮 VARIABLES STEAM
+   🎮 VARIABLES
 ========================= */
 
 :root {
@@ -13,12 +13,12 @@
   --text-main: #e6f0f8;
   --text-muted: #9fb3c8;
 
-  --border: rgba(102,192,244,0.25);
+  --border: rgba(102,192,244,0.2);
   --shadow: rgba(0,0,0,0.6);
 }
 
 /* =========================
-   🌍 RESET Y BASE
+   RESET
 ========================= */
 
 * {
@@ -29,26 +29,12 @@
 
 body {
   background: linear-gradient(180deg, var(--bg-dark), var(--bg-main));
-  color: var(--text-main);
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-h1, h2, h3 {
-  color: var(--accent);
-}
-
-p, li {
-  color: var(--text-muted);
+  color: var(--text-main);
 }
 
 /* =========================
-   🔝 HEADER Y MENÚ
+   HEADER
 ========================= */
 
 header {
@@ -56,392 +42,135 @@ header {
   box-shadow: 0 4px 15px var(--shadow);
 }
 
-.menu,
-.menu_tienda {
+.menu {
   display: flex;
-  align-items: center;
   gap: 20px;
-  padding: 14px 28px;
+  padding: 15px 30px;
 }
 
-.menu a,
-.menu_tienda a {
+.menu a {
   color: var(--accent);
   text-decoration: none;
   font-weight: bold;
-  font-size: 16px;
 }
 
-.menu a:hover,
-.menu_tienda a:hover {
+.menu a:hover {
   color: var(--accent-hover);
 }
 
-.menu input,
-.menu_tienda input {
-  margin-left: auto;
-  background-color: var(--bg-main);
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  padding: 6px 10px;
-  border-radius: 4px;
-}
-
 /* =========================
-   📚 BIBLIOTECA
+   LAYOUT PRINCIPAL
 ========================= */
 
 .catalogo {
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 30px;
-  padding: 30px;
-}
-
-.juego h1,
-.amigo h1 {
-  margin-bottom: 15px;
-}
-
-.juegos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 20px;
-}
-
-.juegos img {
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  transition: transform 0.25s, box-shadow 0.25s;
-}
-
-.juegos img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px var(--shadow);
+  grid-template-columns: 260px 1fr;
+  height: calc(100vh - 70px);
 }
 
 /* =========================
-   🎮 DETALLE JUEGO (STEAM)
+   📚 LISTA (IZQUIERDA)
+========================= */
+
+.juego {
+  background-color: #0f1722;
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.juego h1 {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+/* GRID DE JUEGOS */
+.juegos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* JUEGO */
+.game-cover {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid transparent;
+}
+
+.game-cover:hover {
+  transform: scale(1.03);
+  border: 1px solid var(--accent);
+}
+
+/* SELECCIONADO */
+.game-selected {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* =========================
+   🎮 DETALLE (DERECHA)
 ========================= */
 
 .detalle-juego {
-  background: linear-gradient(135deg, #1b2838, #16202d);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 15px 40px var(--shadow);
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.detalle-header h1 {
-  font-size: 26px;
-}
-
-.detalle-img {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.detalle-desc {
-  line-height: 1.5;
-}
-
-/* botón jugar */
-.btn-play {
-  margin-top: auto;
-  padding: 12px;
-  background-color: var(--accent);
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-play:hover {
-  background-color: var(--accent-hover);
-}
-
-/* juego seleccionado */
-.game-selected {
-  outline: 2px solid var(--accent);
-  transform: scale(1.05);
-}
-
-
-/* =========================
-   👥 AMIGOS
-========================= */
-
-.amigos {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.amigop {
-  background-color: var(--bg-light);
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-}
-
-/* =========================
-   🛒 TIENDA
-========================= */
-
-.tienda {
-  max-width: 1200px;
-  margin: auto;
   padding: 30px;
   display: flex;
   flex-direction: column;
-  gap: 50px;
-}
-
-.hero {
-  display: grid;
-  grid-template-columns: 1.5fr 2fr;
-  gap: 30px;
-  background: linear-gradient(135deg, #1b2838, #16202d);
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 15px 40px var(--shadow);
-
-  width: 1000px;   
-  margin: 0 auto;     
-  margin-bottom: 30px;
-  flex-wrap: wrap;      
-}
-
-.hero-media {
-  width: 100%;
-  max-width: 420px;    
-  aspect-ratio: 16 / 9;
-  flex-shrink: 0;      
-}
-
-.hero-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;   
-  border-radius: 8px;
-}
-
-
-
-.juegos-grid .hero-media,
-.store-grid .store-card img {
-  width: 100%;
-  height: 100%;       
-  object-fit: cover;   
-}
-
-
-.hero-info {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.hero-info p {
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-.hero-thumbs {
-  display: flex;
-  gap: 10px;
-}
-
-.hero-thumbs img {
-  width: 70px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  opacity: 0.7;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.hero-thumbs img:hover {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-.hero-price {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-top: auto;
-}
-
-.discount {
-  background-color: #4c6b22;
-  color: #a4d007;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.price {
-  font-size: 22px;
-  font-weight: bold;
-}
-
-/* =========================
-   🧩 GRID DE JUEGOS
-========================= */
-
-.store-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 25px;
-}
-
-.store-card {
-  background-color: var(--bg-light);
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  transition: transform 0.25s, box-shadow 0.25s;
-  cursor: pointer;
-}
-
-.store-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px var(--shadow);
-}
-
-.store-info {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.store-info h3 {
-  font-size: 14px;
-  color: var(--text-main);
-}
-
-.store-info span {
-  font-weight: bold;
-  color: var(--accent);
-}
-
-/* =========================
-   👤 PERFIL
-========================= */
-
-.perfil {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 25px;
-  background-color: var(--bg-light);
-  border-radius: 10px;
-}
-
-.usuario {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--bg-main);
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.nombreUs {
-  display: flex;
-  align-items: center;
   gap: 20px;
 }
 
-.usuario img {
-  width: 100px;
-  height: 100px;
-  border-radius: 6px;
-  border: 2px solid var(--accent);
+/* TITULO */
+.detalle-header h1 {
+  font-size: 28px;
 }
 
-.btnEditar {
-  display: block;
-  margin: 25px auto 0;
-  padding: 10px 20px;
-  background-color: var(--accent);
+/* IMAGEN */
+.detalle-img {
+  width: 500px;
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+/* DESCRIPCION */
+.detalle-desc {
+  max-width: 600px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* BOTÓN */
+.btn-play {
+  width: 200px;
+  padding: 12px;
   border: none;
   border-radius: 6px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-.btnEditar:hover {
-  background-color: var(--accent-hover);
+.btn-play:hover {
+  transform: scale(1.05);
 }
 
 /* =========================
-   🪟 MODAL
+   SCROLL BONITO
 ========================= */
 
-#editarPerfilModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(4px);
-  justify-content: center;
-  align-items: center;
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.modal-content {
-  background-color: var(--bg-main);
-  border: 1px solid var(--border);
-  padding: 20px;
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
   border-radius: 10px;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
-/* =========================
-   🔐 LOGIN / REGISTRO
-========================= */
-
-.formulario {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-form {
-  background-color: var(--bg-light);
-  padding: 25px;
-  border-radius: 10px;
-  width: 320px;
-  box-shadow: 0 0 25px var(--shadow);
-}
-
-form input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-}
-
-form button {
-  width: 100%;
-  padding: 10px;
-  background-color: var(--accent);
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-form button:hover {
-  background-color: var(--accent-hover);
-}

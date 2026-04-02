@@ -66,7 +66,7 @@ async function actualizarBiblioteca() {
         const usuario = await getSessionUser();
 
         if (!usuario) {
-            juegosGrid.innerHTML = "<p>Inicia sesión</p>";
+            window.location.href = "tienda.html";
             return;
         }
 
