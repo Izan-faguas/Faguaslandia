@@ -50,6 +50,23 @@
 </header>
 
 <main class="tienda">
+  <div class="buscador">
+
+    <input type="text" id="busqueda" placeholder="Buscar juego...">
+
+    <select id="filtroCategoria">
+      <option value="">Todas las categorías</option>
+    </select>
+
+    <select id="filtroPrecio">
+      <option value="">Cualquier precio</option>
+      <option value="gratis">Gratis</option>
+      <option value="0-10">0€ - 10€</option>
+      <option value="10-30">10€ - 30€</option>
+      <option value="30+">30€+</option>
+    </select>
+
+  </div>
   <section id="listaJuegos" class="juegos-grid"></section>
 
 </main>
@@ -59,52 +76,113 @@
 
   const listaJuegosDiv = document.getElementById("listaJuegos");
 
+  const inputBusqueda = document.getElementById("busqueda");
+  const filtroCategoria = document.getElementById("filtroCategoria");
+  const filtroPrecio = document.getElementById("filtroPrecio");
+
+  let juegosGlobal = [];
+
+  // 🎮 cargar juegos
   async function cargarJuegos() {
     try {
       const response = await fetch(`${CONFIG.API_BASE_URL}/juegos`);
       if (!response.ok) throw new Error("No se pudieron cargar los juegos");
 
-      const juegos = await response.json();
-      listaJuegosDiv.innerHTML = "";
+      juegosGlobal = await response.json();
 
-      juegos.forEach((juego, index) => {
-        const juegoSection = document.createElement("section");
-        juegoSection.className = "hero juego";
-
-        juegoSection.innerHTML = `
-          <div class="hero-media">
-            <img src="${juego.imagen_url ?? 'default.png'}" alt="${juego.titulo}">
-          </div>
-
-          <div class="hero-info">
-            <h2>${juego.titulo}</h2>
-            <p>${juego.descripcion ?? 'Sin descripción'}</p>
-
-            <div class="hero-thumbs">
-              <img src="${juego.imagen_url ?? 'default.png'}">
-              <img src="${juego.imagen_url ?? 'default.png'}">
-            </div>
-
-            <div class="hero-price">
-              <span class="price">
-                ${juego.precio ? juego.precio + '€' : 'Gratis'}
-              </span>
-            </div>
-          </div>
-        `;
-        juegoSection.style.cursor = "pointer";
-
-        juegoSection.addEventListener("click", () => {
-          window.location.href = `juego.html?id=${juego.id}`;
-        });
-
-        listaJuegosDiv.appendChild(juegoSection);
-      });
+      cargarCategorias(juegosGlobal);
+      mostrarJuegos(juegosGlobal);
 
     } catch (error) {
       listaJuegosDiv.textContent = error.message;
     }
   }
+
+  // 📂 rellenar categorías dinámicamente
+  function cargarCategorias(juegos) {
+    const categorias = [...new Set(juegos.map(j => j.categoria))];
+
+    categorias.forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      filtroCategoria.appendChild(option);
+    });
+  }
+
+  // 🎨 render juegos
+  function mostrarJuegos(juegos) {
+    listaJuegosDiv.innerHTML = "";
+
+    juegos.forEach(juego => {
+      const juegoSection = document.createElement("section");
+      juegoSection.className = "hero juego";
+
+      juegoSection.innerHTML = `
+        <div class="hero-media">
+          <img src="${juego.imagen_url ?? 'default.png'}">
+        </div>
+
+        <div class="hero-info">
+          <h2>${juego.titulo}</h2>
+          <p>${juego.descripcion ?? 'Sin descripción'}</p>
+
+          <div class="hero-price">
+            <span class="price">
+              ${juego.precio ? juego.precio + '€' : 'Gratis'}
+            </span>
+          </div>
+        </div>
+      `;
+
+      juegoSection.onclick = () => {
+        window.location.href = `juego.html?id=${juego.id}`;
+      };
+
+      listaJuegosDiv.appendChild(juegoSection);
+    });
+  }
+
+  // 🔍 FILTRADO
+  function filtrar() {
+    const texto = inputBusqueda.value.toLowerCase();
+    const categoria = filtroCategoria.value;
+    const precio = filtroPrecio.value;
+
+    let filtrados = juegosGlobal.filter(juego => {
+
+      // nombre
+      const coincideTexto =
+        juego.titulo.toLowerCase().includes(texto) ||
+        juego.descripcion.toLowerCase().includes(texto);
+
+      // categoría
+      const coincideCategoria =
+        !categoria || juego.categoria === categoria;
+
+      // precio
+      let coincidePrecio = true;
+
+      if (precio === "gratis") {
+        coincidePrecio = !juego.precio;
+      } else if (precio === "0-10") {
+        coincidePrecio = juego.precio <= 10;
+      } else if (precio === "10-30") {
+        coincidePrecio = juego.precio > 10 && juego.precio <= 30;
+      } else if (precio === "30+") {
+        coincidePrecio = juego.precio > 30;
+      }
+
+      return coincideTexto && coincideCategoria && coincidePrecio;
+    });
+
+    mostrarJuegos(filtrados);
+  }
+
+  // 🎧 eventos
+  inputBusqueda.addEventListener("input", filtrar);
+  filtroCategoria.addEventListener("change", filtrar);
+  filtroPrecio.addEventListener("change", filtrar);
 
   document.addEventListener("DOMContentLoaded", cargarJuegos);
 </script>

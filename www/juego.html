@@ -10,10 +10,44 @@
 
 <header>
   <nav class="menu">
-    <a href="index.html">Biblioteca</a>
-    <a href="tienda.html">Tienda</a>
-  </nav>
+        <a href="index.html">Biblioteca</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="registro.html">Registro</a>
+        <a href="login.html">Iniciar sesión</a>
+    </nav>
+    <script type="module">
+        import { getSessionUser, logout } from "./session.js";
+
+        const menu = document.querySelector(".menu");
+
+        const usuario = await getSessionUser();
+
+        if (usuario) {
+
+            // quitar login/registro
+            menu.innerHTML = `
+                <a href="index.html">Biblioteca</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="perfil.html">Perfil</a>
+                <a href="#" id="logoutBtn">Cerrar sesión</a>
+            `;
+
+            document.getElementById("logoutBtn").onclick = logout;
+
+        } else {
+
+            // usuario no logueado
+            menu.innerHTML = `
+                <a href="index.html">Biblioteca</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="registro.html">Registro</a>
+                <a href="login.html">Iniciar sesión</a>
+            `;
+        }
+    </script>
 </header>
+
 
 <main id="juegoContainer"></main>
 
@@ -34,17 +68,44 @@ async function cargarJuego() {
     console.log(juego);
 
     container.innerHTML = `
+  <div class="game-page">
+
+    <!-- HERO -->
+    <div class="game-hero">
+      <img src="${juego.imagen_url ?? 'default.png'}">
+      <div class="game-overlay"></div>
       <h1>${juego.titulo}</h1>
+    </div>
 
-      <img src="${juego.imagen_url ?? 'default.png'}" width="300">
+    <!-- CONTENIDO -->
+    <div class="game-content">
 
-      <p>${juego.descripcion ?? 'Sin descripción'}</p>
+      <!-- IZQUIERDA -->
+      <div class="game-left">
+        <img src="${juego.imagen_url ?? 'default.png'}" class="game-main-img">
 
-      <h3>${juego.precio ? juego.precio + "€" : "Gratis"}</h3>
+        <p class="game-desc">
+          ${juego.descripcion ?? 'Sin descripción'}
+        </p>
+      </div>
 
-      <button id="comprarBtn">Comprar</button>
-    `;
-    document.getElementById("comprarBtn").onclick = comprar;
+      <!-- DERECHA -->
+      <div class="game-right">
+        <div class="game-card">
+
+          <h3 class="price">
+            ${juego.precio ? juego.precio + "€" : "Gratis"}
+          </h3>
+
+          <button id="comprarBtn">Comprar</button>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+`;
 
   } catch (e) {
     container.innerHTML = "Error cargando juego";

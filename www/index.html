@@ -47,8 +47,23 @@ if (usuario) {
     </div>
 
     <!-- 🎮 DETALLE -->
-    <div class="amigo detalle-juego" id="detalleJuego">
+    <div class="detalle-juego" id="detalleJuego">
         <h2>Selecciona un juego</h2>
+    </div>
+
+    <!-- 👥 AMIGOS -->
+    <div class="amigos-panel">
+        <h2>👥 Amigos</h2>
+
+        <div class="amigo-item">
+            <span class="estado online"></span>
+            Toni
+        </div>
+
+        <div class="amigo-item">
+            <span class="estado offline"></span>
+            Pau
+        </div>
     </div>
 
 </div>
@@ -112,17 +127,21 @@ function seleccionar(elemento) {
 
 function mostrarJuego(juego) {
     detalle.innerHTML = `
-        <div class="detalle-header">
-            <h1>${juego.titulo}</h1>
+        <div class="detalle-container">
+
+            <img src="${juego.imagen_url || 'default.png'}" class="detalle-img">
+
+            <div class="detalle-info">
+                <h1>${juego.titulo}</h1>
+
+                <p class="detalle-desc">
+                    ${juego.descripcion || "Sin descripción disponible"}
+                </p>
+
+                <button class="btn-play">JUGAR</button>
+            </div>
+
         </div>
-
-        <img src="${juego.imagen_url || 'default.png'}" class="detalle-img">
-
-        <p class="detalle-desc">
-            ${juego.descripcion || "Sin descripción disponible"}
-        </p>
-
-        <button class="btn-play">JUGAR</button>
     `;
 
     document.querySelector(".btn-play").onclick = () => {
