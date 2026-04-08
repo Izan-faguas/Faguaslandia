@@ -378,7 +378,7 @@ header {
 }
 
 /* =========================
-   🎮 GAME PAGE REAL
+   🎮 GAME PAGE
 ========================= */
 
 .game-page {
@@ -414,15 +414,18 @@ header {
   font-size: 36px;
 }
 
-/* CONTENT */
+/* =========================
+   CONTENIDO
+========================= */
+
 .game-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   gap: 30px;
-  padding: 20px 40px;
+  padding: 30px 50px;
 }
 
-/* LEFT */
+/* IZQUIERDA (imagen) */
 .game-left {
   display: flex;
   flex-direction: column;
@@ -434,17 +437,16 @@ header {
   border-radius: 10px;
 }
 
-.game-desc {
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* RIGHT */
+/* DERECHA (info) */
 .game-right {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
+
+/* =========================
+   CARDS
+========================= */
 
 .game-card {
   background: #16202d;
@@ -453,14 +455,47 @@ header {
   border: 1px solid var(--border);
 }
 
-/* PRICE */
+/* descripción */
+.game-desc {
+  line-height: 1.7;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* info extra */
+.game-card.info p {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+}
+
+.game-card.info strong {
+  color: var(--text-main);
+}
+
+/* social */
+.game-card.social {
+  font-size: 14px;
+}
+
+.friend-playing {
+  padding: 6px;
+  border-radius: 6px;
+  background: rgba(102,192,244,0.1);
+  margin-top: 5px;
+}
+
+/* =========================
+   PRECIO + BOTÓN
+========================= */
+
 .price {
   color: #a4d007;
-  font-size: 26px;
+  font-size: 28px;
   margin-bottom: 15px;
 }
 
-/* BUTTON */
+/* botón comprar */
 #comprarBtn {
   width: 100%;
   padding: 12px;
@@ -470,8 +505,233 @@ header {
   color: white;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 #comprarBtn:hover {
   transform: scale(1.05);
+}
+
+/* =========================
+   👤 PERFIL STEAM PRO
+========================= */
+
+.perfil {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #0f1722;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+}
+
+/* =========================
+   🎮 BANNER
+========================= */
+
+.perfil-banner {
+  position: relative;
+  height: 200px;
+  background: linear-gradient(120deg, #1b2838, #0f1722);
+}
+
+/* overlay oscuro */
+.perfil-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, #0f1722);
+}
+
+/* =========================
+   HEADER (avatar + nombre)
+========================= */
+
+.perfil-header {
+  position: absolute;
+  bottom: -45px;
+  left: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 🔥 AVATAR CUADRADO PRO */
+.avatar {
+  width: 95px;
+  height: 95px;
+  border-radius: 14px;
+  object-fit: cover;
+
+  border: 3px solid #0f1722;
+
+  box-shadow:
+    0 0 0 3px rgba(102,192,244,0.3),
+    0 15px 30px rgba(0,0,0,0.8);
+
+  transition: 0.3s;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 20px 40px rgba(0,0,0,0.9);
+}
+
+/* nombre */
+.perfil-nombre h1 {
+  font-size: 24px;
+}
+
+/* nivel */
+.nivel {
+  font-size: 13px;
+  color: var(--accent);
+}
+
+/* =========================
+   BODY
+========================= */
+
+.perfil-body {
+  padding: 70px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* =========================
+   INFO
+========================= */
+
+.perfil-info {
+  background: #16202d;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+.perfil-info strong {
+  color: var(--text-main);
+}
+
+/* botón editar */
+.btnEditar {
+  margin-top: 15px;
+  padding: 12px;
+  width: 200px;
+
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btnEditar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102,192,244,0.4);
+}
+
+/* =========================
+   📊 STATS
+========================= */
+
+.perfil-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+/* tarjetas */
+.stat-card {
+  background: linear-gradient(135deg, #16202d, #0f1722);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.25s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+/* título */
+.stat-card h3 {
+  font-size: 14px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+/* valor */
+.stat-card p {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+/* =========================
+   🪟 MODAL
+========================= */
+
+#editarPerfilModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* contenido */
+.modal-content {
+  background: #16202d;
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+/* inputs */
+.modal-content input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #0f1722;
+  color: var(--text-main);
+}
+
+/* botones */
+.modal-content button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#guardarCambios {
+  background: linear-gradient(90deg, #6fa720, #8ed629);
+  color: white;
+}
+
+#cerrarModal {
+  background: #333;
+  color: white;
 }

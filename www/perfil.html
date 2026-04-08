@@ -9,8 +9,6 @@
 
 <body data-theme="default">
 
-<h2>Faguáslandia</h2>
-
 <header>
   <nav class="menu">
       <a href="index.html">Biblioteca</a>
@@ -54,24 +52,52 @@
 <main>
   <div class="perfil">
 
-    <div class="usuario">
-      <div class="nombreUs">
-        <img id="fotoPerfil" src="img/default.png">
-        <h1 id="nombreUsuario">Cargando...</h1>
-      </div>
+    <div class="perfil-banner">
+      <div class="perfil-overlay"></div>
 
-      <div class="nivel">
-        <h1>Nivel 7</h1>
+      <div class="perfil-header">
+        <img id="fotoPerfil" src="img/default.png" class="avatar">
+
+        <div class="perfil-nombre">
+          <h1 id="nombreUsuario">Cargando...</h1>
+          <span class="nivel">Nivel 7</span>
+        </div>
       </div>
     </div>
 
-    <div class="infoUsuario">
-      <p><strong>Correo:</strong> <span id="emailUsuario"></span></p>
-      <p><strong>Código amigo:</strong> <span id="nombreAmigo"></span>#<span id="idAmigo"></span></p>
+    <div class="perfil-body">
+
+      <div class="perfil-info">
+        <p><strong>Correo:</strong> <span id="emailUsuario"></span></p>
+        <p><strong>Código amigo:</strong> 
+          <span id="nombreAmigo"></span>#<span id="idAmigo"></span>
+        </p>
+
+        <button id="editarPerfilBtn" class="btnEditar">Editar perfil</button>
+      </div>
+
+      <div class="perfil-stats">
+
+        <div class="stat-card">
+          <h3>🎮 Juegos</h3>
+          <p>12</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>⏱️ Horas</h3>
+          <p>245h</p>
+        </div>
+
+        <div class="stat-card">
+          <h3>🏆 Logros</h3>
+          <p>34</p>
+        </div>
+
+      </div>
+
     </div>
 
-    <button id="editarPerfilBtn" class="btnEditar">Editar perfil</button>
-  </div>
+
 </main>
 
 <div id="editarPerfilModal">
@@ -131,6 +157,16 @@ async function cargarPerfil(){
 
     }
 }
+
+const modal = document.getElementById("editarPerfilModal");
+
+document.getElementById("editarPerfilBtn").onclick = () => {
+  modal.style.display = "flex";
+};
+
+document.getElementById("cerrarModal").onclick = () => {
+  modal.style.display = "none";
+};
 
 await cargarPerfil();
 </script>
