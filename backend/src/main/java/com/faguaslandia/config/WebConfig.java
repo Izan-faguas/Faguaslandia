@@ -24,8 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
     // mantener el sistema de archivos que ya tienes
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        registry.addResourceHandler("/uploads/**")
+        System.out.println("RUTA ABSOLUTA: " + new java.io.File("uploads").getAbsolutePath());
+        registry.addResourceHandler("/img/**")
                 .addResourceLocations("file:uploads/");
     }
 }

@@ -80,7 +80,7 @@ public class LauncherApp extends Application {
     private void mostrarLauncher(Usuario usuario) {
         BorderPane root = new BorderPane();
 
-        BibliotecaView bibliotecaView = new BibliotecaView(usuario);
+        BibliotecaView bibliotecaView = new BibliotecaView(usuario.getId());
         TiendaView tiendaView = new TiendaView(usuario);
         JuegoDetailView juegoDetailView = new JuegoDetailView(usuario);
 
@@ -97,7 +97,7 @@ public class LauncherApp extends Application {
         juegoDetailView.getVolverBtn().setOnAction(e -> root.setCenter(tiendaView));
 
         // Mostrar biblioteca al inicio
-        root.setCenter(bibliotecaView);
+        root.setCenter(bibliotecaView.getView());
 
 
 

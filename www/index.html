@@ -85,8 +85,8 @@ async function actualizarBiblioteca() {
             return;
         }
 
-        const res = await fetch(`${CONFIG.API_BASE_URL}/biblioteca`, {
-            credentials: "include"
+            const res = await fetch(`${CONFIG.API_BASE_URL}/compras/usuario/${usuario.id}`, {            
+                credentials: "include"
         });
 
         const juegos = await res.json();

@@ -73,15 +73,18 @@ form.addEventListener('submit', async (e) => {
 
     try {
         const response = await fetch(`${CONFIG.API_BASE_URL}/usuarios/crear`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-            credentials: 'include' 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'include' 
         });
 
-        if (!response.ok) throw new Error('Error al registrar usuario');
-
         const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Error al registrar usuario");
+        }
+
         mensajeDiv.textContent = `Usuario ${result.nombre} registrado correctamente`;
         mensajeDiv.style.color = 'lime';
         form.reset();

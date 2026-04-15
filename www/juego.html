@@ -56,12 +56,34 @@ if (!juegoId) {
 ========================= */
 async function cargarJuego() {
   try {
+
+    // 1️⃣ obtener datos del juego
     const res = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}`);
 
     if (!res.ok) throw new Error();
 
     const juego = await res.json();
 
+    // 2️⃣ comprobar si el usuario lo tiene
+    let comprado = false;
+
+    try {
+      const resCompra = await fetch(
+        `${CONFIG.API_BASE_URL}/compras/juego/${juegoId}`,
+        {
+          credentials: "include"
+        }
+      );
+
+      if (resCompra.ok) {
+        comprado = await resCompra.json();
+      }
+
+    } catch (e) {
+      console.error("Error comprobando compra", e);
+    }
+
+    // 3️⃣ render UI
     container.innerHTML = `
       <div class="game-page">
 
@@ -75,12 +97,12 @@ async function cargarJuego() {
         <!-- CONTENIDO -->
         <div class="game-content">
 
-          <!-- IZQUIERDA (VISUAL) -->
+          <!-- IZQUIERDA -->
           <div class="game-left">
             <img src="${juego.imagen_url ?? 'default.png'}" class="game-main-img">
           </div>
 
-          <!-- DERECHA (INFO) -->
+          <!-- DERECHA -->
           <div class="game-right">
 
             <!-- DESCRIPCIÓN -->
@@ -97,10 +119,12 @@ async function cargarJuego() {
                 ${juego.precio ? juego.precio + "€" : "Gratis"}
               </h3>
 
-              <button id="comprarBtn">Comprar</button>
+              <button id="comprarBtn" ${comprado ? "disabled" : ""}>
+                ${comprado ? "Comprado ✔" : "Comprar"}
+              </button>
             </div>
 
-            <!-- INFO EXTRA -->
+            <!-- INFO -->
             <div class="game-card info">
               <p><strong>Categoría:</strong> ${juego.categoria ?? "No definida"}</p>
               <p><strong>Desarrollador:</strong> ${juego.desarrollador ?? "Desconocido"}</p>
@@ -115,8 +139,15 @@ async function cargarJuego() {
       </div>
     `;
 
-    //  IMPORTANTE: asignar evento después de renderizar
-    document.getElementById("comprarBtn").onclick = comprar;
+    // 4️⃣ lógica botón
+    const btn = document.getElementById("comprarBtn");
+
+    if (comprado) {
+      btn.style.opacity = "0.5";
+      btn.style.cursor = "not-allowed";
+    } else {
+      btn.onclick = comprar;
+    }
 
   } catch (e) {
     container.innerHTML = "Error cargando juego";
@@ -145,6 +176,9 @@ async function comprar() {
     if (!res.ok) throw new Error();
 
     alert("Juego comprado ✅");
+
+    // recargar página para actualizar botón
+    location.reload();
 
   } catch {
     alert("Error al comprar");

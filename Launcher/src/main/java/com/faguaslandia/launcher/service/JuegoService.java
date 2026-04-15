@@ -50,7 +50,7 @@ public class JuegoService {
     """.formatted(usuarioId, juegoId);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8081/compras"))
+                .uri(URI.create(Config.API_BASE_URL + "/compras"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
@@ -89,6 +89,8 @@ public class JuegoService {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("BIBLIOTECA RESPONSE: " + response.body());
 
         return mapper.readValue(response.body(), new TypeReference<List<Juego>>() {});
     }

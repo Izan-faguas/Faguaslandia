@@ -1,156 +1,197 @@
 package com.faguaslandia.launcher.view;
 
+import com.faguaslandia.launcher.Config;
 import com.faguaslandia.launcher.model.Juego;
-import com.faguaslandia.launcher.model.Usuario;
 import com.faguaslandia.launcher.service.JuegoService;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 
 import java.util.List;
 
-public class BibliotecaView extends BorderPane {
+public class BibliotecaView {
 
-    private final JuegoService juegoService;
-    private final Usuario usuario;
+    private final JuegoService juegoService = new JuegoService();
+    private final Long usuarioId;
 
-    private TilePane juegosGrid;
-    private HeaderView header;
+    private HBox root;
 
-    public BibliotecaView(Usuario usuario) {
-        this.usuario = usuario;
-        this.juegoService = new JuegoService();
+    private VBox bibliotecaPanel;
+    private VBox detallePanel;
+    private VBox amigosPanel;
 
-        // ===== HEADER =====
-        header = new HeaderView();
-        header.setActions(
-                this::irBiblioteca,
-                this::irTienda,
-                this::irPerfil
-        );
-        setTop(header);
+    private TilePane juegosContainer;
+    private StackPane selectedCard;
 
-        // ===== CONTENIDO INICIAL =====
-        setCenter(crearContenidoBiblioteca());
+    public BibliotecaView(Long usuarioId) {
+        this.usuarioId = usuarioId;
+        crearVista();
+        cargarBiblioteca();
     }
 
-    // =====================================================
-    // =============== NAVEGACIÓN ==========================
-    // =====================================================
-
-    private void irBiblioteca() {
-        setCenter(crearContenidoBiblioteca());
+    public HBox getView() {
+        return root;
     }
 
-    private void irTienda() {
-        TiendaView tienda = new TiendaView(usuario);
+    private void crearVista() {
 
-        tienda.setCallbackJuegoDetalle(this::irDetalleJuego);
+        root = new HBox();
+        root.getStyleClass().add("root");
 
-        setCenter(tienda);
+        root.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        // 📚 IZQUIERDA (más ancha)
+        bibliotecaPanel = new VBox(15);
+        bibliotecaPanel.getStyleClass().add("panel-left");
+
+        // 🎮 CENTRO (más grande)
+        detallePanel = new VBox(15);
+        detallePanel.getStyleClass().add("panel-center");
+
+        // 👥 DERECHA
+        amigosPanel = new VBox(15);
+        amigosPanel.getStyleClass().add("panel-right");
+
+        bibliotecaPanel.setPrefWidth(200);
+        detallePanel.setPrefWidth(700);
+        amigosPanel.setPrefWidth(190);
+
+        Label titulo = new Label("🎮 Biblioteca");
+        titulo.getStyleClass().add("title");
+
+        bibliotecaPanel.getChildren().add(titulo);
+
+        amigosPanel.getChildren().add(new Label("👥 Amigos"));
+
+        root.getChildren().addAll(bibliotecaPanel, detallePanel, amigosPanel);
+
+        HBox.setHgrow(detallePanel, Priority.ALWAYS);
     }
 
-    private void irDetalleJuego(Juego juego) {
-        JuegoDetailView detalle = new JuegoDetailView(usuario);
+    private void cargarBiblioteca() {
 
-        detalle.setJuego(juego);
-        detalle.setCallbackActualizarBiblioteca(this::actualizarBiblioteca);
-
-        detalle.setCallbackVolver(this::irBiblioteca);
-
-        setCenter(detalle);
-    }
-
-
-    private void irPerfil() {
-        setCenter(new Label("Perfil (pendiente)"));
-    }
-
-    // =====================================================
-    // =============== CONTENIDO BIBLIOTECA ================
-    // =====================================================
-
-    private Node crearContenidoBiblioteca() {
-        HBox contenido = new HBox(30);
-        contenido.setPadding(new Insets(30));
-
-        // ----- JUEGOS -----
-        VBox juegosBox = new VBox(15);
-        Label tituloJuegos = new Label("Biblioteca");
-        tituloJuegos.getStyleClass().add("section-title");
-
-        juegosGrid = new TilePane();
-        juegosGrid.setHgap(20);
-        juegosGrid.setVgap(20);
-        juegosGrid.setPrefColumns(3);
-
-        actualizarBiblioteca();
-
-        juegosBox.getChildren().addAll(tituloJuegos, juegosGrid);
-        HBox.setHgrow(juegosBox, Priority.ALWAYS);
-
-        // ----- AMIGOS -----
-        VBox amigosBox = new VBox(15);
-        Label tituloAmigos = new Label("Amigos");
-        tituloAmigos.getStyleClass().add("section-title");
-
-        VBox listaAmigos = new VBox(12);
-        listaAmigos.getChildren().addAll(
-                crearAmigo("toni", "Activo"),
-                crearAmigo("pau", "Activo")
-        );
-
-        amigosBox.getChildren().addAll(tituloAmigos, listaAmigos);
-        amigosBox.setPrefWidth(200);
-
-        contenido.getChildren().addAll(juegosBox, amigosBox);
-        return contenido;
-    }
-
-    // =====================================================
-    // =============== HELPERS ==============================
-    // =====================================================
-
-    private ImageView crearJuego(String imagen) {
-        ImageView img;
         try {
-            img = new ImageView(new Image(
-                    getClass().getResourceAsStream("/images/" + imagen)
-            ));
+            List<Juego> juegos = juegoService.obtenerBiblioteca(usuarioId);
+
+            juegosContainer = new TilePane();
+            juegosContainer.setPadding(new Insets(10));
+            juegosContainer.setVgap(12);
+            juegosContainer.setHgap(12);
+
+            juegosContainer.setPrefColumns(1);
+            juegosContainer.setMaxWidth(Double.MAX_VALUE);
+
+            for (Juego juego : juegos) {
+
+                String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
+
+                Image image = new Image(url, true);
+
+                ImageView img = new ImageView(image);
+                img.setFitWidth(320);
+                img.setFitHeight(180);
+                img.setPreserveRatio(false);
+                img.setSmooth(true);
+
+                StackPane card = new StackPane(img);
+                card.getStyleClass().add("game-card");
+
+                card.setPrefWidth(320);
+
+                card.setOnMouseClicked(e -> {
+                    mostrarJuego(juego);
+                    marcarSeleccion(card);
+                });
+
+                juegosContainer.getChildren().add(card);
+            }
+
+            ScrollPane scroll = new ScrollPane(juegosContainer);
+            scroll.setFitToWidth(true);
+            scroll.setFitToHeight(true);
+            scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+            VBox.setVgrow(scroll, Priority.ALWAYS);
+
+            bibliotecaPanel.getChildren().add(scroll);
+
+            if (!juegos.isEmpty()) {
+                mostrarJuego(juegos.get(0));
+            }
+
         } catch (Exception e) {
-            img = new ImageView(new Image(
-                    getClass().getResourceAsStream("/images/algo.png")
-            ));
+            bibliotecaPanel.getChildren().add(new Label("Error cargando biblioteca"));
+            e.printStackTrace();
+        }
+    }
+
+    private void mostrarJuego(Juego juego) {
+
+        detallePanel.getChildren().clear();
+
+        String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
+
+        ImageView portada = new ImageView(new Image(url, true));
+        portada.setFitWidth(600);
+        portada.setFitHeight(320);
+        portada.setPreserveRatio(true);
+        portada.setSmooth(true);
+        portada.getStyleClass().add("detalle-img");
+
+        Label titulo = new Label(juego.getTitulo());
+        titulo.getStyleClass().add("title");
+
+        Label desc = new Label(juego.getDescripcion());
+        desc.setWrapText(true);
+        desc.getStyleClass().add("label");
+
+        Button jugar = new Button("JUGAR");
+        jugar.getStyleClass().add("btn-play");
+
+        VBox info = new VBox(10, titulo, desc, jugar);
+        info.getStyleClass().add("detalle-info");
+
+        detallePanel.getChildren().addAll(portada, info);
+    }
+
+    private void marcarSeleccion(StackPane selected) {
+
+        if (selectedCard != null) {
+            selectedCard.setStyle("");
         }
 
-        img.setFitWidth(140);
-        img.setPreserveRatio(true);
-        img.getStyleClass().add("game-cover");
-        return img;
+        selectedCard = selected;
+        selectedCard.setStyle("""
+            -fx-border-color: #00ffcc;
+            -fx-border-width: 2;
+            -fx-background-radius: 10;
+        """);
     }
 
-    private VBox crearAmigo(String nombre, String estado) {
-        VBox box = new VBox(4);
-        box.getStyleClass().add("amigop");
-        box.getChildren().addAll(
-                new Label(nombre),
-                new Label(estado)
-        );
-        return box;
+    private HBox crearAmigo(String nombre, boolean online) {
+
+        Circle estado = new Circle(5);
+        estado.setStyle(online ? "-fx-fill: #4caf50;" : "-fx-fill: #777;");
+
+        Label label = new Label(nombre);
+
+        return new HBox(10, estado, label);
     }
 
     public void actualizarBiblioteca() {
-        try {
-            List<Juego> juegos = juegoService.obtenerBiblioteca(usuario.getId());
-            juegosGrid.getChildren().clear();
-            for (Juego j : juegos) {
-                juegosGrid.getChildren().add(crearJuego(j.getImagen_url()));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        bibliotecaPanel.getChildren().clear();
+
+        Label titulo = new Label("🎮 Biblioteca");
+        titulo.getStyleClass().add("title");
+
+        bibliotecaPanel.getChildren().add(titulo);
+
+        cargarBiblioteca();
     }
 }

@@ -28,9 +28,16 @@ public class UsuarioController {
 
     @PostMapping("/crear")
     public Usuario crearUsuario(@RequestBody Usuario usuario) {
+
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El email ya está en uso"
+            );
+        }
+
         return usuarioRepository.save(usuario);
     }
-
     @GetMapping("/listar")
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
@@ -49,7 +56,7 @@ public class UsuarioController {
                 HttpStatus.UNAUTHORIZED,
                 "Credenciales incorrectas"
         );
-    }   
+    }
 
     @PostMapping("/uploadFoto")
     public String uploadFoto(@RequestParam("file") MultipartFile file) {
