@@ -2,8 +2,15 @@ package com.faguaslandia.controller;
 
 import com.faguaslandia.model.Juego;
 import com.faguaslandia.service.JuegoService;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -40,5 +47,22 @@ public class JuegoController {
     public String eliminarJuego(@PathVariable Long id) {
         juegoService.eliminarJuego(id);
         return "Juego eliminado correctamente";
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> downloadJuego(@PathVariable Long id) throws IOException {
+
+        Juego juego = juegoService.obtenerPorId(id);
+
+        String fileName = juego.getTitulo().replace(" ", "_") + ".zip";
+
+        Path file = Paths.get("games").resolve(fileName);
+
+        Resource resource = new FileSystemResource(file);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=" + fileName)
+                .body(resource);
     }
 }

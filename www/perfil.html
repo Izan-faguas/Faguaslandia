@@ -95,6 +95,22 @@
       </div>
 
     </div> <!-- 👈 CIERRE IMPORTANTE -->  
+    <div class="perfil-amigos">
+
+      <h2>👥 Amigos</h2>
+
+      <div class="agregar-amigo">
+      <input type="text" id="codigoAmigo" placeholder="Código amigo">        
+      <button id="btnAgregarAmigo">Enviar solicitud</button>
+      </div>
+
+      <h3>Solicitudes pendientes</h3>
+      <div id="listaSolicitudes"></div>
+
+      <h3>Lista de amigos</h3>
+      <div id="listaAmigos"></div>
+
+    </div>
 
   </div> <!-- 👈 CIERRE IMPORTANTE -->
 </main>
@@ -157,6 +173,85 @@ async function cargarPerfil(){
     }
 }
 
+async function cargarSolicitudes() {
+      const res = await fetch(
+          `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/solicitudes`
+      );
+
+      const solicitudes = await res.json();
+
+      const contenedor = document.getElementById("listaSolicitudes");
+      contenedor.innerHTML = "";
+
+      solicitudes.forEach(sol => {
+          contenedor.innerHTML += `
+              <div class="solicitud-item">
+                  <span>${sol.usuario1.nombre}</span>
+                  <button onclick="aceptarSolicitud(${sol.id})">
+                      Aceptar
+                  </button>
+              </div>
+          `;
+      });
+  }
+  async function cargarAmigos() {
+    const res = await fetch(
+        `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/amigos`
+    );
+
+    const amigos = await res.json();
+
+    const contenedor = document.getElementById("listaAmigos");
+    contenedor.innerHTML = "";
+
+    amigos.forEach(amigo => {
+        const nombre =
+            amigo.usuario1.id === usuario.id
+                ? amigo.usuario2.nombre
+                : amigo.usuario1.nombre;
+
+        if (amigo.estado === "aceptado") {
+            contenedor.innerHTML += `
+                <div class="amigo-item">${nombre}</div>
+            `;
+        }
+    });
+  }
+
+  document.getElementById("btnAgregarAmigo").onclick = async () => {
+    const codigo = document.getElementById("codigoAmigo").value.trim();
+
+    if (!codigo.includes("#")) {
+        alert("Formato inválido. Usa nombre#id");
+        return;
+    }
+
+    const partes = codigo.split("#");
+    const idNuevo = partes[1];
+
+    await fetch(
+        `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/agregar/${idNuevo}`,
+        { method: "POST" }
+    );
+
+    alert("Solicitud enviada");
+    document.getElementById("codigoAmigo").value = "";
+  };
+
+  window.aceptarSolicitud = async function(idSolicitud) {
+    await fetch(
+        `${CONFIG.API_BASE_URL}/usuarios/solicitud/${idSolicitud}/aceptar`,
+        { method: "PUT" }
+    );
+
+    cargarSolicitudes();
+    cargarAmigos();
+  };
+
+
+
+
+
 const modal = document.getElementById("editarPerfilModal");
 
 document.getElementById("editarPerfilBtn").onclick = () => {
@@ -168,6 +263,10 @@ document.getElementById("cerrarModal").onclick = () => {
 };
 
 await cargarPerfil();
+await cargarSolicitudes();
+await cargarAmigos();
+
+
 </script>
 
 </body>

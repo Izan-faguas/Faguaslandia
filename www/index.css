@@ -684,6 +684,130 @@ header {
   background: #0f1722;
   color: white;
 }
+/* =========================
+   👥 AMIGOS
+========================= */
+
+.perfil-amigos {
+  margin: 0 30px 30px;
+  padding: 25px;
+  background: linear-gradient(135deg, #16202d, #0f1722);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.perfil-amigos h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: var(--text-main);
+}
+
+.perfil-amigos h3 {
+  font-size: 16px;
+  margin: 25px 0 15px;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 8px;
+}
+
+/* =========================
+   ➕ AGREGAR AMIGO
+========================= */
+
+.agregar-amigo {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.agregar-amigo input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0f1722;
+  color: white;
+  outline: none;
+  transition: 0.2s;
+}
+
+.agregar-amigo input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(102,192,244,0.25);
+}
+
+.agregar-amigo button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.agregar-amigo button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(102,192,244,0.25);
+}
+
+/* =========================
+   📩 SOLICITUDES
+========================= */
+
+#listaSolicitudes,
+#listaAmigos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* tarjeta individual */
+.solicitud-item,
+.amigo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+
+  transition: 0.2s;
+}
+
+.solicitud-item:hover,
+.amigo-item:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-1px);
+}
+
+/* nombre */
+.solicitud-item span,
+.amigo-item {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* botón aceptar */
+.solicitud-item button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #6fa720, #8ed629);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.solicitud-item button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 12px rgba(142,214,41,0.3);
+}
 
 /* =========================
    🔐 LOGIN / FORMULARIO

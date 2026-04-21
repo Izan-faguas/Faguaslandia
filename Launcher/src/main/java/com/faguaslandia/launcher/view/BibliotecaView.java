@@ -2,6 +2,7 @@ package com.faguaslandia.launcher.view;
 
 import com.faguaslandia.launcher.Config;
 import com.faguaslandia.launcher.model.Juego;
+import com.faguaslandia.launcher.service.GameInstallerService;
 import com.faguaslandia.launcher.service.JuegoService;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -18,6 +19,8 @@ public class BibliotecaView {
 
     private final JuegoService juegoService = new JuegoService();
     private final Long usuarioId;
+    private GameInstallerService installer = new GameInstallerService();
+
 
     private HBox root;
 
@@ -147,19 +150,44 @@ public class BibliotecaView {
         Label titulo = new Label(juego.getTitulo());
         titulo.getStyleClass().add("title");
 
-        Label desc = new Label(juego.getDescripcion());
+        Label desc = new Label(
+                juego.getDescripcion() != null ? juego.getDescripcion() : "Sin descripción"
+        );
         desc.setWrapText(true);
         desc.getStyleClass().add("label");
 
         Button jugar = new Button("JUGAR");
         jugar.getStyleClass().add("btn-play");
 
+        String gameName = juego.getTitulo().replace(" ", "_");
+        String downloadUrl = Config.API_BASE_URL + "/juegos/download/" + juego.getId();
+
+        jugar.setOnAction(e -> {
+
+            try {
+                if (installer.isInstalled(gameName)) {
+                    System.out.println("Ejecutando " + gameName);
+                    installer.launch(gameName);
+
+                } else {
+                    System.out.println("Instalando " + gameName);
+
+                    installer.install(gameName, downloadUrl);
+
+                    System.out.println("Ejecutando después de instalar...");
+                    installer.launch(gameName);
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
         VBox info = new VBox(10, titulo, desc, jugar);
         info.getStyleClass().add("detalle-info");
 
         detallePanel.getChildren().addAll(portada, info);
     }
-
     private void marcarSeleccion(StackPane selected) {
 
         if (selectedCard != null) {
