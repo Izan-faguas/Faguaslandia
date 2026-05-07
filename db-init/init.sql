@@ -11,11 +11,12 @@ USE faguaslandia;
 CREATE TABLE usuarios (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     avatar_url VARCHAR(255) DEFAULT 'default_avatar.png',
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado ENUM('online', 'offline', 'ocupado', 'ausente') DEFAULT 'offline'
+    estado ENUM('online', 'offline', 'ocupado', 'ausente') DEFAULT 'offline',
+    ultima_actividad DATETIME NULL  
 ) ENGINE=InnoDB;
 
 -- ==============================
@@ -148,7 +149,7 @@ INSERT INTO juegos (
     'Rogue-like', 
     'Antonio Novejarque Escamilla', 
     '2026-02-17', 
-    4.2
+    0
 );
 
 
@@ -162,7 +163,7 @@ INSERT INTO juegos (
     'Estrategia', 
     'FaguasStudio', 
     '2026-01-22', 
-    3.7
+    0
 );
 
 

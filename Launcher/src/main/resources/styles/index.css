@@ -1,156 +1,516 @@
-/* ─── BASE ─── */
-.root {
-    -fx-background-color: #1b2838;
+/* ══════════════════════════════════════
+   FAGUASLANDIA LAUNCHER — index.css
+   Misma paleta y estructura que la web
+   ══════════════════════════════════════ */
+
+/* ─── VARIABLES ─── */
+* {
     -fx-font-family: "Segoe UI";
 }
 
-/* ─── PANELES ─── */
+/* ─── ROOT / FONDO ─── */
+.root {
+    -fx-background-color: #0b1118;
+    -fx-font-family: "Segoe UI";
+}
+
+/* ════════════════════════
+   HEADER
+   ════════════════════════ */
+.header {
+    -fx-background-color: rgba(15, 23, 34, 0.97);
+    -fx-border-color: transparent transparent rgba(102, 192, 244, 0.2) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0 40 0 40;
+    -fx-min-height: 58px;
+    -fx-pref-height: 58px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 30;
+}
+
+.header-label {
+    -fx-text-fill: #9fb3c8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 18 0 18 0;
+}
+
+.header-label:hover {
+    -fx-text-fill: #66c0f4;
+}
+
+.header-label-active {
+    -fx-text-fill: #e6f0f8;
+    -fx-border-color: transparent transparent #66c0f4 transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* ════════════════════════
+   LAYOUT TRES COLUMNAS
+   ════════════════════════ */
 .panel-left {
-    -fx-background-color: #1b2838;
-    -fx-border-color: transparent #2a3f5a transparent transparent;
+    -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
+    -fx-border-color: transparent rgba(102, 192, 244, 0.2) transparent transparent;
     -fx-border-width: 0 1 0 0;
-    -fx-padding: 0;
+    -fx-padding: 20 12 20 12;
+    -fx-pref-width: 240;
+    -fx-min-width: 200;
+}
+
+.panel-left-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9fb3c8;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 16 6;
 }
 
 .panel-center {
-    -fx-background-color: #1b2838;
-    -fx-padding: 0;
+    -fx-background-color: linear-gradient(to bottom, #121a24, #0b1118);
 }
 
 .panel-right {
-    -fx-background-color: #16202d;
-    -fx-border-color: transparent transparent transparent #2a3f5a;
+    -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
+    -fx-border-color: transparent transparent transparent rgba(102, 192, 244, 0.2);
     -fx-border-width: 0 0 0 1;
-    -fx-padding: 14 14 14 14;
+    -fx-padding: 20 14 20 14;
+    -fx-pref-width: 220;
+    -fx-min-width: 180;
 }
 
-/* ─── TÍTULO BIBLIOTECA ─── */
-.title {
-    -fx-font-size: 10px;
-    -fx-text-fill: #5b7a99;
-    -fx-font-weight: bold;
-}
-
-/* ─── TARJETA DE JUEGO (sidebar) ─── */
+/* ════════════════════════
+   TARJETAS BIBLIOTECA (columna izq)
+   ════════════════════════ */
 .game-card {
     -fx-cursor: hand;
     -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-border-color: transparent transparent transparent transparent;
-    -fx-border-width: 0 0 0 2;
-    -fx-padding: 6 12 6 10;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-effect: none;
 }
 
 .game-card:hover {
-    -fx-background-color: rgba(102, 192, 244, 0.07);
-    -fx-border-color: transparent transparent transparent #3a5a7a;
+    -fx-background-color: rgba(102, 192, 244, 0.06);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0, 0, 2);
 }
 
-/* ─── TEXTOS GENERALES ─── */
-.label {
-    -fx-text-fill: #8ba4b8;
-    -fx-font-size: 13px;
+.game-card-selected {
+    -fx-border-color: #66c0f4;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-background-color: rgba(102, 192, 244, 0.05);
 }
 
-/* ─── IMAGEN DETALLE ─── */
+/* ════════════════════════
+   DETALLE CENTRAL
+   ════════════════════════ */
 .detalle-img {
     -fx-effect: none;
 }
 
-/* ─── INFO CENTRAL ─── */
 .detalle-info {
-    -fx-padding: 18 28 24 28;
-    -fx-background-color: #1b2838;
-    -fx-spacing: 12;
+    -fx-padding: 30 30 30 30;
+    -fx-background-color: transparent;
+    -fx-spacing: 16;
 }
 
-/* ─── TÍTULO DEL JUEGO ─── */
 .detalle-titulo {
-    -fx-font-size: 26px;
-    -fx-text-fill: #e8f0f8;
+    -fx-font-size: 28px;
+    -fx-text-fill: #e6f0f8;
     -fx-font-weight: bold;
 }
 
-/* ─── DESCRIPCIÓN ─── */
 .detalle-desc {
-    -fx-text-fill: #8ba4b8;
+    -fx-text-fill: #9fb3c8;
     -fx-font-size: 13px;
+    -fx-line-spacing: 4;
 }
 
-/* ─── STAT CARDS ─── */
-.stat-card {
-    -fx-background-color: #16202d;
-    -fx-border-color: #2a3f5a;
-    -fx-border-width: 1;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-    -fx-padding: 12 14 12 14;
-}
-
-.stat-label {
-    -fx-font-size: 10px;
+.detalle-meta {
     -fx-text-fill: #5b7a99;
-    -fx-font-weight: bold;
+    -fx-font-size: 12px;
 }
 
-.stat-valor {
-    -fx-font-size: 20px;
-    -fx-text-fill: #c6d4df;
-    -fx-font-weight: bold;
-}
-
-.stat-sub {
-    -fx-font-size: 11px;
-    -fx-text-fill: #4a6680;
-}
-
-/* ─── TAGS ─── */
-.tag {
-    -fx-font-size: 11px;
-    -fx-padding: 3 10 3 10;
-    -fx-background-color: #16202d;
-    -fx-text-fill: #66c0f4;
-    -fx-border-color: #2a5a7a;
-    -fx-border-width: 1;
-    -fx-border-radius: 2;
-    -fx-background-radius: 2;
-}
-
-/* ─── BOTÓN JUGAR ─── */
+/* ════════════════════════
+   BOTÓN JUGAR
+   ════════════════════════ */
 .btn-play {
-    -fx-background-color: #4c9fd4;
+    -fx-background-color: linear-gradient(to right, #66c0f4, #4aa3df);
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-padding: 10 32 10 32;
-    -fx-background-radius: 4;
+    -fx-font-size: 14px;
+    -fx-padding: 12 40 12 40;
+    -fx-background-radius: 6;
     -fx-cursor: hand;
     -fx-effect: none;
+    -fx-min-width: 180;
 }
 
 .btn-play:hover {
-    -fx-background-color: #66c0f4;
+    -fx-background-color: linear-gradient(to right, #7fcef8, #66c0f4);
+    -fx-effect: dropshadow(gaussian, rgba(102, 192, 244, 0.4), 12, 0, 0, 3);
 }
 
 .btn-play:pressed {
     -fx-background-color: #3a8abf;
 }
 
-/* ─── AMIGOS ─── */
-.amigo-item {
-    -fx-padding: 7 0 7 0;
-    -fx-border-color: transparent transparent #1e2f40 transparent;
+/* ════════════════════════
+   BOTONES GENÉRICOS
+   ════════════════════════ */
+.btn-secondary {
+    -fx-background-color: rgba(102, 192, 244, 0.12);
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 13px;
+    -fx-padding: 9 24 9 24;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(102, 192, 244, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(102, 192, 244, 0.2);
+}
+
+.btn-buy {
+    -fx-background-color: #3a7bbf;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 11 32 11 32;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.btn-buy:hover {
+    -fx-background-color: #4a8fd4;
+    -fx-effect: dropshadow(gaussian, rgba(58, 123, 191, 0.4), 10, 0, 0, 2);
+}
+
+.btn-comprado {
+    -fx-background-color: rgba(76, 175, 80, 0.15);
+    -fx-text-fill: #4caf50;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 11 32 11 32;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(76, 175, 80, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-cursor: default;
+}
+
+/* ════════════════════════
+   PANEL AMIGOS (derecha)
+   ════════════════════════ */
+.amigos-titulo {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9fb3c8;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 12 0;
+    -fx-border-color: transparent transparent rgba(102, 192, 244, 0.2) transparent;
     -fx-border-width: 0 0 1 0;
-    -fx-background-color: transparent;
+}
+
+.amigos-section-title {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5b7a99;
+    -fx-padding: 10 4 4 4;
+}
+
+.amigo-row {
+    -fx-padding: 8 10 8 10;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-spacing: 9;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.amigo-row:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
 }
 
 .amigo-nombre {
-    -fx-text-fill: #c6d4df;
+    -fx-text-fill: #e6f0f8;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
-.amigo-estado-ingame { -fx-text-fill: #4c9fd4; -fx-font-size: 11px; }
-.amigo-estado-online { -fx-text-fill: #3fb950; -fx-font-size: 11px; }
-.amigo-estado-offline { -fx-text-fill: #4a6680; -fx-font-size: 11px; }
+.amigo-estado-txt {
+    -fx-text-fill: #9fb3c8;
+    -fx-font-size: 11px;
+}
+
+.amigos-vacio {
+    -fx-text-fill: #9fb3c8;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
+}
+
+/* ════════════════════════
+   TIENDA
+   ════════════════════════ */
+.tienda-container {
+    -fx-background-color: linear-gradient(to bottom, #121a24, #0b1118);
+    -fx-padding: 30;
+    -fx-spacing: 24;
+}
+
+.store-card {
+    -fx-background-color: #121a24;
+    -fx-border-color: rgba(102, 192, 244, 0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0, 0, 2);
+    -fx-spacing: 0;
+}
+
+.store-card:hover {
+    -fx-border-color: rgba(102, 192, 244, 0.45);
+    -fx-effect: dropshadow(gaussian, rgba(102,192,244,0.15), 14, 0, 0, 3);
+    -fx-background-color: #16202d;
+}
+
+.store-card-info {
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 6;
+    -fx-background-color: transparent;
+}
+
+.store-card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6f0f8;
+}
+
+.store-card-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9fb3c8;
+}
+
+.store-card-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #66c0f4;
+    -fx-padding: 4 0 0 0;
+}
+
+.store-card-price-free {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4caf50;
+}
+
+.store-card-price-comprado {
+    -fx-font-size: 13px;
+    -fx-text-fill: #4caf50;
+}
+
+/* ════════════════════════
+   BUSCADOR TIENDA
+   ════════════════════════ */
+.search-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(102, 192, 244, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 16 10 16;
+    -fx-text-fill: #e6f0f8;
+    -fx-prompt-text-fill: #5b7a99;
+    -fx-font-size: 13px;
+    -fx-pref-width: 280;
+}
+
+.search-bar:focused {
+    -fx-border-color: rgba(102, 192, 244, 0.6);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+}
+
+.combo-filter {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(102, 192, 244, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #e6f0f8;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12 6 12;
+    -fx-pref-width: 180;
+    -fx-cursor: hand;
+}
+
+/* ════════════════════════
+   LOGIN
+   ════════════════════════ */
+.login-container {
+    -fx-background-color: linear-gradient(to bottom right, #1b2838, #0b1118);
+    -fx-alignment: CENTER;
+}
+
+.login-box {
+    -fx-background-color: rgba(18, 26, 36, 0.95);
+    -fx-border-color: rgba(102, 192, 244, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 48 56 48 56;
+    -fx-spacing: 18;
+    -fx-alignment: CENTER;
+    -fx-min-width: 380;
+    -fx-max-width: 420;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 30, 0, 0, 8);
+}
+
+.login-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6f0f8;
+    -fx-padding: 0 0 10 0;
+}
+
+.login-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #9fb3c8;
+    -fx-padding: 0 0 6 0;
+}
+
+.login-field {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(102, 192, 244, 0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 12 16 12 16;
+    -fx-text-fill: #e6f0f8;
+    -fx-prompt-text-fill: #5b7a99;
+    -fx-font-size: 14px;
+    -fx-pref-width: 300;
+}
+
+.login-field:focused {
+    -fx-border-color: #66c0f4;
+    -fx-background-color: rgba(102, 192, 244, 0.06);
+}
+
+.btn-login {
+    -fx-background-color: linear-gradient(to right, #66c0f4, #4aa3df);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 13 0 13 0;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-pref-width: 300;
+    -fx-effect: dropshadow(gaussian, rgba(102,192,244,0.25), 10, 0, 0, 3);
+}
+
+.btn-login:hover {
+    -fx-background-color: linear-gradient(to right, #7fcef8, #66c0f4);
+    -fx-effect: dropshadow(gaussian, rgba(102,192,244,0.45), 14, 0, 0, 4);
+}
+
+.login-error {
+    -fx-text-fill: #f47f7f;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER;
+}
+
+.login-ok {
+    -fx-text-fill: #4caf50;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER;
+}
+
+/* ════════════════════════
+   BADGE / TAG
+   ════════════════════════ */
+.badge-comprado {
+    -fx-background-color: rgba(76, 175, 80, 0.2);
+    -fx-text-fill: #4caf50;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 9 3 9;
+    -fx-background-radius: 4;
+    -fx-border-color: rgba(76,175,80,0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.tag {
+    -fx-background-color: #16202d;
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 11px;
+    -fx-padding: 4 11 4 11;
+    -fx-background-radius: 4;
+    -fx-border-color: rgba(102, 192, 244, 0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+/* ════════════════════════
+   SCROLLPANE
+   ════════════════════════ */
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 6px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(102, 192, 244, 0.25);
+    -fx-background-radius: 3;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(102, 192, 244, 0.45);
+}
+
+.scroll-pane .scroll-bar .increment-button,
+.scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane .scroll-bar .increment-arrow,
+.scroll-pane .scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-shape: "";
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+/* ════════════════════════
+   SEPARADOR
+   ════════════════════════ */
+.separator {
+    -fx-background-color: rgba(102, 192, 244, 0.15);
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+}
+
+/* ════════════════════════
+   TEXTOS GENERALES
+   ════════════════════════ */
+.text-main   { -fx-text-fill: #e6f0f8; }
+.text-muted  { -fx-text-fill: #9fb3c8; }
+.text-accent { -fx-text-fill: #66c0f4; }
+.text-online  { -fx-text-fill: #4caf50; }
+.text-offline { -fx-text-fill: #5b7a99; }

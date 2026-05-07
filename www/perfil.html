@@ -4,257 +4,297 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="index.css">
-  <title>Faguáslandia</title>
+  <title>Faguáslandia — Perfil</title>
 </head>
 
-<body data-theme="default">
+<body>
 
 <header>
-  <nav class="menu">
-      <a href="index.html">Biblioteca</a>
-      <a href="tienda.html">Tienda</a>
-      <a href="perfil.html">Perfil</a>
-      <a href="registro.html">Registro</a>
-      <a href="login.html">Iniciar sesión</a>
-  </nav>
-      <script type="module">
-        import { getSessionUser, logout } from "./session.js";
-
-        const menu = document.querySelector(".menu");
-
-        const usuarioo = await getSessionUser();
-
-        if (usuarioo) {
-
-            // quitar login/registro
-            menu.innerHTML = `
-                <a href="index.html">Biblioteca</a>
-                <a href="tienda.html">Tienda</a>
-                <a href="perfil.html">Perfil</a>
-                <a href="#" id="logoutBtn">Cerrar sesión</a>
-            `;
-
-            document.getElementById("logoutBtn").onclick = logout;
-
-        } else {
-
-            // usuario no logueado
-            menu.innerHTML = `
-                <a href="index.html">Biblioteca</a>
-                <a href="tienda.html">Tienda</a>
-                <a href="registro.html">Registro</a>
-                <a href="login.html">Iniciar sesión</a>
-            `;
-        }
-    </script>
+  <nav class="menu"></nav>
+  <script type="module">
+    import { getSessionUser, logout } from "./session.js";
+    const menu = document.querySelector(".menu");
+    const u = await getSessionUser();
+    if (u) {
+      menu.innerHTML = `
+        <a href="index.html">Biblioteca</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="#" id="logoutBtn">Cerrar sesión</a>`;
+      document.getElementById("logoutBtn").onclick = logout;
+    } else {
+      menu.innerHTML = `
+        <a href="index.html">Biblioteca</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="registro.html">Registro</a>
+        <a href="login.html">Iniciar sesión</a>`;
+    }
+  </script>
 </header>
+
 <main>
   <div class="perfil">
 
-    <div class="perfil-banner">
-  <div class="perfil-overlay"></div>
-</div>
+    <div class="perfil-banner"><div class="perfil-overlay"></div></div>
 
-<div class="perfil-header">
-  <img id="fotoPerfil" src="img/default.png" class="avatar">
-
-  <div class="perfil-nombre">
-    <h1 id="nombreUsuario">Cargando...</h1>
-    <span class="nivel">Nivel 7</span>
-  </div>
-</div>
+    <div class="perfil-header">
+      <img id="fotoPerfil" class="avatar">
+      <div class="perfil-nombre">
+        <h1 id="nombreUsuario">Cargando...</h1>
+        <span class="nivel">Nivel 7</span>
+      </div>
+    </div>
 
     <div class="perfil-body">
 
       <div class="perfil-info">
         <p><strong>Correo:</strong> <span id="emailUsuario"></span></p>
-        <p><strong>Código amigo:</strong> 
+        <p><strong>Código amigo:</strong>
           <span id="nombreAmigo"></span>#<span id="idAmigo"></span>
         </p>
-
         <button id="editarPerfilBtn" class="btnEditar">Editar perfil</button>
       </div>
 
       <div class="perfil-stats">
-
         <div class="stat-card">
           <h3>🎮 Juegos</h3>
-          <p>12</p>
+          <p id="statJuegos">—</p>
         </div>
-
         <div class="stat-card">
           <h3>⏱️ Horas</h3>
-          <p>245h</p>
+          <p id="statHoras">—</p>
         </div>
-
         <div class="stat-card">
           <h3>🏆 Logros</h3>
-          <p>34</p>
+          <p id="statLogros">—</p>
         </div>
-
       </div>
 
-    </div> <!-- 👈 CIERRE IMPORTANTE -->  
+    </div>
+
+    <!-- ── SECCIÓN AMIGOS ── -->
     <div class="perfil-amigos">
 
       <h2>👥 Amigos</h2>
 
       <div class="agregar-amigo">
-      <input type="text" id="codigoAmigo" placeholder="Código amigo">        
-      <button id="btnAgregarAmigo">Enviar solicitud</button>
+        <input type="text" id="codigoAmigo" placeholder="Buscar por Nombre#id">
+        <button id="btnAgregarAmigo">Enviar solicitud</button>
       </div>
 
       <h3>Solicitudes pendientes</h3>
-      <div id="listaSolicitudes"></div>
+      <div id="listaSolicitudes"><p class="empty-state">Sin solicitudes</p></div>
 
       <h3>Lista de amigos</h3>
-      <div id="listaAmigos"></div>
+      <div id="listaAmigos"><p class="empty-state">Sin amigos aún</p></div>
 
     </div>
 
-  </div> <!-- 👈 CIERRE IMPORTANTE -->
+  </div>
 </main>
 
+<!-- ── MODAL EDITAR PERFIL ── -->
 <div id="editarPerfilModal">
   <div class="modal-content">
     <h2>Editar Perfil</h2>
-
     <label>Nombre</label>
     <input type="text" id="editarNombre">
-
     <label>Correo</label>
     <input type="text" id="editarCorreo">
-
     <label>Foto</label>
-    <input type="file" id="editarFoto">
-
+    <input type="file" id="editarFoto" accept="image/*">
     <button id="guardarCambios">Guardar</button>
     <button id="cerrarModal">Cancelar</button>
   </div>
 </div>
+
+
 
 <script type="module">
 import CONFIG from "./config.js";
 
 let usuario = null;
 
-async function cargarPerfil(){
+// ─────────────────────────────────────────
+// CARGAR PERFIL
+// ─────────────────────────────────────────
+async function cargarPerfil() {
+  try {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/auth/me?t=${Date.now()}`, {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store"
+    });
+    if (res.status === 401) { window.location.href = "login.html"; return; }
 
-    try{
+    usuario = await res.json();
 
-        const res = await fetch(`${CONFIG.API_BASE_URL}/auth/me`,{
-            method:"GET",
-            credentials:"include"
-        });
+    document.getElementById("nombreUsuario").textContent = usuario.nombre + "#" + usuario.id;
+    document.getElementById("emailUsuario").textContent  = usuario.email;
+    document.getElementById("nombreAmigo").textContent   = usuario.nombre;
+    document.getElementById("idAmigo").textContent       = usuario.id;
 
-        if(res.status === 401){
-            window.location.href="login.html";
-            return;
-        }
-
-        usuario = await res.json();
-
-        document.getElementById("nombreUsuario").textContent = usuario.nombre;
-        document.getElementById("emailUsuario").textContent = usuario.email;
-        document.getElementById("nombreAmigo").textContent = usuario.nombre;
-        document.getElementById("idAmigo").textContent = usuario.id;
-
-        const fotoPerfil = document.getElementById("fotoPerfil");
-
-        fotoPerfil.src = usuario.foto
-            ? `${CONFIG.API_BASE_URL}/uploads/${usuario.foto}`
-            : "img/default.png";
-
-    }catch(error){
-
-        console.error("Error cargando sesión:", error);
-        window.location.href="login.html";
-
+    const foto = document.getElementById("fotoPerfil");
+    if (usuario.foto && usuario.foto !== "default_avatar.png") {
+      foto.src = `${CONFIG.API_BASE_URL}/uploads/${usuario.foto}?t=${Date.now()}`;
+    } else {
+      foto.src = "img/default.png";
     }
+  } catch (e) {
+    console.error(e);
+    window.location.href = "login.html";
+  }
 }
 
+// ─────────────────────────────────────────
+// STATS REALES
+// ─────────────────────────────────────────
+async function cargarStats() {
+  try {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/stats`, { credentials: "include" });
+    if (!res.ok) return;
+    const stats = await res.json();
+    document.getElementById("statJuegos").textContent = stats.juegos;
+    document.getElementById("statHoras").textContent  = stats.horas + "h";
+    document.getElementById("statLogros").textContent = stats.logros;
+  } catch (e) {
+    console.error("Error cargando stats:", e);
+  }
+}
+
+// ─────────────────────────────────────────
+// SOLICITUDES
+// ─────────────────────────────────────────
 async function cargarSolicitudes() {
-      const res = await fetch(
-          `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/solicitudes`
-      );
+  const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/solicitudes`, { credentials: "include" });
+  const solicitudes = await res.json();
+  const cont = document.getElementById("listaSolicitudes");
 
-      const solicitudes = await res.json();
-
-      const contenedor = document.getElementById("listaSolicitudes");
-      contenedor.innerHTML = "";
-
-      solicitudes.forEach(sol => {
-          contenedor.innerHTML += `
-              <div class="solicitud-item">
-                  <span>${sol.usuario1.nombre}</span>
-                  <button onclick="aceptarSolicitud(${sol.id})">
-                      Aceptar
-                  </button>
-              </div>
-          `;
-      });
+  if (!solicitudes.length) {
+    cont.innerHTML = `<p class="empty-state">Sin solicitudes pendientes</p>`;
+    return;
   }
-  async function cargarAmigos() {
+
+  cont.innerHTML = "";
+  solicitudes.forEach(sol => {
+    const div = document.createElement("div");
+    div.className = "solicitud-item";
+    div.innerHTML = `
+      <span>${sol.usuario1.nombre}#${sol.usuario1.id}</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn-chat" onclick="aceptarSolicitud(${sol.id})">Aceptar</button>
+        <button class="btn-rechazar" onclick="rechazarSolicitud(${sol.id})">Rechazar</button>
+      </div>`;
+    cont.appendChild(div);
+  });
+}
+
+// ─────────────────────────────────────────
+// AMIGOS
+// ─────────────────────────────────────────
+async function cargarAmigos() {
+  const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/amigos`, { credentials: "include" });
+  const amigos = await res.json();
+  const cont = document.getElementById("listaAmigos");
+
+  const aceptados = amigos.filter(a => a.estado === "aceptado");
+
+  if (!aceptados.length) {
+    cont.innerHTML = `<p class="empty-state">Sin amigos aún. ¡Envía una solicitud!</p>`;
+    return;
+  }
+
+  cont.innerHTML = "";
+  for (const amigo of aceptados) {
+    const esYo   = amigo.usuario1.id === usuario.id;
+    const otro   = esYo ? amigo.usuario2 : amigo.usuario1;
+    const estado = (otro.estado || "offline").toLowerCase();
+
+
+
+    const div = document.createElement("div");
+    div.className = "amigo-item";
+    div.id = `amigo-${otro.id}`;
+    div.dataset.amigoId     = otro.id;
+    div.dataset.amigoNombre = otro.nombre;
+    div.dataset.relacionId  = amigo.id;
+    div.innerHTML = `
+      <div style="display:flex;align-items:center">
+        <span class="estado-badge ${estado}"></span>
+        <span>${otro.nombre}</span>
+      </div>
+      <div class="amigo-actions">
+        <button class="btn-eliminar">Eliminar</button>
+      </div>`;
+    div.querySelector(".btn-eliminar").onclick = () => eliminarAmigo(amigo.id, otro.id);
+    cont.appendChild(div);
+  }
+}
+
+// ─────────────────────────────────────────
+// ACCIONES SOLICITUDES
+// ─────────────────────────────────────────
+window.aceptarSolicitud = async function(id) {
+  await fetch(`${CONFIG.API_BASE_URL}/usuarios/solicitud/${id}/aceptar`, { method: "PUT", credentials: "include" });
+  await cargarSolicitudes();
+  await cargarAmigos();
+};
+
+window.rechazarSolicitud = async function(id) {
+  await fetch(`${CONFIG.API_BASE_URL}/usuarios/solicitud/${id}/rechazar`, { method: "DELETE", credentials: "include" });
+  await cargarSolicitudes();
+};
+
+// ─────────────────────────────────────────
+// ELIMINAR AMIGO
+// ─────────────────────────────────────────
+window.eliminarAmigo = async function(relacionId, amigoUserId) {
+  if (!confirm("¿Seguro que quieres eliminar a este amigo?")) return;
+  await fetch(
+    `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/amigos/${amigoUserId}`,
+    { method: "DELETE", credentials: "include" }
+  );
+  await cargarAmigos();
+};
+
+// ─────────────────────────────────────────
+// ENVIAR SOLICITUD POR CÓDIGO
+// ─────────────────────────────────────────
+document.getElementById("btnAgregarAmigo").onclick = async () => {
+  const codigo = document.getElementById("codigoAmigo").value.trim();
+  if (!codigo.includes("#")) {
+    alert("Formato inválido. Usa Nombre#id");
+    return;
+  }
+  const id2 = parseInt(codigo.split("#")[1]);
+  if (isNaN(id2)) { alert("ID inválido"); return; }
+  if (id2 === usuario.id) { alert("No puedes agregarte a ti mismo"); return; }
+
+  try {
     const res = await fetch(
-        `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/amigos`
+      `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/agregar/${id2}`,
+      { method: "POST", credentials: "include" }
     );
-
-    const amigos = await res.json();
-
-    const contenedor = document.getElementById("listaAmigos");
-    contenedor.innerHTML = "";
-
-    amigos.forEach(amigo => {
-        const nombre =
-            amigo.usuario1.id === usuario.id
-                ? amigo.usuario2.nombre
-                : amigo.usuario1.nombre;
-
-        if (amigo.estado === "aceptado") {
-            contenedor.innerHTML += `
-                <div class="amigo-item">${nombre}</div>
-            `;
-        }
-    });
-  }
-
-  document.getElementById("btnAgregarAmigo").onclick = async () => {
-    const codigo = document.getElementById("codigoAmigo").value.trim();
-
-    if (!codigo.includes("#")) {
-        alert("Formato inválido. Usa nombre#id");
-        return;
+    if (res.ok) {
+      alert("Solicitud enviada ✓");
+      document.getElementById("codigoAmigo").value = "";
+    } else {
+      const msg = await res.text();
+      alert("Error: " + msg);
     }
+  } catch(e) {
+    alert("Error enviando solicitud");
+  }
+};
 
-    const partes = codigo.split("#");
-    const idNuevo = partes[1];
-
-    await fetch(
-        `${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/agregar/${idNuevo}`,
-        { method: "POST" }
-    );
-
-    alert("Solicitud enviada");
-    document.getElementById("codigoAmigo").value = "";
-  };
-
-  window.aceptarSolicitud = async function(idSolicitud) {
-    await fetch(
-        `${CONFIG.API_BASE_URL}/usuarios/solicitud/${idSolicitud}/aceptar`,
-        { method: "PUT" }
-    );
-
-    cargarSolicitudes();
-    cargarAmigos();
-  };
-
-
-
-
-
+// ─────────────────────────────────────────
+// EDITAR PERFIL
+// ─────────────────────────────────────────
 const modal = document.getElementById("editarPerfilModal");
 
 document.getElementById("editarPerfilBtn").onclick = () => {
+  document.getElementById("editarNombre").value = usuario.nombre;
+  document.getElementById("editarCorreo").value = usuario.email;
   modal.style.display = "flex";
 };
 
@@ -262,7 +302,41 @@ document.getElementById("cerrarModal").onclick = () => {
   modal.style.display = "none";
 };
 
+document.getElementById("guardarCambios").onclick = async () => {
+  const nombre = document.getElementById("editarNombre").value.trim();
+  const correo = document.getElementById("editarCorreo").value.trim();
+  const foto   = document.getElementById("editarFoto").files[0];
+
+  if (!nombre || !correo) { alert("Nombre y correo no pueden estar vacíos"); return; }
+  if (foto && !foto.type.startsWith("image/")) { alert("Solo puedes subir imágenes"); return; }
+
+  const formData = new FormData();
+  formData.append("nombre", nombre);
+  formData.append("email", correo);
+  if (foto) formData.append("foto", foto);
+
+  try {
+    const res = await fetch(
+      `${CONFIG.API_BASE_URL}/usuarios/actualizar/${usuario.id}`,
+      { method: "PUT", body: formData, credentials: "include" }
+    );
+    if (!res.ok) throw new Error("Error actualizando perfil");
+    alert("Perfil actualizado ✓");
+    modal.style.display = "none";
+    document.getElementById("editarFoto").value = "";
+    await cargarPerfil();
+    await cargarStats();
+  } catch(e) {
+    console.error(e);
+    alert("Error al actualizar perfil");
+  }
+};
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
 await cargarPerfil();
+await cargarStats();
 await cargarSolicitudes();
 await cargarAmigos();
 

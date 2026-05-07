@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/juegos")
-@CrossOrigin
 public class JuegoController {
 
     private final JuegoService juegoService;

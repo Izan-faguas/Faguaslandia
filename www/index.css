@@ -86,7 +86,7 @@ header {
 
 .catalogo {
   display: grid;
-  grid-template-columns: 260px 1fr 240px; /* 👈 3 columnas */
+  grid-template-columns: 260px 1fr 240px;
   height: calc(100vh - 70px);
 }
 
@@ -190,7 +190,7 @@ header {
 }
 
 /* =========================
-   👥 PANEL AMIGOS (DERECHA)
+   👥 PANEL AMIGOS BIBLIOTECA (DERECHA)
 ========================= */
 
 .amigos-panel {
@@ -199,44 +199,335 @@ header {
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .amigos-panel h2 {
-  font-size: 16px;
-  margin-bottom: 15px;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.amigos-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 8px 4px 4px;
+}
+
+.amigo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .2s;
+  gap: 8px;
+}
+
+.amigo-row:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.amigo-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.amigo-nombre {
+  font-size: 13px;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amigo-estado-txt {
+  font-size: 11px;
   color: var(--text-muted);
 }
 
-/* lista amigos */
-.amigo-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
+.amigos-vacio {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px 0;
+  line-height: 1.6;
+}
+
+.amigos-vacio a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.amigos-vacio a:hover {
+  text-decoration: underline;
+}
+
+.btn-chat-mini {
+  padding: 5px 10px;
+  border: none;
   border-radius: 6px;
+  background: rgba(102,192,244,0.15);
+  color: var(--accent);
+  font-size: 12px;
   cursor: pointer;
-  transition: 0.2s;
-  font-size: 14px;
+  opacity: 0;
+  transition: .2s;
+  flex-shrink: 0;
 }
 
-.amigo-item:hover {
-  background: rgba(102,192,244,0.1);
+.amigo-row:hover .btn-chat-mini {
+  opacity: 1;
 }
 
-/* estado */
+/* =========================
+   🔵 PUNTOS DE ESTADO
+========================= */
+
+.estado-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.estado-dot.online,
+.estado-badge.online {
+  background: var(--online);
+  box-shadow: 0 0 5px var(--online);
+}
+
+.estado-dot.ausente,
+.estado-badge.ausente {
+  background: #f0a500;
+}
+
+.estado-dot.ocupado,
+.estado-badge.ocupado {
+  background: #e74c3c;
+}
+
+.estado-dot.offline,
+.estado-badge.offline {
+  background: var(--offline);
+}
+
+/* estado badge (perfil) */
+.estado-badge {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* estado (antiguo, compatibilidad) */
 .estado {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
 }
 
-.estado.online {
-  background: var(--online);
-  box-shadow: 0 0 6px var(--online);
+.estado.online  { background-color: #4CAF50; }
+.estado.offline { background-color: #777; }
+.estado.ausente { background-color: orange; }
+.estado.ocupado { background-color: red; }
+
+/* =========================
+   💬 CHAT FLOTANTE (index)
+========================= */
+
+#chatFloat {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 24px;
+  width: 320px;
+  background: #16202d;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  z-index: 300;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
 }
 
-.estado.offline {
-  background: var(--offline);
+#chatFloat.open {
+  display: flex;
+}
+
+.chat-float-header {
+  padding: 11px 16px;
+  background: #0f1722;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.chat-float-header span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.chat-float-header button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.chat-float-header button:hover {
+  color: var(--text-main);
+}
+
+.chat-float-messages {
+  height: 250px;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-float-input {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+}
+
+.chat-float-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: #0b1118;
+  color: var(--text-main);
+  font-size: 13px;
+  outline: none;
+  transition: .2s;
+}
+
+.chat-float-input input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(102,192,244,0.2);
+}
+
+.chat-float-input button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 7px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.chat-float-input button:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   💬 BURBUJAS DE MENSAJE
+========================= */
+
+.msg {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.msg.enviado {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #1a5276, #1f618d);
+  color: #d6eaf8;
+  border-bottom-right-radius: 3px;
+}
+
+.msg.recibido {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-main);
+  border-bottom-left-radius: 3px;
+}
+
+.msg .hora {
+  display: block;
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 3px;
+  text-align: right;
+}
+
+/* =========================
+   🔢 BADGE MENSAJES NO LEÍDOS
+========================= */
+
+.badge-msg,
+.badge-no-leidos {
+  display: inline-block;
+  background: var(--accent);
+  color: #0b1118;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 9px;
+  padding: 1px 6px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* =========================
+   📌 ESTADO SELECTOR (header)
+========================= */
+
+.estado-selector {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.estado-selector select {
+  background: #0f1722;
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: .2s;
+}
+
+.estado-selector select:focus {
+  border-color: var(--accent);
 }
 
 /* =========================
@@ -265,7 +556,6 @@ header {
   gap: 30px;
 }
 
-/* tarjeta tipo Steam */
 .hero {
   display: grid;
   grid-template-columns: 300px 1fr;
@@ -283,7 +573,6 @@ header {
   box-shadow: 0 15px 35px var(--shadow);
 }
 
-/* imagen */
 .hero-media {
   width: 100%;
   height: 160px;
@@ -297,26 +586,22 @@ header {
   object-fit: cover;
 }
 
-/* info */
 .hero-info {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* título */
 .hero-info h2 {
   font-size: 20px;
 }
 
-/* descripción */
 .hero-info p {
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1.4;
 }
 
-/* mini imágenes */
 .hero-thumbs {
   display: flex;
   gap: 8px;
@@ -335,7 +620,6 @@ header {
   opacity: 1;
 }
 
-/* precio */
 .hero-price {
   margin-top: auto;
 }
@@ -387,7 +671,6 @@ header {
   gap: 20px;
 }
 
-/* HERO */
 .game-hero {
   position: relative;
   height: 300px;
@@ -414,10 +697,6 @@ header {
   font-size: 36px;
 }
 
-/* =========================
-   CONTENIDO
-========================= */
-
 .game-content {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -425,7 +704,6 @@ header {
   padding: 30px 50px;
 }
 
-/* IZQUIERDA (imagen) */
 .game-left {
   display: flex;
   flex-direction: column;
@@ -437,16 +715,11 @@ header {
   border-radius: 10px;
 }
 
-/* DERECHA (info) */
 .game-right {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
-/* =========================
-   CARDS
-========================= */
 
 .game-card {
   background: #16202d;
@@ -455,14 +728,12 @@ header {
   border: 1px solid var(--border);
 }
 
-/* descripción */
 .game-desc {
   line-height: 1.7;
   color: var(--text-muted);
   font-size: 15px;
 }
 
-/* info extra */
 .game-card.info p {
   font-size: 14px;
   margin-bottom: 8px;
@@ -473,7 +744,6 @@ header {
   color: var(--text-main);
 }
 
-/* social */
 .game-card.social {
   font-size: 14px;
 }
@@ -485,17 +755,12 @@ header {
   margin-top: 5px;
 }
 
-/* =========================
-   PRECIO + BOTÓN
-========================= */
-
 .price {
   color: #a4d007;
   font-size: 28px;
   margin-bottom: 15px;
 }
 
-/* botón comprar */
 #comprarBtn {
   width: 100%;
   padding: 12px;
@@ -511,8 +776,9 @@ header {
 #comprarBtn:hover {
   transform: scale(1.05);
 }
+
 /* =========================
-   👤 PERFIL STEAM PRO FIX
+   👤 PERFIL
 ========================= */
 
 .perfil {
@@ -525,69 +791,49 @@ header {
   overflow: hidden;
 }
 
-/* =========================
-   🎮 BANNER
-========================= */
-
 .perfil-banner {
   height: 260px;
   background: url("img/default.png") center/cover no-repeat;
   position: relative;
 }
 
-/* overlay oscuro */
 .perfil-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, transparent, #0f1722);
 }
 
-/* =========================
-   HEADER (YA NO ABSOLUTO)
-========================= */
-
 .perfil-header {
   display: flex;
   align-items: center;
   gap: 20px;
-
   padding: 20px 30px;
-  margin-top: -90px; 
+  margin-top: -90px;
   position: relative;
   z-index: 2;
 }
 
-/* avatar */
 .avatar {
   width: 100px;
   height: 100px;
   border-radius: 12px;
   object-fit: cover;
-
   border: 4px solid #0f1722;
-
   box-shadow:
     0 0 0 4px rgba(102,192,244,0.25),
     0 15px 30px rgba(0,0,0,0.8);
-
   background: #000;
 }
 
-/* nombre */
 .perfil-nombre h1 {
   font-size: 24px;
   font-weight: 700;
 }
 
-/* nivel */
 .nivel {
   font-size: 13px;
   color: var(--accent);
 }
-
-/* =========================
-   BODY
-========================= */
 
 .perfil-body {
   padding: 20px 30px 30px;
@@ -595,10 +841,6 @@ header {
   flex-direction: column;
   gap: 30px;
 }
-
-/* =========================
-   INFO
-========================= */
 
 .perfil-info {
   background: linear-gradient(135deg, #16202d, #0f1722);
@@ -612,12 +854,10 @@ header {
   color: var(--text-main);
 }
 
-/* botón */
 .btnEditar {
   margin-top: 15px;
   padding: 12px;
   width: 200px;
-
   background: linear-gradient(90deg, var(--accent), var(--accent-hover));
   border: none;
   border-radius: 8px;
@@ -655,7 +895,7 @@ header {
 }
 
 /* =========================
-   MODAL
+   MODAL EDITAR PERFIL
 ========================= */
 
 #editarPerfilModal {
@@ -665,6 +905,7 @@ header {
   display: none;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .modal-content {
@@ -677,15 +918,52 @@ header {
   gap: 12px;
 }
 
+.modal-content h2 {
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.modal-content label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 .modal-content input {
   padding: 10px;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: #0f1722;
   color: white;
+  outline: none;
+  transition: .2s;
 }
+
+.modal-content input:focus {
+  border-color: var(--accent);
+}
+
+.modal-content button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+#guardarCambios {
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
+}
+
+#cerrarModal {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
 /* =========================
-   👥 AMIGOS
+   👥 SECCIÓN AMIGOS (perfil)
 ========================= */
 
 .perfil-amigos {
@@ -754,7 +1032,7 @@ header {
 }
 
 /* =========================
-   📩 SOLICITUDES
+   📩 SOLICITUDES Y LISTA AMIGOS (perfil)
 ========================= */
 
 #listaSolicitudes,
@@ -764,18 +1042,15 @@ header {
   gap: 12px;
 }
 
-/* tarjeta individual */
 .solicitud-item,
 .amigo-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 14px 16px;
   border-radius: 10px;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
-
   transition: 0.2s;
 }
 
@@ -785,15 +1060,14 @@ header {
   transform: translateY(-1px);
 }
 
-/* nombre */
-.solicitud-item span,
-.amigo-item {
+.solicitud-item span {
   color: var(--text-main);
   font-weight: 500;
 }
 
-/* botón aceptar */
-.solicitud-item button {
+/* botón aceptar solicitud */
+.solicitud-item button,
+.btn-aceptar {
   padding: 8px 14px;
   border: none;
   border-radius: 6px;
@@ -804,9 +1078,178 @@ header {
   transition: 0.2s;
 }
 
-.solicitud-item button:hover {
+.solicitud-item button:hover,
+.btn-aceptar:hover {
   transform: scale(1.03);
   box-shadow: 0 5px 12px rgba(142,214,41,0.3);
+}
+
+/* botones de acción amigo */
+.amigo-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-chat {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-chat:hover {
+  transform: scale(1.04);
+}
+
+.btn-eliminar,
+.btn-rechazar {
+  padding: 6px 12px;
+  border: 1px solid rgba(255,80,80,0.35);
+  border-radius: 6px;
+  background: rgba(255,80,80,0.08);
+  color: #ff6b6b;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-eliminar:hover,
+.btn-rechazar:hover {
+  background: rgba(255,80,80,0.18);
+}
+
+/* =========================
+   💬 CHAT MODAL (perfil)
+========================= */
+
+#chatModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  justify-content: center;
+  align-items: center;
+}
+
+#chatModal.open {
+  display: flex;
+}
+
+.chat-box {
+  background: #16202d;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  width: 460px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px 20px;
+  background: #0f1722;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header span {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.chat-header button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.chat-header button:hover {
+  color: var(--text-main);
+}
+
+.chat-messages {
+  flex: 1;
+  height: 320px;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* burbujas en chat modal (más grandes que el flotante) */
+.chat-messages .msg {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.chat-messages .msg .hora {
+  font-size: 11px;
+}
+
+.chat-input-area {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0b1118;
+  color: var(--text-main);
+  font-size: 14px;
+  outline: none;
+  transition: .2s;
+}
+
+.chat-input-area input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(102,192,244,0.25);
+}
+
+.chat-input-area button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.chat-input-area button:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 18px 0;
 }
 
 /* =========================
@@ -816,24 +1259,20 @@ header {
 .formulario {
   max-width: 400px;
   margin: 80px auto;
-
   background: linear-gradient(135deg, #16202d, #0f1722);
   border: 1px solid var(--border);
   border-radius: 12px;
-
   box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-
   padding: 30px;
+  animation: fadeIn 0.4s ease;
 }
 
-/* título */
 .formulario h2 {
   text-align: center;
   margin-bottom: 25px;
   color: var(--text-main);
 }
 
-/* labels */
 .formulario label {
   display: block;
   margin-bottom: 6px;
@@ -841,52 +1280,41 @@ header {
   color: var(--text-muted);
 }
 
-/* inputs */
 .formulario input {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
-
   border-radius: 8px;
   border: 1px solid var(--border);
-
   background: #0b1118;
   color: var(--text-main);
-
   transition: 0.2s;
 }
 
-/* focus input */
 .formulario input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 8px rgba(102,192,244,0.3);
 }
 
-/* botón */
 .formulario button {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
-
   border: none;
   border-radius: 8px;
-
   background: linear-gradient(90deg, var(--accent), var(--accent-hover));
   color: white;
   font-weight: bold;
-
   cursor: pointer;
   transition: 0.2s;
 }
 
-/* hover botón */
 .formulario button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(102,192,244,0.4);
 }
 
-/* mensaje login */
 #mensaje {
   margin-top: 15px;
   text-align: center;
@@ -894,18 +1322,141 @@ header {
   font-weight: bold;
 }
 
-/* animación suave entrada */
-.formulario {
-  animation: fadeIn 0.4s ease;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* ==============================
+   RESEÑAS
+============================== */
+.game-resenas {
+  max-width: 900px;
+  width: 100%;
+  margin: 32px auto 0;
+  padding: 0 24px 48px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.game-resenas h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.resena-form {
+  background: var(--card-bg, #1a2332);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 28px;
+}
+
+.resena-form h3 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+.estrellas-input {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.estrella {
+  font-size: 28px;
+  color: var(--border);
+  cursor: pointer;
+  transition: color 0.15s, transform 0.1s;
+  user-select: none;
+}
+
+.estrella:hover,
+.estrella.activa {
+  color: #f4c542;
+  transform: scale(1.15);
+}
+
+.resena-form textarea {
+  width: 100%;
+  background: #0b1118;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-main);
+  padding: 10px 12px;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.resena-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.resena-item {
+  background: var(--card-bg, #1a2332);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  animation: fadeIn 0.2s ease;
+}
+
+.resena-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.resena-header strong {
+  color: var(--text-main);
+  font-size: 15px;
+}
+
+.resena-estrellas {
+  color: #f4c542;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.resena-fecha {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.resena-comentario {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Tienda — juegos comprados */
+.hero-media {
+  position: relative;
+}
+
+.badge-comprado {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(102,192,244,0.15);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.price.comprado {
+  color: var(--accent);
+  font-size: 15px;
 }

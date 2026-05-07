@@ -73,14 +73,16 @@
 
 <script type="module">
   import CONFIG from "./config.js";
+  import { getSessionUser } from "./session.js";
 
   const listaJuegosDiv = document.getElementById("listaJuegos");
 
-  const inputBusqueda = document.getElementById("busqueda");
+  const inputBusqueda   = document.getElementById("busqueda");
   const filtroCategoria = document.getElementById("filtroCategoria");
-  const filtroPrecio = document.getElementById("filtroPrecio");
+  const filtroPrecio    = document.getElementById("filtroPrecio");
 
-  let juegosGlobal = [];
+  let juegosGlobal  = [];
+  let compradosSet  = new Set(); // IDs de juegos que tiene el usuario
 
   // 🎮 cargar juegos
   async function cargarJuegos() {
@@ -89,6 +91,21 @@
       if (!response.ok) throw new Error("No se pudieron cargar los juegos");
 
       juegosGlobal = await response.json();
+
+      // Cargar compras del usuario si hay sesión
+      const usuario = await getSessionUser();
+      if (usuario) {
+        try {
+          const resCompras = await fetch(
+            `${CONFIG.API_BASE_URL}/compras/usuario/${usuario.id}`,
+            { credentials: "include" }
+          );
+          if (resCompras.ok) {
+            const compras = await resCompras.json();
+            compradosSet = new Set(compras.map(c => c.id));
+          }
+        } catch(_) {}
+      }
 
       cargarCategorias(juegosGlobal);
       mostrarJuegos(juegosGlobal);
@@ -115,12 +132,15 @@
     listaJuegosDiv.innerHTML = "";
 
     juegos.forEach(juego => {
+      const comprado = compradosSet.has(juego.id);
+
       const juegoSection = document.createElement("section");
       juegoSection.className = "hero juego";
 
       juegoSection.innerHTML = `
         <div class="hero-media">
           <img src="${juego.imagen_url ?? 'default.png'}">
+          ${comprado ? '<span class="badge-comprado">✔ En tu biblioteca</span>' : ""}
         </div>
 
         <div class="hero-info">
@@ -128,8 +148,8 @@
           <p>${juego.descripcion ?? 'Sin descripción'}</p>
 
           <div class="hero-price">
-            <span class="price">
-              ${juego.precio ? juego.precio + '€' : 'Gratis'}
+            <span class="price ${comprado ? 'comprado' : ''}">
+              ${comprado ? 'Comprado' : (juego.precio ? juego.precio + '€' : 'Gratis')}
             </span>
           </div>
         </div>

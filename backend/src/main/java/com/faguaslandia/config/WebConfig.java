@@ -21,11 +21,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    // mantener el sistema de archivos que ya tienes
+    // servir imágenes subidas
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        System.out.println("RUTA ABSOLUTA: " + new java.io.File("uploads").getAbsolutePath());
-        registry.addResourceHandler("/img/**")
+
+        System.out.println("RUTA ABSOLUTA: "
+                + new java.io.File("uploads").getAbsolutePath());
+
+        registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }
 }

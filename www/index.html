@@ -11,28 +11,23 @@
 
 <header>
 <nav class="menu"></nav>
-
 <script type="module">
 import { getSessionUser, logout } from "./session.js";
-
 const menu = document.querySelector(".menu");
-const usuario = await getSessionUser();
-
-if (usuario) {
-    menu.innerHTML = `
-        <a href="index.html">Biblioteca</a>
-        <a href="tienda.html">Tienda</a>
-        <a href="perfil.html">Perfil</a>
-        <a href="#" id="logoutBtn">Cerrar sesión</a>
-    `;
-    document.getElementById("logoutBtn").onclick = logout;
+const u = await getSessionUser();
+if (u) {
+  menu.innerHTML = `
+    <a href="index.html">Biblioteca</a>
+    <a href="tienda.html">Tienda</a>
+    <a href="perfil.html">Perfil</a>
+    <a href="#" id="logoutBtn">Cerrar sesión</a>`;
+  document.getElementById("logoutBtn").onclick = logout;
 } else {
-    menu.innerHTML = `
-        <a href="index.html">Biblioteca</a>
-        <a href="tienda.html">Tienda</a>
-        <a href="registro.html">Registro</a>
-        <a href="login.html">Iniciar sesión</a>
-    `;
+  menu.innerHTML = `
+    <a href="index.html">Biblioteca</a>
+    <a href="tienda.html">Tienda</a>
+    <a href="registro.html">Registro</a>
+    <a href="login.html">Iniciar sesión</a>`;
 }
 </script>
 </header>
@@ -40,116 +35,276 @@ if (usuario) {
 <main>
 <div class="catalogo">
 
-    <!-- 📚 LISTA -->
-    <div class="juego">
-        <h1>🎮 Biblioteca</h1>
-        <div class="juegos" id="juegosGrid"></div>
-    </div>
+  <!-- 📚 LISTA -->
+  <div class="juego">
+    <h1>🎮 Biblioteca</h1>
+    <div class="juegos" id="juegosGrid"></div>
+  </div>
 
-    <!-- 🎮 DETALLE -->
-    <div class="detalle-juego" id="detalleJuego">
-        <h2>Selecciona un juego</h2>
-    </div>
+  <!-- 🎮 DETALLE -->
+  <div class="detalle-juego" id="detalleJuego">
+    <h2 style="padding:30px;color:var(--text-muted)">Selecciona un juego</h2>
+  </div>
 
-    <!-- 👥 AMIGOS -->
-    <div class="amigos-panel">
-        <h2>👥 Amigos</h2>
-
-        <div class="amigo-item">
-            <span class="estado online"></span>
-            Toni
-        </div>
-
-        <div class="amigo-item">
-            <span class="estado offline"></span>
-            Pau
-        </div>
-    </div>
+  <!-- 👥 AMIGOS -->
+  <div class="amigos-panel" id="amigosPanel">
+    <h2>👥 Amigos</h2>
+    <div id="listaAmigosIndex"><p class="amigos-vacio">Cargando...</p></div>
+  </div>
 
 </div>
 </main>
+
+<!-- CHAT FLOTANTE -->
+<div id="chatFloat">
+  <div class="chat-float-header" id="chatFloatHeader">
+    <span id="chatFloatNombre">Chat</span>
+    <button id="cerrarChatFloat">✕</button>
+  </div>
+  <div class="chat-float-messages" id="chatFloatMessages"></div>
+  <div class="chat-float-input">
+    <input type="text" id="chatFloatInput" placeholder="Escribe un mensaje..." maxlength="500">
+    <button id="btnEnviarFloat">↑</button>
+  </div>
+</div>
 
 <script type="module">
 import CONFIG from "./config.js";
 import { getSessionUser } from "./session.js";
 
-const juegosGrid = document.getElementById("juegosGrid");
-const detalle = document.getElementById("detalleJuego");
+let usuario = null;
+let chatAmigoId = null;
+let chatPollInterval = null;
+let amigosPollInterval = null;
 
+// ─────────────────────────────────────────
+// BIBLIOTECA
+// ─────────────────────────────────────────
 async function actualizarBiblioteca() {
-    try {
-        const usuario = await getSessionUser();
+  const juegosGrid = document.getElementById("juegosGrid");
+  const detalle    = document.getElementById("detalleJuego");
 
-        if (!usuario) {
-            window.location.href = "tienda.html";
-            return;
-        }
+  try {
+    usuario = await getSessionUser();
+    if (!usuario) { window.location.href = "tienda.html"; return; }
 
-            const res = await fetch(`${CONFIG.API_BASE_URL}/compras/usuario/${usuario.id}`, {            
-                credentials: "include"
-        });
+    const res   = await fetch(`${CONFIG.API_BASE_URL}/compras/usuario/${usuario.id}`, { credentials: "include" });
+    const juegos = await res.json();
 
-        const juegos = await res.json();
+    juegosGrid.innerHTML = "";
 
-        juegosGrid.innerHTML = "";
-
-        juegos.forEach((juego, index) => {
-            const img = document.createElement("img");
-
-            img.src = juego.imagen_url || "default.png";
-            img.classList.add("game-cover");
-
-            img.addEventListener("click", () => {
-                mostrarJuego(juego);
-                seleccionar(img);
-            });
-
-            juegosGrid.appendChild(img);
-
-            if (index === 0) {
-                mostrarJuego(juego);
-                seleccionar(img);
-            }
-        });
-
-    } catch (e) {
-        juegosGrid.innerHTML = "Error";
-    }
-}
-
-function seleccionar(elemento) {
-    document.querySelectorAll(".game-cover").forEach(img => {
-        img.classList.remove("game-selected");
+    juegos.forEach((juego, i) => {
+      const img = document.createElement("img");
+      img.src = juego.imagen_url || "default.png";
+      img.classList.add("game-cover");
+      img.addEventListener("click", () => { mostrarJuego(juego, detalle); seleccionar(img); });
+      juegosGrid.appendChild(img);
+      if (i === 0) { mostrarJuego(juego, detalle); seleccionar(img); }
     });
 
-    elemento.classList.add("game-selected");
+    if (!juegos.length) {
+      juegosGrid.innerHTML = `<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">
+        Tu biblioteca está vacía.<br><a href="tienda.html" style="color:var(--accent)">Visita la tienda</a></p>`;
+    }
+
+    await cargarAmigosPanel();
+
+  } catch(e) {
+    juegosGrid.innerHTML = "Error cargando biblioteca";
+  }
 }
 
-function mostrarJuego(juego) {
-    detalle.innerHTML = `
-        <div class="detalle-container">
+function seleccionar(img) {
+  document.querySelectorAll(".game-cover").forEach(i => i.classList.remove("game-selected"));
+  img.classList.add("game-selected");
+}
 
-            <img src="${juego.imagen_url || 'default.png'}" class="detalle-img">
+function mostrarJuego(juego, detalle) {
+  detalle.innerHTML = `
+    <div class="detalle-container">
+      <img src="${juego.imagen_url || 'default.png'}" class="detalle-img">
+      <div class="detalle-info">
+        <h1>${juego.titulo}</h1>
+        <p class="detalle-desc">${juego.descripcion || "Sin descripción disponible"}</p>
+        <button class="btn-play">JUGAR</button>
+      </div>
+    </div>`;
+  detalle.querySelector(".btn-play").onclick = () => alert("Iniciando " + juego.titulo);
+}
 
-            <div class="detalle-info">
-                <h1>${juego.titulo}</h1>
+// ─────────────────────────────────────────
+// PANEL AMIGOS
+// ─────────────────────────────────────────
+async function cargarAmigosPanel() {
+  if (!usuario) return;
+  const cont = document.getElementById("listaAmigosIndex");
 
-                <p class="detalle-desc">
-                    ${juego.descripcion || "Sin descripción disponible"}
-                </p>
+  try {
+    const res    = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/amigos`, { credentials: "include" });
+    const amigos = await res.json();
+    const aceptados = amigos.filter(a => a.estado === "aceptado");
 
-                <button class="btn-play">JUGAR</button>
-            </div>
+    if (!aceptados.length) {
+      cont.innerHTML = `<p class="amigos-vacio">Sin amigos aún.<br>
+        <a href="perfil.html">Agrega desde tu perfil</a></p>`;
+      return;
+    }
 
+    const online  = aceptados.filter(a => {
+      const otro = a.usuario1.id === usuario.id ? a.usuario2 : a.usuario1;
+      return ["online","ausente","ocupado"].includes((otro.estado||"offline").toLowerCase());
+    });
+    const offline = aceptados.filter(a => {
+      const otro = a.usuario1.id === usuario.id ? a.usuario2 : a.usuario1;
+      return !["online","ausente","ocupado"].includes((otro.estado||"offline").toLowerCase());
+    });
+
+    cont.innerHTML = "";
+
+    if (online.length) {
+      const tOnline = document.createElement("div");
+      tOnline.className = "amigos-section-title";
+      tOnline.textContent = `— Online (${online.length})`;
+      cont.appendChild(tOnline);
+      for (const a of online) await renderAmigoRow(a, cont);
+    }
+    if (offline.length) {
+      const tOffline = document.createElement("div");
+      tOffline.className = "amigos-section-title";
+      tOffline.textContent = `— Offline (${offline.length})`;
+      cont.appendChild(tOffline);
+      for (const a of offline) await renderAmigoRow(a, cont);
+    }
+
+  } catch(e) {
+    cont.innerHTML = `<p class="amigos-vacio">Error cargando amigos</p>`;
+  }
+}
+
+async function renderAmigoRow(amigo, cont) {
+  const otro   = amigo.usuario1.id === usuario.id ? amigo.usuario2 : amigo.usuario1;
+  const estado = (otro.estado || "offline").toLowerCase();
+
+  let noLeidos = 0;
+  try {
+    const r = await fetch(`${CONFIG.API_BASE_URL}/mensajes/no-leidos/${usuario.id}/de/${otro.id}`, { credentials: "include" });
+    const data = await r.json(); noLeidos = data.total || 0;
+  } catch(_) {}
+
+  const estadoTxt = { online:"En línea", ausente:"Ausente", ocupado:"Ocupado", offline:"Desconectado" }[estado] || "Desconectado";
+
+  const div = document.createElement("div");
+  div.className = "amigo-row";
+  div.innerHTML = `
+    <div class="amigo-info">
+      <span class="estado-dot ${estado}"></span>
+      <div>
+        <div class="amigo-nombre">
+          ${otro.nombre}
+          ${noLeidos > 0 ? `<span class="badge-msg">${noLeidos}</span>` : ""}
         </div>
-    `;
+        <div class="amigo-estado-txt">${estadoTxt}</div>
+      </div>
+    </div>
+    <button class="btn-chat-mini" title="Abrir chat">💬</button>`;
 
-    document.querySelector(".btn-play").onclick = () => {
-        alert("Iniciando " + juego.titulo);
-    };
+  div.dataset.amigoId     = otro.id;
+  div.dataset.amigoNombre = otro.nombre;
+  cont.appendChild(div);
 }
 
-document.addEventListener("DOMContentLoaded", actualizarBiblioteca);
+// ─────────────────────────────────────────
+// CHAT FLOTANTE
+// ─────────────────────────────────────────
+// Listener delegado — un único handler en el contenedor para todos los amigos
+document.getElementById("listaAmigosIndex").addEventListener("click", (e) => {
+  const row = e.target.closest(".amigo-row");
+  if (!row) return;
+  abrirChatFlotante(parseInt(row.dataset.amigoId), row.dataset.amigoNombre);
+});
+
+async function abrirChatFlotante(amigoId, amigoNombre) {
+  chatAmigoId = amigoId;
+  document.getElementById("chatFloatNombre").textContent = "💬 " + amigoNombre;
+  document.getElementById("chatFloat").classList.add("open");
+  document.getElementById("chatFloatInput").focus();
+  await cargarMensajesFloat();
+
+  clearInterval(chatPollInterval);
+  chatPollInterval = setInterval(cargarMensajesFloat, 3000);
+}
+
+document.getElementById("cerrarChatFloat").onclick = (e) => {
+  e.stopPropagation();
+  document.getElementById("chatFloat").classList.remove("open");
+  clearInterval(chatPollInterval);
+  chatAmigoId = null;
+  cargarAmigosPanel(); // Refrescar badges
+};
+
+async function cargarMensajesFloat() {
+  if (!chatAmigoId || !usuario) return;
+  try {
+    const res = await fetch(
+      `${CONFIG.API_BASE_URL}/mensajes/conversacion?id1=${usuario.id}&id2=${chatAmigoId}`,
+      { credentials: "include" }
+    );
+    const mensajes = await res.json();
+    const cont = document.getElementById("chatFloatMessages");
+    const abajo = cont.scrollHeight - cont.scrollTop <= cont.clientHeight + 60;
+
+    cont.innerHTML = "";
+    if (!mensajes.length) {
+      cont.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:12px;padding:20px 0">Sin mensajes aún. ¡Di hola!</p>`;
+      return;
+    }
+
+    mensajes.forEach(m => {
+      const esEnviado = m.emisor.id === usuario.id;
+      const hora = new Date(m.fechaEnvio).toLocaleTimeString("es-ES", { hour:"2-digit", minute:"2-digit" });
+      const div = document.createElement("div");
+      div.className = "msg " + (esEnviado ? "enviado" : "recibido");
+      div.innerHTML = `${m.contenido}<span class="hora">${hora}</span>`;
+      cont.appendChild(div);
+    });
+
+    if (abajo) cont.scrollTop = cont.scrollHeight;
+  } catch(e) { console.error(e); }
+}
+
+document.getElementById("btnEnviarFloat").onclick = enviarMensajeFloat;
+document.getElementById("chatFloatInput").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviarMensajeFloat(); }
+});
+
+async function enviarMensajeFloat() {
+  const input    = document.getElementById("chatFloatInput");
+  const contenido = input.value.trim();
+  if (!contenido || !chatAmigoId || !usuario) return;
+
+  input.value = "";
+  try {
+    await fetch(`${CONFIG.API_BASE_URL}/mensajes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ emisorId: usuario.id, receptorId: chatAmigoId, contenido })
+    });
+    await cargarMensajesFloat();
+  } catch(e) {
+    console.error(e);
+    input.value = contenido;
+  }
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", async () => {
+  await actualizarBiblioteca();
+  // Refrescar panel amigos cada 20s
+  amigosPollInterval = setInterval(cargarAmigosPanel, 20000);
+});
 </script>
 
 </body>

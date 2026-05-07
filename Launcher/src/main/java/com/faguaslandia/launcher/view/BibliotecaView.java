@@ -4,7 +4,9 @@ import com.faguaslandia.launcher.Config;
 import com.faguaslandia.launcher.model.Juego;
 import com.faguaslandia.launcher.service.GameInstallerService;
 import com.faguaslandia.launcher.service.JuegoService;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -17,18 +19,16 @@ import java.util.List;
 
 public class BibliotecaView {
 
-    private final JuegoService juegoService = new JuegoService();
+    private final JuegoService juegoService   = new JuegoService();
+    private final GameInstallerService installer = new GameInstallerService();
     private final Long usuarioId;
-    private GameInstallerService installer = new GameInstallerService();
-
 
     private HBox root;
-
     private VBox bibliotecaPanel;
     private VBox detallePanel;
     private VBox amigosPanel;
+    private VBox juegosContainer;
 
-    private TilePane juegosContainer;
     private StackPane selectedCard;
 
     public BibliotecaView(Long usuarioId) {
@@ -37,189 +37,204 @@ public class BibliotecaView {
         cargarBiblioteca();
     }
 
-    public HBox getView() {
-        return root;
-    }
+    public HBox getView() { return root; }
 
     private void crearVista() {
-
         root = new HBox();
         root.getStyleClass().add("root");
 
-        root.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        // 📚 IZQUIERDA (más ancha)
-        bibliotecaPanel = new VBox(15);
+        /* ── IZQUIERDA: lista covers ── */
+        bibliotecaPanel = new VBox(12);
         bibliotecaPanel.getStyleClass().add("panel-left");
 
-        // 🎮 CENTRO (más grande)
-        detallePanel = new VBox(15);
-        detallePanel.getStyleClass().add("panel-center");
+        Label tituloLib = new Label("🎮 Biblioteca");
+        tituloLib.getStyleClass().add("panel-left-title");
+        bibliotecaPanel.getChildren().add(tituloLib);
 
-        // 👥 DERECHA
-        amigosPanel = new VBox(15);
+        /* ── CENTRO: detalle ── */
+        detallePanel = new VBox();
+        detallePanel.getStyleClass().add("panel-center");
+        HBox.setHgrow(detallePanel, Priority.ALWAYS);
+
+        Label placeholder = new Label("Selecciona un juego");
+        placeholder.setStyle("-fx-text-fill: #5b7a99; -fx-font-size: 14px;");
+        placeholder.setPadding(new Insets(40));
+        detallePanel.getChildren().add(placeholder);
+
+        /* ── DERECHA: amigos ── */
+        amigosPanel = new VBox(4);
         amigosPanel.getStyleClass().add("panel-right");
 
-        bibliotecaPanel.setPrefWidth(200);
-        detallePanel.setPrefWidth(700);
-        amigosPanel.setPrefWidth(190);
+        Label tituloAmigos = new Label("👥 Amigos");
+        tituloAmigos.getStyleClass().add("amigos-titulo");
+        tituloAmigos.setMaxWidth(Double.MAX_VALUE);
+        amigosPanel.getChildren().add(tituloAmigos);
 
-        Label titulo = new Label("🎮 Biblioteca");
-        titulo.getStyleClass().add("title");
-
-        bibliotecaPanel.getChildren().add(titulo);
-
-        amigosPanel.getChildren().add(new Label("👥 Amigos"));
+        Label amigosEmpty = new Label("Sin amigos aún.\nAgrega desde tu perfil.");
+        amigosEmpty.getStyleClass().add("amigos-vacio");
+        amigosEmpty.setWrapText(true);
+        amigosEmpty.setPadding(new Insets(16, 4, 0, 4));
+        amigosPanel.getChildren().add(amigosEmpty);
 
         root.getChildren().addAll(bibliotecaPanel, detallePanel, amigosPanel);
-
-        HBox.setHgrow(detallePanel, Priority.ALWAYS);
     }
 
     private void cargarBiblioteca() {
-
         try {
             List<Juego> juegos = juegoService.obtenerBiblioteca(usuarioId);
 
-            juegosContainer = new TilePane();
-            juegosContainer.setPadding(new Insets(10));
-            juegosContainer.setVgap(12);
-            juegosContainer.setHgap(12);
-
-            juegosContainer.setPrefColumns(1);
-            juegosContainer.setMaxWidth(Double.MAX_VALUE);
+            juegosContainer = new VBox(10);
+            juegosContainer.setPadding(new Insets(4, 4, 4, 4));
 
             for (Juego juego : juegos) {
-
-                String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
-
-                Image image = new Image(url, true);
-
-                ImageView img = new ImageView(image);
-                img.setFitWidth(320);
-                img.setFitHeight(180);
-                img.setPreserveRatio(false);
-                img.setSmooth(true);
-
-                StackPane card = new StackPane(img);
-                card.getStyleClass().add("game-card");
-
-                card.setPrefWidth(320);
-
-                card.setOnMouseClicked(e -> {
-                    mostrarJuego(juego);
-                    marcarSeleccion(card);
-                });
-
+                StackPane card = crearCard(juego);
                 juegosContainer.getChildren().add(card);
             }
 
             ScrollPane scroll = new ScrollPane(juegosContainer);
+            scroll.getStyleClass().add("scroll-pane");
             scroll.setFitToWidth(true);
-            scroll.setFitToHeight(true);
-            scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
             scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             VBox.setVgrow(scroll, Priority.ALWAYS);
 
             bibliotecaPanel.getChildren().add(scroll);
 
             if (!juegos.isEmpty()) {
-                mostrarJuego(juegos.get(0));
+                Juego primero = juegos.get(0);
+                mostrarJuego(primero);
+                // marcar el primer card
+                Platform.runLater(() -> {
+                    if (!juegosContainer.getChildren().isEmpty()) {
+                        marcarSeleccion((StackPane) juegosContainer.getChildren().get(0));
+                    }
+                });
+            } else {
+                Label empty = new Label("Tu biblioteca está vacía.\nVisita la tienda.");
+                empty.setWrapText(true);
+                empty.setStyle("-fx-text-fill: #5b7a99; -fx-font-size: 12px; -fx-padding: 20 10 0 10; -fx-text-alignment: CENTER;");
+                detallePanel.getChildren().setAll(empty);
             }
 
         } catch (Exception e) {
-            bibliotecaPanel.getChildren().add(new Label("Error cargando biblioteca"));
             e.printStackTrace();
+            bibliotecaPanel.getChildren().add(new Label("Error cargando biblioteca"));
         }
+    }
+
+    private StackPane crearCard(Juego juego) {
+        String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
+        Image image = new Image(url, true);
+
+        ImageView img = new ImageView(image);
+        img.setFitWidth(196);
+        img.setFitHeight(72);
+        img.setPreserveRatio(false);
+        img.setSmooth(true);
+
+        StackPane card = new StackPane(img);
+        card.getStyleClass().add("game-card");
+        card.setMaxWidth(Double.MAX_VALUE);
+
+        card.setOnMouseClicked(e -> {
+            mostrarJuego(juego);
+            marcarSeleccion(card);
+        });
+
+        return card;
     }
 
     private void mostrarJuego(Juego juego) {
-
         detallePanel.getChildren().clear();
 
+        /* ── Imagen grande ── */
         String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
-
         ImageView portada = new ImageView(new Image(url, true));
-        portada.setFitWidth(600);
+        portada.setFitWidth(900);
         portada.setFitHeight(320);
-        portada.setPreserveRatio(true);
+        portada.setPreserveRatio(false);
         portada.setSmooth(true);
         portada.getStyleClass().add("detalle-img");
 
+        // contenedor de imagen que ocupa todo el ancho
+        StackPane imgContainer = new StackPane(portada);
+        imgContainer.setMaxWidth(Double.MAX_VALUE);
+        portada.fitWidthProperty().bind(imgContainer.widthProperty());
+
+        /* ── Info ── */
         Label titulo = new Label(juego.getTitulo());
-        titulo.getStyleClass().add("title");
+        titulo.getStyleClass().add("detalle-titulo");
 
-        Label desc = new Label(
-                juego.getDescripcion() != null ? juego.getDescripcion() : "Sin descripción"
-        );
+        Label desc = new Label(juego.getDescripcion() != null ? juego.getDescripcion() : "Sin descripción disponible");
         desc.setWrapText(true);
-        desc.getStyleClass().add("label");
+        desc.getStyleClass().add("detalle-desc");
 
-        Button jugar = new Button("JUGAR");
+        // Fila de meta: desarrollador, categoría
+        HBox meta = new HBox(16);
+        if (juego.getDesarrollador() != null) {
+            Label dev = new Label("👤 " + juego.getDesarrollador());
+            dev.getStyleClass().add("detalle-meta");
+            meta.getChildren().add(dev);
+        }
+        if (juego.getCategoria() != null) {
+            Label cat = new Label(juego.getCategoria());
+            cat.getStyleClass().add("tag");
+            meta.getChildren().add(cat);
+        }
+
+        Button jugar = new Button("▶  JUGAR");
         jugar.getStyleClass().add("btn-play");
 
-        String gameName = juego.getTitulo().replace(" ", "_");
+        String gameName   = juego.getTitulo().replace(" ", "_");
         String downloadUrl = Config.API_BASE_URL + "/juegos/download/" + juego.getId();
 
         jugar.setOnAction(e -> {
-
-            try {
-                if (installer.isInstalled(gameName)) {
-                    System.out.println("Ejecutando " + gameName);
-                    installer.launch(gameName);
-
-                } else {
-                    System.out.println("Instalando " + gameName);
-
-                    installer.install(gameName, downloadUrl);
-
-                    System.out.println("Ejecutando después de instalar...");
-                    installer.launch(gameName);
+            jugar.setDisable(true);
+            jugar.setText("⏳  Cargando...");
+            new Thread(() -> {
+                try {
+                    if (!installer.isInstalled(gameName)) {
+                        Platform.runLater(() -> jugar.setText("⬇  Instalando..."));
+                        installer.install(gameName, downloadUrl);
+                    }
+                    Platform.runLater(() -> {
+                        jugar.setDisable(false);
+                        jugar.setText("▶  JUGAR");
+                        installer.launch(gameName);
+                    });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Platform.runLater(() -> {
+                        jugar.setDisable(false);
+                        jugar.setText("▶  JUGAR");
+                    });
                 }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            }).start();
         });
 
-        VBox info = new VBox(10, titulo, desc, jugar);
+        VBox info = new VBox(14, titulo, desc, meta, jugar);
         info.getStyleClass().add("detalle-info");
+        info.setMaxWidth(Double.MAX_VALUE);
 
-        detallePanel.getChildren().addAll(portada, info);
+        detallePanel.getChildren().addAll(imgContainer, info);
+        VBox.setVgrow(info, Priority.ALWAYS);
     }
-    private void marcarSeleccion(StackPane selected) {
 
+    private void marcarSeleccion(StackPane card) {
         if (selectedCard != null) {
-            selectedCard.setStyle("");
+            selectedCard.getStyleClass().remove("game-card-selected");
         }
-
-        selectedCard = selected;
-        selectedCard.setStyle("""
-            -fx-border-color: #00ffcc;
-            -fx-border-width: 2;
-            -fx-background-radius: 10;
-        """);
-    }
-
-    private HBox crearAmigo(String nombre, boolean online) {
-
-        Circle estado = new Circle(5);
-        estado.setStyle(online ? "-fx-fill: #4caf50;" : "-fx-fill: #777;");
-
-        Label label = new Label(nombre);
-
-        return new HBox(10, estado, label);
+        selectedCard = card;
+        card.getStyleClass().add("game-card-selected");
     }
 
     public void actualizarBiblioteca() {
         bibliotecaPanel.getChildren().clear();
-
-        Label titulo = new Label("🎮 Biblioteca");
-        titulo.getStyleClass().add("title");
-
-        bibliotecaPanel.getChildren().add(titulo);
-
+        Label tituloLib = new Label("🎮 Biblioteca");
+        tituloLib.getStyleClass().add("panel-left-title");
+        bibliotecaPanel.getChildren().add(tituloLib);
+        detallePanel.getChildren().clear();
+        selectedCard = null;
         cargarBiblioteca();
     }
 }
