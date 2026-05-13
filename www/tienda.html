@@ -139,7 +139,7 @@
 
       juegoSection.innerHTML = `
         <div class="hero-media">
-          <img src="${juego.imagen_url ?? 'default.png'}">
+          <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url ?? 'img/default.png'}">
           ${comprado ? '<span class="badge-comprado">✔ En tu biblioteca</span>' : ""}
         </div>
 

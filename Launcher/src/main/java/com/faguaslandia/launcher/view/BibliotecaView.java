@@ -123,8 +123,12 @@ public class BibliotecaView {
     }
 
     private StackPane crearCard(Juego juego) {
-        String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
+        String url = Config.IMG_BASE_URL + "/" + juego.getImagen_url();
         Image image = new Image(url, true);
+        image.errorProperty().addListener((obs, o, err) -> {
+            if (err) System.out.println("Error cargando imagen: " + url);
+        });
+
 
         ImageView img = new ImageView(image);
         img.setFitWidth(196);
@@ -148,7 +152,7 @@ public class BibliotecaView {
         detallePanel.getChildren().clear();
 
         /* ── Imagen grande ── */
-        String url = Config.API_BASE_URL + "/" + juego.getImagen_url();
+        String url = Config.IMG_BASE_URL + "/" + juego.getImagen_url();
         ImageView portada = new ImageView(new Image(url, true));
         portada.setFitWidth(900);
         portada.setFitHeight(320);

@@ -6,6 +6,7 @@ import java.util.Properties;
 public class Config {
 
     public static final String API_BASE_URL;
+    public static final String IMG_BASE_URL;
 
     static {
         try {
@@ -27,6 +28,8 @@ public class Config {
             if (API_BASE_URL == null || API_BASE_URL.isBlank()) {
                 throw new RuntimeException("api.base-url no está definido");
             }
+
+            IMG_BASE_URL = API_BASE_URL + "/uploads";
 
         } catch (Exception e) {
             throw new RuntimeException("Error cargando launcher.properties", e);

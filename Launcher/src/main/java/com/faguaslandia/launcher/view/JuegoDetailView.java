@@ -23,16 +23,16 @@ public class JuegoDetailView extends VBox {
     public JuegoDetailView(Usuario usuario) {
         this.usuario = usuario;
         this.juegoService = new JuegoService();
-        setStyle("-fx-background-color: linear-gradient(to bottom, #121a24, #0b1118);");
-        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        VBox.setVgrow(this, Priority.ALWAYS);
+        setMaxWidth(Double.MAX_VALUE);
+        setMaxHeight(Double.MAX_VALUE);
+        getStyleClass().add("panel-center");
     }
 
     public void setJuego(Juego juego) {
         getChildren().clear();
 
         /* ── Imagen hero ── */
-        String imgUrl = Config.API_BASE_URL + "/" + juego.getImagen_url();
+        String imgUrl = Config.IMG_BASE_URL + "/" + juego.getImagen_url();
         ImageView portada = new ImageView(new Image(imgUrl, true));
         portada.setFitHeight(320);
         portada.setPreserveRatio(false);
@@ -138,11 +138,10 @@ public class JuegoDetailView extends VBox {
         sep.setMaxWidth(Double.MAX_VALUE);
 
         /* ── Ensamblar ── */
-        VBox info = new VBox(16, volver, tituloPrecio, desc, meta, sep, comprarBtn);
-        info.setStyle("-fx-padding: 28 32 28 32; -fx-background-color: transparent;");
-        info.setMaxWidth(Double.MAX_VALUE);
 
-        getChildren().addAll(hero, info);
+        VBox info = new VBox(16, volver, tituloPrecio, desc, meta, sep, comprarBtn);
+        info.setPadding(new Insets(28, 32, 28, 32));  // ← en vez de setStyle con padding inline
+        info.setMaxWidth(Double.MAX_VALUE);
         VBox.setVgrow(info, Priority.ALWAYS);
     }
 

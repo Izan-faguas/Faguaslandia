@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="" />
+    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/HeaderView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/HeaderView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/JuegoDetailView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/JuegoDetailView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/TiendaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/TiendaView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/resources/styles/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/resources/styles/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/Eternal_Orbit.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/algo.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/img/algo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/user_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/img/user_1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/juego.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/juego.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/perfil.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/tienda.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/tienda.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,6 +75,9 @@
       <recent name="$PROJECT_DIR$/games" />
       <recent name="$PROJECT_DIR$/uploads" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/uploads/img" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="FaguaslandiaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
@@ -103,6 +125,8 @@
       <workItem from="1778046839545" duration="7654000" />
       <workItem from="1778132867082" duration="5193000" />
       <workItem from="1778426974093" duration="341000" />
+      <workItem from="1778669009555" duration="1731000" />
+      <workItem from="1778692525263" duration="3281000" />
     </task>
     <servers />
   </component>

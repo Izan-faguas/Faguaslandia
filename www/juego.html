@@ -76,14 +76,14 @@ async function cargarJuego() {
       <div class="game-page">
 
         <div class="game-hero">
-          <img src="${juego.imagen_url ?? 'default.png'}">
+          <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url ?? 'img/default.png'}"> 
           <div class="game-overlay"></div>
           <h1>${juego.titulo}</h1>
         </div>
 
         <div class="game-content">
           <div class="game-left">
-            <img src="${juego.imagen_url ?? 'default.png'}" class="game-main-img">
+            <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url ?? 'img/default.png'}" class="game-main-img">
           </div>
           <div class="game-right">
             <div class="game-card">

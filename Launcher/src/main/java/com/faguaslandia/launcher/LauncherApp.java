@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class LauncherApp extends Application {
@@ -74,7 +73,6 @@ public class LauncherApp extends Application {
             }).start();
         });
 
-        // Enter en el campo password también lanza login
         loginView.getPassword().setOnAction(e -> loginView.getLoginBtn().fire());
         loginView.getUsuario().setOnAction(e  -> loginView.getPassword().requestFocus());
     }
@@ -88,18 +86,19 @@ public class LauncherApp extends Application {
         root.setTop(header);
 
         // ── Vistas ──
-        BibliotecaView bibliotecaView  = new BibliotecaView(usuario.getId());
-        TiendaView tiendaView          = new TiendaView(usuario);
+        BibliotecaView  bibliotecaView  = new BibliotecaView(usuario.getId());
+        TiendaView      tiendaView      = new TiendaView(usuario);
         JuegoDetailView juegoDetailView = new JuegoDetailView(usuario);
+        AmigosView      amigosView      = new AmigosView(usuario);
+        PerfilView      perfilView      = new PerfilView(usuario);
 
-        // Callbacks cruzados
+        // Callbacks cruzados tienda ↔ detalle
         juegoDetailView.setCallbackActualizarBiblioteca(() ->
                 bibliotecaView.actualizarBiblioteca()
         );
-        juegoDetailView.setCallbackVolver(() -> {
-            root.setCenter(tiendaView);
-        });
-
+        juegoDetailView.setCallbackVolver(() ->
+                root.setCenter(tiendaView)
+        );
         tiendaView.setCallbackJuegoDetalle(j -> {
             juegoDetailView.setJuego(j);
             root.setCenter(juegoDetailView);
@@ -109,7 +108,11 @@ public class LauncherApp extends Application {
         header.setActions(
                 () -> root.setCenter(bibliotecaView.getView()),
                 () -> root.setCenter(tiendaView),
-                () -> { /* perfil — futuro */ }
+                () -> {
+                    amigosView.cargarDatos();
+                    root.setCenter(amigosView);
+                },
+                () -> root.setCenter(perfilView)
         );
 
         // Pantalla inicial: biblioteca

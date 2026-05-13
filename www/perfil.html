@@ -136,7 +136,7 @@ async function cargarPerfil() {
 
     const foto = document.getElementById("fotoPerfil");
     if (usuario.foto && usuario.foto !== "default_avatar.png") {
-      foto.src = `${CONFIG.API_BASE_URL}/uploads/${usuario.foto}?t=${Date.now()}`;
+      foto.src = `${CONFIG.API_BASE_URL}/uploads/img/${usuario.foto}?t=${Date.now()}`;
     } else {
       foto.src = "img/default.png";
     }

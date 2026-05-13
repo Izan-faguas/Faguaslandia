@@ -36,7 +36,6 @@ public class TiendaView extends VBox {
         getStyleClass().add("tienda-container");
         setMaxWidth(Double.MAX_VALUE);
         setMaxHeight(Double.MAX_VALUE);
-        VBox.setVgrow(this, Priority.ALWAYS);
 
         construirUI();
         cargarJuegos();
@@ -78,7 +77,6 @@ public class TiendaView extends VBox {
         scroll.getStyleClass().add("scroll-pane");
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        VBox.setVgrow(scroll, Priority.ALWAYS);
 
         getChildren().addAll(titulo, barra, scroll);
     }
@@ -159,7 +157,7 @@ public class TiendaView extends VBox {
         boolean comprado = compradosSet != null && compradosSet.contains(j.getId());
 
         /* ── Imagen ── */
-        String imgUrl = Config.API_BASE_URL + "/" + j.getImagen_url();
+        String imgUrl = Config.IMG_BASE_URL + "/" + j.getImagen_url();
         ImageView img = new ImageView(new Image(imgUrl, true));
         img.setFitWidth(220);
         img.setFitHeight(124);

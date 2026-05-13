@@ -514,3 +514,387 @@
 .text-accent { -fx-text-fill: #66c0f4; }
 .text-online  { -fx-text-fill: #4caf50; }
 .text-offline { -fx-text-fill: #5b7a99; }
+/* ════════════════════════════════════════
+   PERFIL
+   ════════════════════════════════════════ */
+
+.perfil-banner {
+    -fx-background-color: linear-gradient(to right, #1b2838, #16202d);
+    -fx-pref-height: 160px;
+    -fx-max-height: 160px;
+    -fx-min-height: 160px;
+}
+
+.perfil-avatar-wrapper {
+    -fx-background-color: #1b2838;
+    -fx-border-color: #0b1118;
+    -fx-border-width: 4;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-min-width: 100px;
+    -fx-min-height: 100px;
+    -fx-max-width: 100px;
+    -fx-max-height: 100px;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 10, 0, 0, 3);
+}
+
+.perfil-avatar-initial {
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.perfil-nombre {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6f0f8;
+}
+
+.perfil-email {
+    -fx-font-size: 13px;
+    -fx-text-fill: #9fb3c8;
+}
+
+.perfil-estado-badge {
+    -fx-background-color: rgba(102, 192, 244, 0.12);
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 12 4 12;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(102, 192, 244, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+}
+
+.perfil-section-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9fb3c8;
+    -fx-padding: 0 0 4 0;
+}
+
+.perfil-msg {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4caf50;
+}
+
+.perfil-card {
+    -fx-background-color: rgba(255,255,255,0.03);
+    -fx-border-color: rgba(102, 192, 244, 0.12);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 18 20 18 20;
+}
+
+.perfil-dato-clave {
+    -fx-text-fill: #5b7a99;
+    -fx-font-size: 12px;
+    -fx-min-width: 200px;
+}
+
+.perfil-dato-valor {
+    -fx-text-fill: #e6f0f8;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Botones de estado (toggle) */
+.estado-toggle {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-text-fill: #9fb3c8;
+    -fx-font-size: 12px;
+    -fx-padding: 8 18 8 18;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(102, 192, 244, 0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+}
+
+.estado-toggle:hover {
+    -fx-background-color: rgba(102, 192, 244, 0.1);
+    -fx-text-fill: #e6f0f8;
+}
+
+.estado-toggle-active {
+    -fx-background-color: rgba(102, 192, 244, 0.18);
+    -fx-text-fill: #e6f0f8;
+    -fx-border-color: rgba(102, 192, 244, 0.6);
+    -fx-font-weight: bold;
+}
+
+/* ════════════════════════════════════════
+   AMIGOS — PANEL IZQUIERDO
+   ════════════════════════════════════════ */
+
+.amigos-left-panel {
+    -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
+    -fx-border-color: transparent rgba(102, 192, 244, 0.2) transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-pref-width: 290;
+    -fx-min-width: 250;
+    -fx-max-width: 320;
+}
+
+.amigos-left-header {
+    -fx-background-color: rgba(15, 23, 34, 0.95);
+    -fx-border-color: transparent transparent rgba(102, 192, 244, 0.15) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 16 16 16 16;
+}
+
+.amigos-panel-title {
+    -fx-text-fill: #e6f0f8;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.amigos-search {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(102, 192, 244, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12 8 12;
+    -fx-text-fill: #e6f0f8;
+    -fx-prompt-text-fill: #5b7a99;
+    -fx-font-size: 12px;
+}
+
+.amigos-search:focused {
+    -fx-border-color: rgba(102, 192, 244, 0.5);
+}
+
+.amigos-tabs {
+    -fx-border-color: transparent transparent rgba(102, 192, 244, 0.15) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.amigos-tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9fb3c8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 10 0;
+    -fx-cursor: hand;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.amigos-tab:hover {
+    -fx-text-fill: #e6f0f8;
+}
+
+.amigos-tab-active {
+    -fx-text-fill: #e6f0f8 !important;
+    -fx-border-color: transparent transparent #66c0f4 transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* Fila amigo */
+.amigo-row {
+    -fx-padding: 8 10 8 10;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.amigo-row:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+}
+
+.amigo-row-selected {
+    -fx-background-color: rgba(102, 192, 244, 0.08);
+    -fx-border-color: rgba(102, 192, 244, 0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+}
+
+.amigo-avatar {
+    -fx-background-color: #1b2838;
+    -fx-background-radius: 50;
+    -fx-alignment: CENTER;
+}
+
+/* Dot de estado */
+.estado-dot {
+    -fx-background-radius: 50;
+    -fx-border-color: #0b1118;
+    -fx-border-width: 2;
+    -fx-border-radius: 50;
+}
+
+.estado-dot-online      { -fx-background-color: #4caf50; }
+.estado-dot-ausente     { -fx-background-color: #f9a825; }
+.estado-dot-no-molestar { -fx-background-color: #e53935; }
+.estado-dot-offline     { -fx-background-color: #5b7a99; }
+
+/* Botón chat pequeño */
+.amigo-btn-chat {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5b7a99;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8 4 8;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.amigo-btn-chat:hover {
+    -fx-background-color: rgba(102, 192, 244, 0.12);
+    -fx-text-fill: #66c0f4;
+}
+
+/* Botón agregar amigo */
+.btn-agregar-amigo {
+    -fx-background-color: rgba(102, 192, 244, 0.12);
+    -fx-text-fill: #66c0f4;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14 6 14;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(102, 192, 244, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+
+.btn-agregar-amigo:hover {
+    -fx-background-color: rgba(102, 192, 244, 0.22);
+}
+
+/* Solicitudes */
+.solicitud-card {
+    -fx-background-color: rgba(255,255,255,0.03);
+    -fx-border-color: rgba(102, 192, 244, 0.12);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14 14 14 14;
+    -fx-spacing: 10;
+}
+
+.btn-aceptar {
+    -fx-background-color: #2e7d32;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 16 7 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.btn-aceptar:hover {
+    -fx-background-color: #388e3c;
+}
+
+.btn-rechazar {
+    -fx-background-color: rgba(229, 57, 53, 0.15);
+    -fx-text-fill: #ef5350;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 16 7 16;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(229, 57, 53, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+}
+
+.btn-rechazar:hover {
+    -fx-background-color: rgba(229, 57, 53, 0.28);
+}
+
+/* ════════════════════════════════════════
+   CHAT
+   ════════════════════════════════════════ */
+
+.chat-placeholder-area {
+    -fx-background-color: #0b1118;
+    -fx-alignment: CENTER;
+}
+
+.chat-placeholder-txt {
+    -fx-text-fill: #5b7a99;
+    -fx-font-size: 14px;
+}
+
+.chat-panel {
+    -fx-background-color: #0b1118;
+}
+
+.chat-header {
+    -fx-background-color: rgba(15, 23, 34, 0.97);
+    -fx-border-color: transparent transparent rgba(102, 192, 244, 0.15) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 14 20 14 20;
+}
+
+.chat-nombre {
+    -fx-text-fill: #e6f0f8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.chat-btn-cerrar {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5b7a99;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8 4 8;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.chat-btn-cerrar:hover {
+    -fx-background-color: rgba(244, 67, 54, 0.15);
+    -fx-text-fill: #f44336;
+}
+
+.chat-burbuja-mia {
+    -fx-background-color: #1a4a7a;
+    -fx-text-fill: #e6f0f8;
+    -fx-font-size: 13px;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 16 16 4 16;
+    -fx-wrap-text: true;
+}
+
+.chat-burbuja-otro {
+    -fx-background-color: #1b2838;
+    -fx-text-fill: #e6f0f8;
+    -fx-font-size: 13px;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 16 16 16 4;
+    -fx-wrap-text: true;
+}
+
+.chat-hora {
+    -fx-text-fill: #5b7a99;
+    -fx-font-size: 10px;
+    -fx-padding: 2 4 0 4;
+}
+
+.chat-input-box {
+    -fx-background-color: rgba(15, 23, 34, 0.97);
+    -fx-border-color: rgba(102, 192, 244, 0.15) transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 14 16 14 16;
+}
+
+.chat-input {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(102, 192, 244, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-background-radius: 24;
+    -fx-padding: 10 18 10 18;
+    -fx-text-fill: #e6f0f8;
+    -fx-prompt-text-fill: #5b7a99;
+    -fx-font-size: 13px;
+}
+
+.chat-input:focused {
+    -fx-border-color: rgba(102, 192, 244, 0.55);
+    -fx-background-color: rgba(255, 255, 255, 0.09);
+}
