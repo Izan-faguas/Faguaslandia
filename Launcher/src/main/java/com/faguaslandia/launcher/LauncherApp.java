@@ -9,6 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 public class LauncherApp extends Application {
 
     private AuthService authService;
@@ -55,6 +59,26 @@ public class LauncherApp extends Application {
                         loginView.getLoginBtn().setDisable(false);
                         if (usuario != null) {
                             mostrarLauncher(usuario);
+                            Thread heartbeat = new Thread(() -> {
+                                while (true) {
+                                    try {
+                                        Thread.sleep(60000);
+                                        HttpRequest req = HttpRequest.newBuilder()
+                                                .uri(URI.create(Config.API_BASE_URL + "/presencia/heartbeat"))
+                                                .POST(HttpRequest.BodyPublishers.noBody())
+                                                .build();
+                                        AuthService.getClient().send(req, HttpResponse.BodyHandlers.discarding());
+                                    } catch (InterruptedException ie) {
+                                        Thread.currentThread().interrupt();
+                                        break;
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            });
+                            heartbeat.setDaemon(true);
+                            heartbeat.start();
+
                         } else {
                             loginView.getMensaje().getStyleClass().remove("login-ok");
                             loginView.getMensaje().getStyleClass().add("login-error");
@@ -120,6 +144,7 @@ public class LauncherApp extends Application {
 
         scene.setRoot(root);
     }
+
 
     public static void main(String[] args) {
         launch();

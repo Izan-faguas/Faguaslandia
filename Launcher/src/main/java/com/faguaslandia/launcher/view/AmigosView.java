@@ -2,6 +2,7 @@ package com.faguaslandia.launcher.view;
 
 import com.faguaslandia.launcher.Config;
 import com.faguaslandia.launcher.model.Usuario;
+import com.faguaslandia.launcher.service.AuthService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,9 +41,25 @@ public class AmigosView extends HBox {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class MensajeDTO {
         public Long id;
-        public Long remitenteId;
+        public UsuarioDTO emisor;
         public String contenido;
-        public String fecha;
+        public String fechaEnvio;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class UsuarioDTO {
+        public Long id;
+        public String nombre;
+        public String foto;
+        public String estado;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class AmigoRelacionDTO {
+        public Long id;
+        public UsuarioDTO usuario1;
+        public UsuarioDTO usuario2;
+        public String estado;
     }
 
     // ── Campos ──────────────────────────────────────────
@@ -217,19 +234,34 @@ public class AmigosView extends HBox {
 
     private List<AmigoDTO> fetchAmigos() throws Exception {
         String url = Config.API_BASE_URL + "/usuarios/" + usuarioActual.getId() + "/amigos";
-        HttpResponse<String> resp = HttpClient.newHttpClient().send(
-            HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
-            HttpResponse.BodyHandlers.ofString()
+        HttpResponse<String> resp = AuthService.getClient().send(
+                HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
+                HttpResponse.BodyHandlers.ofString()
         );
         if (resp.statusCode() == 200) {
-            return mapper.readValue(resp.body(), new TypeReference<>() {});
+            List<AmigoRelacionDTO> relaciones = mapper.readValue(resp.body(), new TypeReference<>() {});
+            return relaciones.stream()
+                    .filter(r -> "aceptado".equals(r.estado))
+                    .map(r -> {
+                        UsuarioDTO otro = r.usuario1.id.equals(usuarioActual.getId())
+                                ? r.usuario2 : r.usuario1;
+
+                        AmigoDTO a = new AmigoDTO();
+                        a.id     = otro.id;
+                        a.nombre = otro.nombre;
+                        a.estado = otro.estado;
+                        a.foto   = otro.foto != null && !otro.foto.equals("default_avatar.png")
+                                ? Config.IMG_BASE_URL + "/avatars/" + otro.foto
+                                : null;
+                        return a;
+                    }).toList();
         }
         return new ArrayList<>();
     }
 
     private List<AmigoDTO> fetchSolicitudes() throws Exception {
         String url = Config.API_BASE_URL + "/usuarios/" + usuarioActual.getId() + "/solicitudes-pendientes";
-        HttpResponse<String> resp = HttpClient.newHttpClient().send(
+        HttpResponse<String> resp = AuthService.getClient().send(
             HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
             HttpResponse.BodyHandlers.ofString()
         );
@@ -439,7 +471,7 @@ public class AmigosView extends HBox {
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/solicitudes/" + sol.solicitudId + "/" + endpoint;
-                HttpClient.newHttpClient().send(
+                AuthService.getClient().send(
                     HttpRequest.newBuilder().uri(URI.create(url))
                         .POST(HttpRequest.BodyPublishers.noBody()).build(),
                     HttpResponse.BodyHandlers.ofString()
@@ -587,10 +619,11 @@ public class AmigosView extends HBox {
     }
 
     private List<MensajeDTO> fetchMensajes(Long amigoId) throws Exception {
-        String url = Config.API_BASE_URL + "/mensajes/" + usuarioActual.getId() + "/" + amigoId;
-        HttpResponse<String> resp = HttpClient.newHttpClient().send(
-            HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
-            HttpResponse.BodyHandlers.ofString()
+        String url = Config.API_BASE_URL + "/mensajes/conversacion?id1="
+                + usuarioActual.getId() + "&id2=" + amigoId;
+        HttpResponse<String> resp = AuthService.getClient().send(
+                HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
+                HttpResponse.BodyHandlers.ofString()
         );
         if (resp.statusCode() == 200) {
             return mapper.readValue(resp.body(), new TypeReference<>() {});
@@ -607,20 +640,21 @@ public class AmigosView extends HBox {
 
         // Mostrar optimísticamente
         MensajeDTO local = new MensajeDTO();
-        local.remitenteId = usuarioActual.getId();
-        local.contenido   = texto;
-        local.fecha       = "ahora";
-        mensajesBox.getChildren().add(crearBurbuja(local));
+        local.emisor = new UsuarioDTO();
+        local.emisor.id = usuarioActual.getId();
+        local.emisor.nombre = usuarioActual.getNombre();
+        local.contenido = texto;
+        local.fechaEnvio = java.time.LocalDateTime.now().toString();
 
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/mensajes";
                 String json = String.format(
-                    "{\"remitenteId\":%d,\"destinatarioId\":%d,\"contenido\":\"%s\"}",
-                    usuarioActual.getId(), amigoSeleccionado.id,
-                    texto.replace("\"", "\\\"")
+                        "{\"receptorId\":%d,\"contenido\":\"%s\"}",
+                        amigoSeleccionado.id,
+                        texto.replace("\"", "\\\"")
                 );
-                HttpClient.newHttpClient().send(
+                AuthService.getClient().send(
                     HttpRequest.newBuilder().uri(URI.create(url))
                         .header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(json)).build(),
@@ -635,14 +669,20 @@ public class AmigosView extends HBox {
     }
 
     private HBox crearBurbuja(MensajeDTO m) {
-        boolean mio = m.remitenteId != null && m.remitenteId.equals(usuarioActual.getId());
+        boolean mio = m.emisor != null && m.emisor.id.equals(usuarioActual.getId());
 
         Label bubble = new Label(m.contenido);
         bubble.setWrapText(true);
         bubble.setMaxWidth(360);
         bubble.getStyleClass().add(mio ? "chat-burbuja-mia" : "chat-burbuja-otro");
 
-        Label hora = new Label(m.fecha != null ? m.fecha : "");
+        String horaTexto = "";
+        if (m.fechaEnvio != null && m.fechaEnvio.length() >= 16) {
+            horaTexto = (mio ? "Tú" : (m.emisor != null ? m.emisor.nombre : ""))
+                    + "  •  " + m.fechaEnvio.substring(11, 16);
+        }
+
+        Label hora = new Label(horaTexto);
         hora.getStyleClass().add("chat-hora");
 
         VBox stack = new VBox(3, bubble, hora);
@@ -765,7 +805,7 @@ public class AmigosView extends HBox {
                     "{\"remitenteId\":%d,\"destinatarioEmail\":\"%s\"}",
                     usuarioActual.getId(), email
                 );
-                HttpResponse<String> resp = HttpClient.newHttpClient().send(
+                HttpResponse<String> resp = AuthService.getClient().send(
                     HttpRequest.newBuilder().uri(URI.create(url))
                         .header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(json)).build(),

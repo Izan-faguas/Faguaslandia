@@ -13,13 +13,18 @@ import java.net.http.HttpResponse;
 public class AuthService {
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private static HttpClient client;  // cliente compartido con cookies
+
+    public static HttpClient getClient() { return client; }
 
     public Usuario login(String email, String password) throws Exception {
         String url = Config.API_BASE_URL + "/auth/login";
-        // URL de tu backend
-
-        // Creamos el JSON para enviar al backend
         String json = String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
+
+        // Crear el cliente con CookieManager para mantener la sesión
+        client = HttpClient.newBuilder()
+                .cookieHandler(new java.net.CookieManager())
+                .build();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -27,14 +32,12 @@ public class AuthService {
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            // Devuelve un Usuario con todos sus datos
             return mapper.readValue(response.body(), Usuario.class);
         } else {
-            return null; // login fallido
+            return null;
         }
     }
 }

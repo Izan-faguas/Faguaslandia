@@ -7,25 +7,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.net.URI;
-import java.net.URL;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-import static jdk.javadoc.doclet.DocletEnvironment.ModuleMode.API;
-
 public class JuegoService {
 
     private static final String API_BASE = Config.API_BASE_URL + "/juegos";
-
-
-    private final HttpClient client;
     private final ObjectMapper mapper;
 
-
     public JuegoService() {
-        this.client = HttpClient.newHttpClient();
         this.mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
     }
@@ -35,19 +26,14 @@ public class JuegoService {
                 .uri(URI.create(API_BASE))
                 .GET()
                 .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = AuthService.getClient().send(request, HttpResponse.BodyHandlers.ofString());
         return mapper.readValue(response.body(), new TypeReference<List<Juego>>() {});
     }
 
     public void comprarJuego(Long usuarioId, Long juegoId) throws Exception {
-
         String json = """
-    {
-      "usuarioId": %d,
-      "juegoId": %d
-    }
-    """.formatted(usuarioId, juegoId);
+                {"usuarioId": %d, "juegoId": %d}
+                """.formatted(usuarioId, juegoId);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(Config.API_BASE_URL + "/compras"))
@@ -55,46 +41,29 @@ public class JuegoService {
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
-
+        HttpResponse<String> response = AuthService.getClient().send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("STATUS COMPRA: " + response.statusCode());
         System.out.println("RESPUESTA: " + response.body());
     }
 
-
-
     public boolean estaComprado(Long usuarioId, Long juegoId) throws Exception {
         String url = Config.API_BASE_URL + "/compras/usuario/" + usuarioId + "/juego/" + juegoId;
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
                 .build();
-
-        HttpResponse<String> response = client.send(
-                request, HttpResponse.BodyHandlers.ofString());
-
+        HttpResponse<String> response = AuthService.getClient().send(request, HttpResponse.BodyHandlers.ofString());
         return Boolean.parseBoolean(response.body());
     }
 
-
     public List<Juego> obtenerBiblioteca(Long usuarioId) throws Exception {
         String url = Config.API_BASE_URL + "/compras/usuario/" + usuarioId;
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
                 .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
+        HttpResponse<String> response = AuthService.getClient().send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("BIBLIOTECA RESPONSE: " + response.body());
-
         return mapper.readValue(response.body(), new TypeReference<List<Juego>>() {});
     }
-
-
-
 }
