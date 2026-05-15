@@ -1,12 +1,7 @@
 package com.faguaslandia.controller;
 
-import com.faguaslandia.model.EstadoAmigo;
-import com.faguaslandia.model.EstadoUsuario;
-import com.faguaslandia.model.Usuario;
-import com.faguaslandia.model.Amigo;
-import com.faguaslandia.repository.AmigoRepository;
-import com.faguaslandia.repository.CompraRepository;
-import com.faguaslandia.repository.UsuarioRepository;
+import com.faguaslandia.model.*;
+import com.faguaslandia.repository.*;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -30,15 +25,21 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
     private final AmigoRepository amigoRepository;
     private final CompraRepository compraRepository;
+    private final SesionJuegoRepository sesionJuegoRepository;
+    private final LogroUsuarioRepository logroUsuarioRepository;
 
     public UsuarioController(
             UsuarioRepository usuarioRepository,
             AmigoRepository amigoRepository,
-            CompraRepository compraRepository
+            CompraRepository compraRepository,
+            SesionJuegoRepository sesionJuegoRepository,
+            LogroUsuarioRepository logroUsuarioRepository
     ) {
         this.usuarioRepository = usuarioRepository;
         this.amigoRepository = amigoRepository;
         this.compraRepository = compraRepository;
+        this.sesionJuegoRepository = sesionJuegoRepository;
+        this.logroUsuarioRepository = logroUsuarioRepository;
     }
 
     // -------------------------------------------------------
@@ -128,15 +129,32 @@ public class UsuarioController {
     @GetMapping("/{id}/stats")
     public Map<String, Object> getStats(@PathVariable Long id) {
         long numJuegos = compraRepository.findByUsuarioId(id).size();
-        // Horas y logros reales: por ahora calculados desde las compras.
-        // Cuando implementes sesiones de juego, actualiza aquí.
-        long horas   = numJuegos * 5L;   // placeholder realista: ~5h por juego
-        long logros  = numJuegos * 2L;   // placeholder: ~2 logros por juego
+        Double horas   = sesionJuegoRepository.totalHorasByUsuario(id);
+        long logros    = logroUsuarioRepository.countByUsuarioId(id);
         return Map.of(
                 "juegos", numJuegos,
-                "horas",  horas,
+                "horas",  Math.round(horas * 10.0) / 10.0,
                 "logros", logros
         );
+    }
+
+    @GetMapping("/{id}/logros")
+    public List<Map<String, Object>> getLogros(@PathVariable Long id) {
+        try {
+            return logroUsuarioRepository.findByUsuarioId(id).stream()
+                    .map(lu -> Map.<String, Object>of(
+                            "id",              lu.getId(),
+                            "nombre",          lu.getLogro().getNombre(),
+                            "descripcion",     lu.getLogro().getDescripcion(),
+                            "icono",           lu.getLogro().getIconoUrl(),
+                            "tipo",            lu.getLogro().getTipo().name(),
+                            "fechaDesbloqueo", lu.getFechaDesbloqueo().toString()
+                    ))
+                    .collect(java.util.stream.Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     // -------------------------------------------------------

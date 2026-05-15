@@ -41,37 +41,62 @@ public class HeaderView extends HBox {
     private Label makeNav(String texto) {
         Label lbl = new Label(texto);
         lbl.getStyleClass().add("header-label");
+
         lbl.setOnMouseEntered(e -> {
             if (lbl != activeLabel)
                 lbl.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 18 0 18 0; -fx-cursor: hand;");
         });
+
         lbl.setOnMouseExited(e -> {
             if (lbl != activeLabel)
-                lbl.setStyle("");
+                lbl.setStyle(null);
         });
+
         return lbl;
     }
 
     private void setActive(Label lbl) {
         if (activeLabel != null) {
             activeLabel.getStyleClass().remove("header-label-active");
-            activeLabel.setStyle("");
+            activeLabel.setStyle(null);
         }
+
         activeLabel = lbl;
         lbl.getStyleClass().add("header-label-active");
-        lbl.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 18 0 18 0; -fx-cursor: hand; -fx-border-color: transparent transparent #66c0f4 transparent; -fx-border-width: 0 0 2 0;");
+        lbl.setStyle(
+                "-fx-text-fill: #e6f0f8;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 18 0 18 0;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-border-color: transparent transparent #66c0f4 transparent;" +
+                        "-fx-border-width: 0 0 2 0;"
+        );
     }
 
     public void setActions(Runnable bibliotecaAction, Runnable tiendaAction,
                            Runnable amigosAction, Runnable perfilAction) {
-        if (bibliotecaAction != null) lblBiblioteca.setOnMouseClicked(e -> { setActive(lblBiblioteca); bibliotecaAction.run(); });
-        if (tiendaAction     != null) lblTienda.setOnMouseClicked(e    -> { setActive(lblTienda);      tiendaAction.run(); });
-        if (amigosAction     != null) lblAmigos.setOnMouseClicked(e    -> { setActive(lblAmigos);      amigosAction.run(); });
-        if (perfilAction     != null) lblPerfil.setOnMouseClicked(e    -> { setActive(lblPerfil);      perfilAction.run(); });
+
+        if (bibliotecaAction != null)
+            lblBiblioteca.setOnMouseClicked(e -> { setActive(lblBiblioteca); bibliotecaAction.run(); });
+
+        if (tiendaAction != null)
+            lblTienda.setOnMouseClicked(e -> { setActive(lblTienda); tiendaAction.run(); });
+
+        if (amigosAction != null)
+            lblAmigos.setOnMouseClicked(e -> { setActive(lblAmigos); amigosAction.run(); });
+
+        if (perfilAction != null)
+            lblPerfil.setOnMouseClicked(e -> { setActive(lblPerfil); perfilAction.run(); });
     }
 
     /** Compatibilidad con firma antigua de 3 parámetros */
     public void setActions(Runnable bibliotecaAction, Runnable tiendaAction, Runnable perfilAction) {
         setActions(bibliotecaAction, tiendaAction, null, perfilAction);
+    }
+
+    /** Permite activar la pestaña de amigos desde fuera */
+    public void activarAmigos() {
+        setActive(lblAmigos);
     }
 }

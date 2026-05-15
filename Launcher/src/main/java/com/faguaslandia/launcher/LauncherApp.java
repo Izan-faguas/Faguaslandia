@@ -117,9 +117,16 @@ public class LauncherApp extends Application {
         PerfilView      perfilView      = new PerfilView(usuario);
 
         // Callbacks cruzados tienda ↔ detalle
-        juegoDetailView.setCallbackActualizarBiblioteca(() ->
-                bibliotecaView.actualizarBiblioteca()
+        juegoDetailView.setCallbackActualizarBiblioteca(bibliotecaView::actualizarBiblioteca
         );
+        bibliotecaView.setCallbackAbrirChat(amigoId -> {
+            header.activarAmigos();
+            amigosView.cargarDatos();
+            root.setCenter(amigosView);
+
+            Platform.runLater(() -> amigosView.abrirChatPorId(amigoId));
+        });
+
         juegoDetailView.setCallbackVolver(() ->
                 root.setCenter(tiendaView)
         );

@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class AmigosView extends HBox {
 
+
     // ── Modelo interno ──────────────────────────────────
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class AmigoDTO {
@@ -833,6 +834,16 @@ public class AmigosView extends HBox {
             }
         }).start();
     }
+
+    public void abrirChatPorId(Long id) {
+        if (amigos == null) return;
+
+        amigos.stream()
+                .filter(a -> a.id.equals(id))
+                .findFirst()
+                .ifPresent(this::abrirChat);
+    }
+
 
     public void detener() {
         detenerPolling();

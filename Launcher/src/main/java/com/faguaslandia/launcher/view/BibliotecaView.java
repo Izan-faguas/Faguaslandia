@@ -13,13 +13,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 
 import java.util.List;
 
 public class BibliotecaView {
 
-    private final JuegoService juegoService   = new JuegoService();
+    private final JuegoService juegoService = new JuegoService();
     private final GameInstallerService installer = new GameInstallerService();
     private final Long usuarioId;
 
@@ -30,6 +29,12 @@ public class BibliotecaView {
     private VBox juegosContainer;
 
     private StackPane selectedCard;
+
+    private Runnable callbackIrAmigos;
+    private java.util.function.Consumer<Long> callbackAbrirChat;
+
+    public void setCallbackIrAmigos(Runnable r) { this.callbackIrAmigos = r; }
+    public void setCallbackAbrirChat(java.util.function.Consumer<Long> c) { this.callbackAbrirChat = c; }
 
     public BibliotecaView(Long usuarioId) {
         this.usuarioId = usuarioId;
@@ -43,7 +48,6 @@ public class BibliotecaView {
         root = new HBox();
         root.getStyleClass().add("root");
 
-        /* ── IZQUIERDA: lista covers ── */
         bibliotecaPanel = new VBox(12);
         bibliotecaPanel.getStyleClass().add("panel-left");
 
@@ -51,7 +55,6 @@ public class BibliotecaView {
         tituloLib.getStyleClass().add("panel-left-title");
         bibliotecaPanel.getChildren().add(tituloLib);
 
-        /* ── CENTRO: detalle ── */
         detallePanel = new VBox();
         detallePanel.getStyleClass().add("panel-center");
         HBox.setHgrow(detallePanel, Priority.ALWAYS);
@@ -61,22 +64,85 @@ public class BibliotecaView {
         placeholder.setPadding(new Insets(40));
         detallePanel.getChildren().add(placeholder);
 
-        /* ── DERECHA: amigos ── */
         amigosPanel = new VBox(4);
         amigosPanel.getStyleClass().add("panel-right");
 
         Label tituloAmigos = new Label("👥 Amigos");
         tituloAmigos.getStyleClass().add("amigos-titulo");
-        tituloAmigos.setMaxWidth(Double.MAX_VALUE);
         amigosPanel.getChildren().add(tituloAmigos);
 
-        Label amigosEmpty = new Label("Sin amigos aún.\nAgrega desde tu perfil.");
-        amigosEmpty.getStyleClass().add("amigos-vacio");
-        amigosEmpty.setWrapText(true);
-        amigosEmpty.setPadding(new Insets(16, 4, 0, 4));
-        amigosPanel.getChildren().add(amigosEmpty);
+        cargarAmigosPanel();
 
         root.getChildren().addAll(bibliotecaPanel, detallePanel, amigosPanel);
+    }
+
+    private void cargarAmigosPanel() {
+        new Thread(() -> {
+            try {
+                String url = Config.API_BASE_URL + "/usuarios/" + usuarioId + "/amigos";
+                var resp = com.faguaslandia.launcher.service.AuthService.getClient().send(
+                        java.net.http.HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build(),
+                        java.net.http.HttpResponse.BodyHandlers.ofString()
+                );
+                if (resp.statusCode() != 200) return;
+
+                var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+
+                var relaciones = mapper.readValue(
+                        resp.body(),
+                        new com.fasterxml.jackson.core.type.TypeReference<
+                                java.util.List<com.faguaslandia.launcher.view.AmigosView.AmigoRelacionDTO>
+                                >() {}
+                );
+
+                var filas = relaciones.stream()
+                        .filter(r -> "aceptado".equals(r.estado))
+                        .map(r -> r.usuario1.id.equals(usuarioId) ? r.usuario2 : r.usuario1)
+                        .map(otro -> {
+                            String dotColor = switch (otro.estado == null ? "offline" : otro.estado) {
+                                case "online"      -> "#4caf50";
+                                case "ausente"     -> "#f9a825";
+                                case "no_molestar" -> "#e53935";
+                                default            -> "#5b7a99";
+                            };
+
+                            Label dot = new Label("●");
+                            dot.setStyle("-fx-text-fill: " + dotColor + "; -fx-font-size: 10px;");
+
+                            Label nombre = new Label(otro.nombre);
+                            nombre.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 13px;");
+
+                            HBox fila = new HBox(8, dot, nombre);
+                            fila.setAlignment(Pos.CENTER_LEFT);
+                            fila.setPadding(new Insets(6, 10, 6, 10));
+                            fila.setStyle("-fx-cursor: hand; -fx-background-radius: 6;");
+                            fila.setOnMouseEntered(e -> fila.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 6;"));
+                            fila.setOnMouseExited(e -> fila.setStyle("-fx-background-radius: 6;"));
+
+                            Long amigoId = otro.id;
+
+                            fila.setOnMouseClicked(e -> {
+                                if (callbackAbrirChat != null) callbackAbrirChat.accept(amigoId);
+                            });
+
+                            return fila;
+                        }).toList();
+
+                Platform.runLater(() -> {
+                    if (filas.isEmpty()) {
+                        Label empty = new Label("Sin amigos aún.");
+                        empty.getStyleClass().add("amigos-vacio");
+                        empty.setPadding(new Insets(16, 10, 0, 10));
+                        amigosPanel.getChildren().add(empty);
+                    } else {
+                        amigosPanel.getChildren().addAll(filas);
+                    }
+                });
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start();
     }
 
     private void cargarBiblioteca() {
@@ -103,7 +169,7 @@ public class BibliotecaView {
             if (!juegos.isEmpty()) {
                 Juego primero = juegos.get(0);
                 mostrarJuego(primero);
-                // marcar el primer card
+
                 Platform.runLater(() -> {
                     if (!juegosContainer.getChildren().isEmpty()) {
                         marcarSeleccion((StackPane) juegosContainer.getChildren().get(0));
@@ -125,10 +191,6 @@ public class BibliotecaView {
     private StackPane crearCard(Juego juego) {
         String url = Config.IMG_BASE_URL + "/" + juego.getImagen_url();
         Image image = new Image(url, true);
-        image.errorProperty().addListener((obs, o, err) -> {
-            if (err) System.out.println("Error cargando imagen: " + url);
-        });
-
 
         ImageView img = new ImageView(image);
         img.setFitWidth(196);
@@ -151,7 +213,6 @@ public class BibliotecaView {
     private void mostrarJuego(Juego juego) {
         detallePanel.getChildren().clear();
 
-        /* ── Imagen grande ── */
         String url = Config.IMG_BASE_URL + "/" + juego.getImagen_url();
         ImageView portada = new ImageView(new Image(url, true));
         portada.setFitWidth(900);
@@ -160,12 +221,10 @@ public class BibliotecaView {
         portada.setSmooth(true);
         portada.getStyleClass().add("detalle-img");
 
-        // contenedor de imagen que ocupa todo el ancho
         StackPane imgContainer = new StackPane(portada);
         imgContainer.setMaxWidth(Double.MAX_VALUE);
         portada.fitWidthProperty().bind(imgContainer.widthProperty());
 
-        /* ── Info ── */
         Label titulo = new Label(juego.getTitulo());
         titulo.getStyleClass().add("detalle-titulo");
 
@@ -173,7 +232,6 @@ public class BibliotecaView {
         desc.setWrapText(true);
         desc.getStyleClass().add("detalle-desc");
 
-        // Fila de meta: desarrollador, categoría
         HBox meta = new HBox(16);
         if (juego.getDesarrollador() != null) {
             Label dev = new Label("👤 " + juego.getDesarrollador());
@@ -189,7 +247,7 @@ public class BibliotecaView {
         Button jugar = new Button("▶  JUGAR");
         jugar.getStyleClass().add("btn-play");
 
-        String gameName   = juego.getTitulo().replace(" ", "_");
+        String gameName = juego.getTitulo().replace(" ", "_");
         String downloadUrl = Config.API_BASE_URL + "/juegos/download/" + juego.getId();
 
         jugar.setOnAction(e -> {
