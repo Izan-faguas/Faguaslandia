@@ -835,6 +835,36 @@ header {
   color: var(--accent);
 }
 
+.nivel-progreso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.nivel-barra-bg {
+  flex: 1;
+  height: 6px;
+  background: var(--border, rgba(255,255,255,0.1));
+  border-radius: 3px;
+  overflow: hidden;
+  max-width: 160px;
+}
+
+.nivel-barra-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.nivel-puntos {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+
 .perfil-body {
   padding: 20px 30px 30px;
   display: flex;
@@ -892,6 +922,49 @@ header {
 .stat-card p {
   font-size: 24px;
   font-weight: bold;
+}
+
+.logro-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: 0.2s;
+}
+
+.logro-item:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+.logro-icono {
+  font-size: 28px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.logro-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.logro-info strong {
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.logro-info span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.logro-info small {
+  color: var(--accent);
+  font-size: 11px;
 }
 
 /* =========================
@@ -1713,4 +1786,66 @@ header {
   .estrellas-input .estrella {
     font-size: 24px;
   }
+}
+
+/* ── TOAST LOGROS ────────────────────────────────────── */
+#toastContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.toast-logro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card-bg, #1e1e2e);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 14px 18px;
+  min-width: 280px;
+  max-width: 340px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.toast-logro.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast-icono {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.toast-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toast-titulo {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toast-nombre {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text, #fff);
+}
+
+.toast-desc {
+  font-size: 12px;
+  color: var(--text-muted);
 }

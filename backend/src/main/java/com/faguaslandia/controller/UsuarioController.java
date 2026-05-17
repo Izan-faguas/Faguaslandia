@@ -12,11 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+
+import com.faguaslandia.service.LogroService;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -27,19 +28,22 @@ public class UsuarioController {
     private final CompraRepository compraRepository;
     private final SesionJuegoRepository sesionJuegoRepository;
     private final LogroUsuarioRepository logroUsuarioRepository;
+    private final LogroService logroService;
 
     public UsuarioController(
             UsuarioRepository usuarioRepository,
             AmigoRepository amigoRepository,
             CompraRepository compraRepository,
             SesionJuegoRepository sesionJuegoRepository,
-            LogroUsuarioRepository logroUsuarioRepository
+            LogroUsuarioRepository logroUsuarioRepository,
+            LogroService logroService
     ) {
-        this.usuarioRepository = usuarioRepository;
-        this.amigoRepository = amigoRepository;
-        this.compraRepository = compraRepository;
-        this.sesionJuegoRepository = sesionJuegoRepository;
+        this.usuarioRepository      = usuarioRepository;
+        this.amigoRepository        = amigoRepository;
+        this.compraRepository       = compraRepository;
+        this.sesionJuegoRepository  = sesionJuegoRepository;
         this.logroUsuarioRepository = logroUsuarioRepository;
+        this.logroService           = logroService;
     }
 
     // -------------------------------------------------------
@@ -89,7 +93,6 @@ public class UsuarioController {
                 File directory = new File(folder);
                 if (!directory.exists()) directory.mkdirs();
 
-                // Borrar foto anterior
                 File[] files = directory.listFiles();
                 if (files != null) {
                     for (File f : files) {
@@ -128,16 +131,51 @@ public class UsuarioController {
     // -------------------------------------------------------
     @GetMapping("/{id}/stats")
     public Map<String, Object> getStats(@PathVariable Long id) {
-        long numJuegos = compraRepository.findByUsuarioId(id).size();
-        Double horas   = sesionJuegoRepository.totalHorasByUsuario(id);
-        long logros    = logroUsuarioRepository.countByUsuarioId(id);
+        long   numJuegos = compraRepository.findByUsuarioId(id).size();
+        Double horas     = sesionJuegoRepository.totalHorasByUsuario(id);
+        if (horas == null) horas = 0.0;
+        long   logros    = logroUsuarioRepository.countByUsuarioId(id);
+
+        double ptsLogros = logros * 10.0;
+        double ptsHoras;
+        if (horas <= 50) {
+            ptsHoras = horas;
+        } else if (horas <= 150) {
+            ptsHoras = 50 + (horas - 50) * 0.5;
+        } else {
+            ptsHoras = 50 + 50 + (horas - 150) * 0.2;
+        }
+        double puntos = ptsLogros + ptsHoras;
+
+        int nivel;
+        if      (puntos < 15)  nivel = 1;
+        else if (puntos < 35)  nivel = 2;
+        else if (puntos < 65)  nivel = 3;
+        else if (puntos < 100) nivel = 4;
+        else if (puntos < 150) nivel = 5;
+        else if (puntos < 220) nivel = 6;
+        else                   nivel = 7;
+
+        double[] umbrales = {0, 15, 35, 65, 100, 150, 220, Double.MAX_VALUE};
+        double ptsNivelActual = umbrales[nivel - 1];
+        double ptsNivelSig    = umbrales[nivel];
+        int progreso = nivel == 7 ? 100
+                : (int) ((puntos - ptsNivelActual) / (ptsNivelSig - ptsNivelActual) * 100);
+
         return Map.of(
-                "juegos", numJuegos,
-                "horas",  Math.round(horas * 10.0) / 10.0,
-                "logros", logros
+                "juegos",   numJuegos,
+                "horas",    Math.round(horas * 10.0) / 10.0,
+                "logros",   logros,
+                "puntos",   (int) puntos,
+                "nivel",    nivel,
+                "progreso", progreso
         );
     }
 
+    // -------------------------------------------------------
+    // LOGROS DEL PERFIL
+    // GET /usuarios/{id}/logros
+    // -------------------------------------------------------
     @GetMapping("/{id}/logros")
     public List<Map<String, Object>> getLogros(@PathVariable Long id) {
         try {
@@ -158,36 +196,47 @@ public class UsuarioController {
     }
 
     // -------------------------------------------------------
+    // LOGROS PENDIENTES DE NOTIFICAR
+    // GET /usuarios/{id}/logros-pendientes
+    // Devuelve los logros no notificados y los marca como notificados
+    // -------------------------------------------------------
+    @GetMapping("/{id}/logros-pendientes")
+    public List<Map<String, Object>> getLogrosPendientes(@PathVariable Long id) {
+        List<LogroUsuario> pendientes = logroUsuarioRepository.findByUsuarioIdAndNotificadoFalse(id);
+
+        // Marcar todos como notificados
+        pendientes.forEach(lu -> lu.setNotificado(true));
+        logroUsuarioRepository.saveAll(pendientes);
+
+        return pendientes.stream()
+                .map(lu -> Map.<String, Object>of(
+                        "nombre",      lu.getLogro().getNombre(),
+                        "descripcion", lu.getLogro().getDescripcion(),
+                        "icono",       lu.getLogro().getIconoUrl()
+                ))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    // -------------------------------------------------------
     // AMIGOS — ENVIAR SOLICITUD
     // -------------------------------------------------------
     @PostMapping("/{id1}/agregar/{id2}")
-    public String enviarSolicitud(
-            @PathVariable Long id1,
-            @PathVariable Long id2
-    ) {
+    public String enviarSolicitud(@PathVariable Long id1, @PathVariable Long id2) {
         if (id1.equals(id2)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "No puedes agregarte a ti mismo"
-            );
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No puedes agregarte a ti mismo");
         }
-
-        // Evitar duplicados
         List<Amigo> existentes = amigoRepository.findByUsuario1IdOrUsuario2Id(id1, id2);
         boolean yaSolicitud = existentes.stream().anyMatch(a ->
                 (a.getUsuario1().getId().equals(id1) && a.getUsuario2().getId().equals(id2)) ||
                         (a.getUsuario1().getId().equals(id2) && a.getUsuario2().getId().equals(id1))
         );
         if (yaSolicitud) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Ya existe una relación con ese usuario"
-            );
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una relación con ese usuario");
         }
-
         Usuario u1 = usuarioRepository.findById(id1)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario emisor no encontrado"));
         Usuario u2 = usuarioRepository.findById(id2)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario receptor no encontrado"));
-
         amigoRepository.save(new Amigo(u1, u2));
         return "Solicitud enviada";
     }
@@ -209,11 +258,13 @@ public class UsuarioController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Solicitud no encontrada"));
         sol.setEstado(EstadoAmigo.aceptado);
         amigoRepository.save(sol);
+        logroService.onAmistad(sol.getUsuario1().getId());
+        logroService.onAmistad(sol.getUsuario2().getId());
         return "Solicitud aceptada";
     }
 
     // -------------------------------------------------------
-    // AMIGOS — RECHAZAR SOLICITUD  (NUEVO)
+    // AMIGOS — RECHAZAR SOLICITUD
     // -------------------------------------------------------
     @DeleteMapping("/solicitud/{id}/rechazar")
     public String rechazarSolicitud(@PathVariable Long id) {
@@ -224,13 +275,10 @@ public class UsuarioController {
     }
 
     // -------------------------------------------------------
-    // AMIGOS — ELIMINAR AMIGO  (NUEVO)
+    // AMIGOS — ELIMINAR AMIGO
     // -------------------------------------------------------
     @DeleteMapping("/{id}/amigos/{amigoId}")
-    public String eliminarAmigo(
-            @PathVariable Long id,
-            @PathVariable Long amigoId
-    ) {
+    public String eliminarAmigo(@PathVariable Long id, @PathVariable Long amigoId) {
         List<Amigo> relaciones = amigoRepository.findByUsuario1IdOrUsuario2Id(id, id);
         Amigo relacion = relaciones.stream()
                 .filter(a -> a.getEstado() == EstadoAmigo.aceptado &&
@@ -242,13 +290,10 @@ public class UsuarioController {
     }
 
     // -------------------------------------------------------
-    // AMIGOS — BLOQUEAR  (NUEVO)
+    // AMIGOS — BLOQUEAR
     // -------------------------------------------------------
     @PutMapping("/{id}/bloquear/{amigoId}")
-    public String bloquearAmigo(
-            @PathVariable Long id,
-            @PathVariable Long amigoId
-    ) {
+    public String bloquearAmigo(@PathVariable Long id, @PathVariable Long amigoId) {
         List<Amigo> relaciones = amigoRepository.findByUsuario1IdOrUsuario2Id(id, id);
         Amigo relacion = relaciones.stream()
                 .filter(a ->

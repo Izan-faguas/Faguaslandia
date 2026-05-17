@@ -12,19 +12,24 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.faguaslandia.service.LogroService;
+
 @Service
 public class CompraService {
 
     private final CompraRepository compraRepo;
     private final UsuarioRepository usuarioRepo;
     private final JuegoRepository juegoRepo;
+    private final LogroService logroService;
 
     public CompraService(CompraRepository compraRepo,
                          UsuarioRepository usuarioRepo,
-                         JuegoRepository juegoRepo) {
-        this.compraRepo = compraRepo;
-        this.usuarioRepo = usuarioRepo;
-        this.juegoRepo = juegoRepo;
+                         JuegoRepository juegoRepo,
+                         LogroService logroService) {
+        this.compraRepo   = compraRepo;
+        this.usuarioRepo  = usuarioRepo;
+        this.juegoRepo    = juegoRepo;
+        this.logroService = logroService;
     }
 
     public boolean estaComprado(Long usuarioId, Long juegoId) {
@@ -49,6 +54,7 @@ public class CompraService {
         compra.setFechaCompra(LocalDateTime.now());
 
         compraRepo.save(compra);
+        logroService.onCompra(usuarioId);
     }
 
     public List<Juego> obtenerBiblioteca(Long usuarioId) {

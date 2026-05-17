@@ -1,6 +1,7 @@
 -- ==============================
 -- BASE DE DATOS
 -- ==============================
+SET NAMES utf8mb4;
 DROP DATABASE IF EXISTS faguaslandia;
 CREATE DATABASE faguaslandia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE faguaslandia;
@@ -83,7 +84,7 @@ CREATE TABLE logros (
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     icono_url VARCHAR(255),
-    tipo ENUM('compra', 'amistad', 'chat', 'resena', 'puntuacion', 'especial') DEFAULT 'especial',
+    tipo ENUM('compra', 'amistad', 'chat', 'reseña', 'puntuacion', 'especial') DEFAULT 'especial',
     id_juego BIGINT NULL,
     FOREIGN KEY (id_juego) REFERENCES juegos(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
@@ -96,6 +97,7 @@ CREATE TABLE logros_usuarios (
     id_usuario BIGINT NOT NULL,
     id_logro BIGINT NOT NULL,
     fecha_desbloqueo DATETIME DEFAULT CURRENT_TIMESTAMP,
+    notificado BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_logro) REFERENCES logros(id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (id_usuario, id_logro)
@@ -134,12 +136,13 @@ CREATE TABLE sesiones_juego (
 -- DATOS: USUARIOS
 -- ==============================
 INSERT INTO usuarios (id, nombre, email, password, avatar_url, fecha_registro, estado, ultima_actividad) VALUES
-(1, 'Izanfg06',   'izanfaguasgarcia@gmail.com', 'Alcachofa21',     'user_1.jpg',         '2026-03-08 11:07:29', 'offline', NULL),
-(2, 'esparrago',  'esparragoalvapor@yahoo.es',  'esparrago',       'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
-(3, 'Victor',     'v.plasoler@edu.gva.es',       'Abcd1234',        'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
-(4, 'RedNex',     'toni@gmail.com',              'Texmex',          'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
-(8, 'Starinja02', 'ratonpoeta@gmail.com',        'Contrasena',      'default_avatar.png', '2026-05-10 15:30:32', 'offline', NULL),
-(9, 'Paunav3D',   'gillgrunt@gmail.com',         'WildFireLaCabra', 'default_avatar.png', '2026-05-12 13:41:58', 'offline', NULL);
+(1,  'Izanfg06',   'izanfaguasgarcia@gmail.com', 'Alcachofa21',     'user_1.jpg',         '2026-03-08 11:07:29', 'offline', NULL),
+(2,  'esparrago',  'esparragoalvapor@yahoo.es',  'esparrago',       'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
+(3,  'Victor',     'v.plasoler@edu.gva.es',       'Abcd1234',        'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
+(4,  'RedNex',     'toni@gmail.com',              'Texmex',          'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
+(8,  'Starinja02', 'ratonpoeta@gmail.com',        'Contrasena',      'default_avatar.png', '2026-05-10 15:30:32', 'offline', NULL),
+(9,  'Paunav3D',   'gillgrunt@gmail.com',         'WildFireLaCabra', 'default_avatar.png', '2026-05-12 13:41:58', 'offline', NULL),
+(10, 'Hiban',      'panadero@gmail.com',          'Panpan',          'user_10.jpg',        '2026-05-17 11:14:20', 'offline', NULL);
 
 -- ==============================
 -- DATOS: JUEGOS
@@ -160,11 +163,12 @@ INSERT INTO compras (id, id_usuario, id_juego, fecha_compra) VALUES
 -- DATOS: AMIGOS
 -- ==============================
 INSERT INTO amigos (id, id_usuario1, id_usuario2, estado, fecha_solicitud) VALUES
-(1, 1, 4, 'aceptado', '2026-04-21 12:01:49'),
-(3, 3, 4, 'aceptado', '2026-04-21 12:37:30'),
-(4, 8, 1, 'aceptado', '2026-05-10 17:36:02'),
-(5, 1, 3, 'aceptado', '2026-05-10 23:05:18'),
-(6, 9, 1, 'aceptado', '2026-05-12 13:42:47');
+(1, 1,  4,  'aceptado', '2026-04-21 12:01:49'),
+(3, 3,  4,  'aceptado', '2026-04-21 12:37:30'),
+(4, 8,  1,  'aceptado', '2026-05-10 17:36:02'),
+(5, 1,  3,  'aceptado', '2026-05-10 23:05:18'),
+(6, 9,  1,  'aceptado', '2026-05-12 13:42:47'),
+(7, 1,  10, 'aceptado', '2026-05-17 11:14:20');
 
 -- ==============================
 -- DATOS: RESEÑAS
@@ -177,12 +181,12 @@ INSERT INTO resenas (id, id_usuario, id_juego, puntuacion, comentario, fecha) VA
 -- DATOS: LOGROS — Eternal Orbit
 -- ==============================
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Primera Órbita',     'Completa tu primera partida.',                    '🚀', 'especial',   1),
+('Primera Orbita',     'Completa tu primera partida.',                    '🚀', 'especial',   1),
 ('Sin Escudos',        'Sobrevive 5 minutos sin recibir daño.',           '🛡️', 'especial',   1),
-('Coleccionista',      'Recoge 50 objetos en una sola partida.',          '📦', 'especial',   1),
-('Órbita Infinita',    'Alcanza la ronda 10.',                            '🌌', 'especial',   1),
+('Coleccionista EO',   'Recoge 50 objetos en una sola partida.',          '📦', 'especial',   1),
+('Orbita Infinita',    'Alcanza la ronda 10.',                            '🌌', 'especial',   1),
 ('Comprador Espacial', 'Compra Eternal Orbit.',                           '🛒', 'compra',     1),
-('Crítico Espacial',   'Deja una reseña de Eternal Orbit.',               '✍️', 'resena',     1);
+('Critico Espacial',   'Deja una reseña de Eternal Orbit.',               '✍️', 'reseña',     1);
 
 -- ==============================
 -- DATOS: LOGROS — Mini Golf
@@ -193,31 +197,27 @@ INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
 ('Ronda Perfecta',     'Completa una ronda sin sobrepasar el par.',       '🏆', 'especial',   2),
 ('Golfista Novato',    'Completa tu primera partida de Mini Golf.',       '🏌️', 'especial',   2),
 ('Comprador Golfista', 'Compra Mini Golf.',                               '🛒', 'compra',     2),
-('Crítico Golfista',   'Deja una reseña de Mini Golf.',                   '✍️', 'resena',     2);
+('Critico Golfista',   'Deja una reseña de Mini Golf.',                   '✍️', 'reseña',     2);
 
 -- ==============================
--- DATOS: LOGROS GLOBALES (sin juego)
+-- DATOS: LOGROS GLOBALES
 -- ==============================
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Primer Amigo',       'Agrega tu primer amigo.',                         '👥', 'amistad',    NULL),
-('Sociable',           'Ten 3 amigos al mismo tiempo.',                   '🤝', 'amistad',    NULL),
-('Primer Mensaje',     'Envía tu primer mensaje.',                        '💬', 'chat',       NULL),
-('Coleccionista',      'Compra 2 juegos.',                                '🎮', 'compra',     NULL);
+('Primer juego',   'Compra tu primer juego en Faguaslandia', '🛒', 'compra', NULL),
+('Coleccionista',  'Compra 3 juegos en total',               '📦', 'compra', NULL),
+('Fanatico',       'Compra 5 juegos en total',               '🎮', 'compra', NULL);
 
--- ==============================
--- DATOS: LOGROS DESBLOQUEADOS
--- ==============================
--- Izanfg06 (id=1): compró ambos juegos, tiene amigos, dejó reseñas
-INSERT INTO logros_usuarios (id_usuario, id_logro, fecha_desbloqueo) VALUES
-(1, 5,  '2026-04-01 10:25:33'),  -- Comprador Espacial
-(1, 11, '2026-03-18 09:12:31'),  -- Comprador Golfista
-(1, 9,  '2026-05-07 10:59:38'),  -- Crítico Golfista
-(1, 12, '2026-05-07 11:03:10'),  -- Crítico Espacial
-(1, 13, '2026-04-21 12:01:49'),  -- Primer Amigo
-(1, 14, '2026-05-10 17:36:02'),  -- Sociable
-(1, 16, '2026-04-21 12:01:49');  -- Coleccionista (2 juegos)
+INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
+('Primer amigo',         'Añade a tu primer amigo',   '🤝', 'amistad', NULL),
+('Bien acompañado',      'Ten 3 amigos a la vez',     '👫', 'amistad', NULL),
+('El alma de la fiesta', 'Ten 5 amigos a la vez',     '🎉', 'amistad', NULL);
 
--- RedNex (id=4): compró Eternal Orbit, tiene amigos
-INSERT INTO logros_usuarios (id_usuario, id_logro, fecha_desbloqueo) VALUES
-(4, 5,  '2026-04-14 11:14:39'),  -- Comprador Espacial
-(4, 13, '2026-04-21 12:01:49');  -- Primer Amigo        
+INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
+('Critico novel',       'Escribe tu primera reseña', '✍️', 'reseña', NULL),
+('Critico experto',     'Escribe 3 reseñas en total','📝', 'reseña', NULL),
+('Critico profesional', 'Escribe 5 reseñas en total','🏅', 'reseña', NULL);
+
+INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
+('Primera hora',    'Juega tu primera hora en total', '⏱️', 'puntuacion', NULL),
+('Maratonista',     'Acumula 10 horas de juego',      '🏃', 'puntuacion', NULL),
+('Sin vida social', 'Acumula 50 horas de juego',      '🛋️', 'puntuacion', NULL);

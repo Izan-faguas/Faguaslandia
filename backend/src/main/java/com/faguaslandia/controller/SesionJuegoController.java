@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
+import com.faguaslandia.service.LogroService;
+
 @RestController
 @RequestMapping("/sesiones")
 public class SesionJuegoController {
@@ -22,13 +24,16 @@ public class SesionJuegoController {
     private final SesionJuegoRepository sesionRepository;
     private final UsuarioRepository usuarioRepository;
     private final JuegoRepository juegoRepository;
+    private final LogroService logroService;
 
     public SesionJuegoController(SesionJuegoRepository sesionRepository,
                                  UsuarioRepository usuarioRepository,
-                                 JuegoRepository juegoRepository) {
+                                 JuegoRepository juegoRepository,
+                                 LogroService logroService) {
         this.sesionRepository = sesionRepository;
         this.usuarioRepository = usuarioRepository;
         this.juegoRepository = juegoRepository;
+        this.logroService = logroService;
     }
 
     /**
@@ -74,7 +79,9 @@ public class SesionJuegoController {
         double horas = ChronoUnit.MINUTES.between(sesion.getInicio(), sesion.getFin()) / 60.0;
         sesion.setHorasJugadas(Math.round(horas * 100.0) / 100.0);
 
-        return sesionRepository.save(sesion);
+        SesionJuego guardada = sesionRepository.save(sesion);
+        logroService.onSesion(sesion.getUsuario().getId());
+        return guardada;
     }
 
     /**

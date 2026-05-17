@@ -9,6 +9,9 @@
 
 <body>
 
+<!-- TOAST LOGROS -->
+<div id="toastContainer"></div>
+
 <header>
   <nav class="menu"></nav>
   <script type="module">
@@ -41,7 +44,13 @@
       <img id="fotoPerfil" class="avatar">
       <div class="perfil-nombre">
         <h1 id="nombreUsuario">Cargando...</h1>
-        <span class="nivel">Nivel 7</span>
+        <span class="nivel" id="nivelBadge">Nivel 1</span>
+        <div class="nivel-progreso">
+          <div class="nivel-barra-bg">
+            <div class="nivel-barra-fill" id="nivelBarraFill" style="width:0%"></div>
+          </div>
+          <span class="nivel-puntos" id="nivelPuntos">0 pts</span>
+        </div>
       </div>
     </div>
 
@@ -72,13 +81,18 @@
 
     </div>
 
+    <!-- ── SECCIÓN LOGROS ── -->
+    <div class="perfil-amigos">
+      <h2>🏆 Logros</h2>
+      <div id="listaLogros"><p class="empty-state">Cargando logros...</p></div>
+    </div>
     <!-- ── SECCIÓN AMIGOS ── -->
     <div class="perfil-amigos">
 
       <h2>👥 Amigos</h2>
 
       <div class="agregar-amigo">
-        <input type="text" id="codigoAmigo" placeholder="Buscar por Nombre#id">
+        <input type="text" id="codigoAmigo" placeholder="Buscar por Nombre#id"> 
         <button id="btnAgregarAmigo">Enviar solicitud</button>
       </div>
 
@@ -154,11 +168,49 @@ async function cargarStats() {
     const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/stats`, { credentials: "include" });
     if (!res.ok) return;
     const stats = await res.json();
+
+    // Tarjetas
     document.getElementById("statJuegos").textContent = stats.juegos;
     document.getElementById("statHoras").textContent  = stats.horas + "h";
     document.getElementById("statLogros").textContent = stats.logros;
+
+    // Nivel y progreso
+    document.getElementById("nivelBadge").textContent    = "Nivel " + stats.nivel;
+    document.getElementById("nivelPuntos").textContent   = stats.puntos + " pts";
+    document.getElementById("nivelBarraFill").style.width = Math.min(stats.progreso, 100) + "%";
   } catch (e) {
     console.error("Error cargando stats:", e);
+  }
+}
+
+async function cargarLogros() {
+  try {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/logros`, { credentials: "include" });
+    if (!res.ok) return;
+    const logros = await res.json();
+    const cont = document.getElementById("listaLogros");
+
+    if (!logros.length) {
+      cont.innerHTML = `<p class="empty-state">Sin logros aún.</p>`;
+      return;
+    }
+
+    cont.innerHTML = "";
+    logros.forEach(l => {
+      const fecha = new Date(l.fechaDesbloqueo).toLocaleDateString("es-ES");
+      const div = document.createElement("div");
+      div.className = "logro-item";
+      div.innerHTML = `
+        <div class="logro-icono">${l.icono}</div>
+        <div class="logro-info">
+          <strong>${l.nombre}</strong>
+          <span>${l.descripcion}</span>
+          <small>Desbloqueado el ${fecha}</small>
+        </div>`;
+      cont.appendChild(div);
+    });
+  } catch (e) {
+    console.error("Error cargando logros:", e);
   }
 }
 
@@ -339,8 +391,45 @@ await cargarPerfil();
 await cargarStats();
 await cargarSolicitudes();
 await cargarAmigos();
+await cargarLogros();
 
+// ─────────────────────────────────────────
+// TOAST DE LOGROS
+// ─────────────────────────────────────────
+function mostrarToastLogro(logro, delay = 0) {
+  setTimeout(() => {
+    const toast = document.createElement("div");
+    toast.className = "toast-logro";
+    toast.innerHTML = `
+      <div class="toast-icono">${logro.icono}</div>
+      <div class="toast-texto">
+        <span class="toast-titulo">🏆 Logro desbloqueado</span>
+        <span class="toast-nombre">${logro.nombre}</span>
+        <span class="toast-desc">${logro.descripcion}</span>
+      </div>`;
+    document.getElementById("toastContainer").appendChild(toast);
 
+    requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add("visible")));
+
+    setTimeout(() => {
+      toast.classList.remove("visible");
+      setTimeout(() => toast.remove(), 400);
+    }, 4000);
+  }, delay);
+}
+
+// Consultar logros pendientes de notificar directamente desde la BD
+try {
+  const resPendientes = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/logros-pendientes`, {
+    credentials: "include"
+  });
+  if (resPendientes.ok) {
+    const pendientes = await resPendientes.json();
+    pendientes.forEach((l, i) => mostrarToastLogro(l, i * 1200));
+  }
+} catch(e) {
+  console.error("Error cargando logros pendientes:", e);
+}
 </script>
 
 </body>

@@ -22,6 +22,9 @@ public class LogroUsuario {
     @Column(name = "fecha_desbloqueo")
     private LocalDateTime fechaDesbloqueo;
 
+    @Column(name = "notificado")
+    private boolean notificado = false;
+
     public LogroUsuario() {}
 
     public Long getId() { return id; }
@@ -34,4 +37,7 @@ public class LogroUsuario {
 
     public LocalDateTime getFechaDesbloqueo() { return fechaDesbloqueo; }
     public void setFechaDesbloqueo(LocalDateTime fechaDesbloqueo) { this.fechaDesbloqueo = fechaDesbloqueo; }
+
+    public boolean isNotificado() { return notificado; }
+    public void setNotificado(boolean notificado) { this.notificado = notificado; }
 }

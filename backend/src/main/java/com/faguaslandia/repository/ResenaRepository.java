@@ -16,4 +16,6 @@ public interface ResenaRepository extends JpaRepository<Resena, Long> {
 
     @Query("SELECT AVG(r.puntuacion) FROM Resena r WHERE r.juego.id = :juegoId")
     Double calcularPromedio(@Param("juegoId") Long juegoId);
+
+    long countByUsuarioId(Long usuarioId);
 }

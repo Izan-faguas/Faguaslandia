@@ -83,8 +83,12 @@ form.addEventListener('submit', async (e) => {
         if (!response.ok) throw new Error('Usuario o contraseña incorrectos');
 
         const result = await response.json();
-        mensajeDiv.textContent = `Bienvenido, ${result.nombre}!`;
+        mensajeDiv.textContent = `Bienvenido, ${result.usuario.nombre}!`;
         mensajeDiv.style.color = 'lime';
+
+        if (result.logrosNuevos && result.logrosNuevos.length > 0) {
+            sessionStorage.setItem("logrosNuevos", JSON.stringify(result.logrosNuevos));
+        }
 
         setTimeout(() => window.location.href = 'perfil.html', 1500);
 

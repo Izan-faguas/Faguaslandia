@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.faguaslandia.service.LogroService;
+
 @RestController
 @RequestMapping("/resenas")
 public class ResenaController {
@@ -26,13 +28,16 @@ public class ResenaController {
     private final ResenaRepository resenaRepository;
     private final JuegoRepository juegoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final LogroService logroService;
 
     public ResenaController(ResenaRepository resenaRepository,
                             JuegoRepository juegoRepository,
-                            UsuarioRepository usuarioRepository) {
-        this.resenaRepository = resenaRepository;
-        this.juegoRepository  = juegoRepository;
+                            UsuarioRepository usuarioRepository,
+                            LogroService logroService) {
+        this.resenaRepository  = resenaRepository;
+        this.juegoRepository   = juegoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.logroService      = logroService;
     }
 
     /**
@@ -90,6 +95,7 @@ public class ResenaController {
         }
 
         resenaRepository.save(resena);
+        logroService.onResena(sesion.getId());
 
         // Actualizar valoración promedio del juego
         Double promedio = resenaRepository.calcularPromedio(juegoId);

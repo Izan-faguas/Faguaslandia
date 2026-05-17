@@ -3,6 +3,7 @@ package com.faguaslandia.controller;
 import com.faguaslandia.model.EstadoUsuario;
 import com.faguaslandia.model.Usuario;
 import com.faguaslandia.repository.UsuarioRepository;
+import com.faguaslandia.service.LogroService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,6 +20,9 @@ public class AuthController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private LogroService logroService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
@@ -33,13 +38,24 @@ public class AuthController {
             return ResponseEntity.status(401).body("Contraseña incorrecta");
         }
 
-        // Poner online + registrar actividad inicial
         usuario.setEstado(EstadoUsuario.online);
         usuario.setUltimaActividad(LocalDateTime.now());
         usuarioRepository.save(usuario);
 
         session.setAttribute("usuario", usuario);
-        return ResponseEntity.ok(usuario);
+
+        // Comprobar logros — los pendientes se consultarán desde el perfil
+        logroService.comprobarTodos(usuario.getId());
+
+        // Devolver datos del usuario (el launcher necesita el id y nombre)
+        Map<String, Object> usuarioData = Map.of(
+                "id",     usuario.getId(),
+                "nombre", usuario.getNombre(),
+                "email",  usuario.getEmail(),
+                "estado", usuario.getEstado().toString()
+        );
+
+        return ResponseEntity.ok(Map.of("usuario", usuarioData));
     }
 
     @GetMapping("/me")
@@ -48,7 +64,6 @@ public class AuthController {
         if (usuario == null) {
             return ResponseEntity.status(401).body("No hay sesión activa");
         }
-        // Devolver datos frescos de BD (el estado puede haber cambiado)
         return usuarioRepository.findById(usuario.getId())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(401).build());
@@ -57,7 +72,6 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-
         if (usuario != null) {
             usuarioRepository.findById(usuario.getId()).ifPresent(u -> {
                 u.setEstado(EstadoUsuario.offline);
@@ -65,7 +79,6 @@ public class AuthController {
                 usuarioRepository.save(u);
             });
         }
-
         session.invalidate();
         return ResponseEntity.ok("Sesión cerrada");
     }
