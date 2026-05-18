@@ -172,21 +172,169 @@ header {
   color: var(--text-muted);
 }
 
-.btn-play {
-  width: 200px;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
+.detalle-horas {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 4px 0 0;
 }
 
-.btn-play:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102,192,244,0.4);
+/* ── DOS COLUMNAS ────────────────────────────────────────── */
+.detalle-dos-columnas {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+  padding-top: 14px;
+}
+
+.detalle-col-izq {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detalle-col-der {
+  width: 180px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-left: 1px solid var(--border, rgba(255,255,255,0.08));
+  padding-left: 14px;
+}
+
+/* ── ACTUALIZACIONES ─────────────────────────────────────── */
+.act-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+}
+
+.act-item:last-child { border-bottom: none; }
+
+.act-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.act-titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text, #fff);
+}
+
+.act-fecha {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.act-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+/* ── STEAM LABEL ─────────────────────────────────────────── */
+.steam-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ── STEAM ROWS (der) ────────────────────────────────────── */
+.steam-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+}
+
+.steam-row:last-child { border-bottom: none; }
+
+/* ── LOGROS ──────────────────────────────────────────────── */
+.steam-logros-fila {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.steam-logros-iconos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.steam-logro-icono {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border-radius: 4px;
+  background: var(--card-bg, #1e1e2e);
+  cursor: default;
+  transition: transform 0.15s;
+}
+
+.steam-logro-icono:hover { transform: scale(1.2); z-index: 1; }
+.steam-logro-icono.bloqueado { filter: grayscale(1); opacity: 0.35; }
+
+.steam-logros-barra-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.steam-logros-barra-bg {
+  flex: 1;
+  height: 4px;
+  background: var(--border, rgba(255,255,255,0.1));
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.steam-logros-barra-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.steam-logros-txt {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── AMIGOS ──────────────────────────────────────────────── */
+.steam-amigos-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.steam-amigo-avatar img {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  transition: transform 0.15s;
+  cursor: default;
+}
+
+.steam-amigo-avatar:hover img {
+  transform: scale(1.15);
+  border-color: var(--accent);
 }
 
 /* =========================
@@ -1600,10 +1748,6 @@ header {
 
   .detalle-info h1 {
     font-size: 20px;
-  }
-
-  .btn-play {
-    width: 100%;
   }
 
   /* Panel derecho: amigos abajo */

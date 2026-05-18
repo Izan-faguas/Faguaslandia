@@ -251,9 +251,11 @@ public class AmigosView extends HBox {
                         a.id     = otro.id;
                         a.nombre = otro.nombre;
                         a.estado = otro.estado;
-                        a.foto   = otro.foto != null && !otro.foto.equals("default_avatar.png")
-                                ? Config.IMG_BASE_URL + "/avatars/" + otro.foto
-                                : null;
+                        String nombreFoto = (otro.foto != null && !otro.foto.isBlank())
+                                ? otro.foto
+                                : "default_avatar.png";
+                        a.foto = Config.IMG_BASE_URL + "/avatars/" + nombreFoto;
+
                         return a;
                     }).toList();
         }
@@ -350,16 +352,23 @@ public class AmigosView extends HBox {
         av.getStyleClass().add("amigo-avatar");
 
         if (amigo.foto != null && !amigo.foto.isBlank()) {
-            try {
-                ImageView img = new ImageView(new Image(amigo.foto, true));
-                img.setFitWidth(size);
-                img.setFitHeight(size);
-                Circle clip = new Circle(size / 2, size / 2, size / 2);
-                img.setClip(clip);
-                av.getChildren().add(img);
-            } catch (Exception e) {
-                av.getChildren().add(letraAvatar(amigo, size));
-            }
+            System.out.println("Cargando avatar: " + amigo.foto); // log temporal
+            Image image = new Image(amigo.foto, true);
+            ImageView img = new ImageView(image);
+            img.setFitWidth(size);
+            img.setFitHeight(size);
+            Circle clip = new Circle(size / 2, size / 2, size / 2);
+            img.setClip(clip);
+            image.errorProperty().addListener((obs, old, error) -> {
+                if (error) {
+                    System.out.println("Error cargando: " + amigo.foto); // log temporal
+                    Platform.runLater(() -> {
+                        av.getChildren().clear();
+                        av.getChildren().add(letraAvatar(amigo, size));
+                    });
+                }
+            });
+            av.getChildren().add(img);
         } else {
             av.getChildren().add(letraAvatar(amigo, size));
         }

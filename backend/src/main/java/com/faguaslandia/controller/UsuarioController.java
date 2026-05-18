@@ -89,16 +89,13 @@ public class UsuarioController {
                             HttpStatus.BAD_REQUEST, "Solo se permiten imágenes"
                     );
                 }
-                String folder = "uploads/";
+                String folder = "uploads/avatars/";
                 File directory = new File(folder);
                 if (!directory.exists()) directory.mkdirs();
 
-                File[] files = directory.listFiles();
-                if (files != null) {
-                    for (File f : files) {
-                        if (f.getName().startsWith("user_" + id)) f.delete();
-                    }
-                }
+                // Borrar solo el archivo anterior de este usuario, no listar toda la carpeta
+                File archivoAnterior = new File(folder + "user_" + id + ".jpg");
+                if (archivoAnterior.exists()) archivoAnterior.delete();
 
                 String filename = "user_" + id + ".jpg";
                 Path path = Paths.get(folder + filename);
@@ -112,7 +109,11 @@ public class UsuarioController {
                         original.getWidth(), original.getHeight(),
                         BufferedImage.TYPE_INT_RGB
                 );
-                rgbImage.getGraphics().drawImage(original, 0, 0, null);
+                java.awt.Graphics2D g2d = rgbImage.createGraphics();
+                g2d.setColor(java.awt.Color.WHITE);
+                g2d.fillRect(0, 0, original.getWidth(), original.getHeight());
+                g2d.drawImage(original, 0, 0, null);
+                g2d.dispose();
                 ImageIO.write(rgbImage, "jpg", path.toFile());
                 usuario.setFoto(filename);
             } catch (Exception e) {

@@ -48,12 +48,13 @@ public class AuthController {
         logroService.comprobarTodos(usuario.getId());
 
         // Devolver datos del usuario (el launcher necesita el id y nombre)
-        Map<String, Object> usuarioData = Map.of(
-                "id",     usuario.getId(),
-                "nombre", usuario.getNombre(),
-                "email",  usuario.getEmail(),
-                "estado", usuario.getEstado().toString()
-        );
+        Map<String, Object> usuarioData = new java.util.HashMap<>();
+        usuarioData.put("id",     usuario.getId());
+        usuarioData.put("nombre", usuario.getNombre());
+        usuarioData.put("email",  usuario.getEmail());
+        usuarioData.put("estado", usuario.getEstado().toString());
+        usuarioData.put("foto",   usuario.getFoto() != null ? usuario.getFoto() : "default_avatar.png");
+
 
         return ResponseEntity.ok(Map.of("usuario", usuarioData));
     }

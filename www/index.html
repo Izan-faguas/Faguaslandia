@@ -125,10 +125,108 @@ function mostrarJuego(juego, detalle) {
       <div class="detalle-info">
         <h1>${juego.titulo}</h1>
         <p class="detalle-desc">${juego.descripcion || "Sin descripción disponible"}</p>
-        <button class="btn-play">JUGAR</button>
+        <p class="detalle-horas" id="detalle-horas">⏱️ Cargando horas...</p>
       </div>
+    </div>
+
+    <div class="detalle-dos-columnas">
+
+      <div class="detalle-col-izq">
+        <span class="steam-label">ACTUALIZACIONES</span>
+        <div id="detalle-actualizaciones"><p style="color:var(--text-muted);font-size:12px">Cargando...</p></div>
+      </div>
+
+      <div class="detalle-col-der">
+        <div class="steam-row">
+          <span class="steam-label">LOGROS</span>
+          <div id="detalle-logros" class="steam-logros-fila"></div>
+        </div>
+        <div class="steam-row">
+          <span class="steam-label">AMIGOS</span>
+          <div id="detalle-amigos" class="steam-amigos-fila"></div>
+        </div>
+      </div>
+
     </div>`;
-  detalle.querySelector(".btn-play").onclick = () => alert("Iniciando " + juego.titulo);
+
+  cargarDetalleJuego(juego.id);
+}
+
+async function cargarDetalleJuego(juegoId) {
+  // Horas jugadas
+  try {
+    const res  = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/mis-horas`, { credentials: "include" });
+    const data = await res.json();
+    const el   = document.getElementById("detalle-horas");
+    if (el) el.textContent = `⏱️ ${data.horas}h jugadas`;
+  } catch(e) {}
+
+  // Actualizaciones
+  try {
+    const res  = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/actualizaciones`);
+    const acts = await res.json();
+    const cont = document.getElementById("detalle-actualizaciones");
+    if (!cont) return;
+    if (!acts.length) {
+      cont.innerHTML = `<p style="color:var(--text-muted);font-size:12px">Sin actualizaciones aún.</p>`;
+    } else {
+      cont.innerHTML = acts.map(a => `
+        <div class="act-item">
+          <div class="act-header">
+            <span class="act-titulo">${a.titulo}</span>
+            <span class="act-fecha">${a.fecha}</span>
+          </div>
+          ${a.descripcion ? `<p class="act-desc">${a.descripcion}</p>` : ""}
+        </div>`).join("");
+    }
+  } catch(e) {}
+
+  // Logros + estadísticas
+  try {
+    const [resLogros, resStats] = await Promise.all([
+      fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/logros`, { credentials: "include" }),
+      fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/logros-estadisticas`)
+    ]);
+    const logros = await resLogros.json();
+    const stats  = await resStats.json();
+    const statsMap = Object.fromEntries(stats.map(s => [s.id, s.porcentaje]));
+    const cont   = document.getElementById("detalle-logros");
+    if (!cont) return;
+    if (!logros.length) {
+      cont.innerHTML = `<span style="color:var(--text-muted);font-size:12px">Sin logros</span>`;
+    } else {
+      const desbloqueados = logros.filter(l => l.desbloqueado).length;
+      cont.innerHTML = `
+        <div class="steam-logros-iconos">
+          ${logros.map(l => `
+            <div class="steam-logro-icono ${l.desbloqueado ? '' : 'bloqueado'}" title="${l.nombre}: ${l.descripcion} (${statsMap[l.id] ?? 0}% jugadores)">
+              <span>${l.icono}</span>
+            </div>`).join("")}
+        </div>
+        <div class="steam-logros-barra-wrap">
+          <div class="steam-logros-barra-bg">
+            <div class="steam-logros-barra-fill" style="width:${logros.length ? Math.round(desbloqueados/logros.length*100) : 0}%"></div>
+          </div>
+          <span class="steam-logros-txt">${desbloqueados} / ${logros.length}</span>
+        </div>`;
+    }
+  } catch(e) {}
+
+  // Amigos con el juego
+  try {
+    const res    = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/amigos-con-juego`, { credentials: "include" });
+    const amigos = await res.json();
+    const cont   = document.getElementById("detalle-amigos");
+    if (!cont) return;
+    if (!amigos.length) {
+      cont.innerHTML = `<span style="color:var(--text-muted);font-size:12px">Ningún amigo tiene este juego</span>`;
+    } else {
+      cont.innerHTML = amigos.map(a => `
+        <div class="steam-amigo-avatar" title="${a.nombre} · ${a.horas}h">
+          <img src="${CONFIG.API_BASE_URL}/uploads/${a.foto}" onerror="this.src='${CONFIG.API_BASE_URL}/uploads/avatars/default_avatar.png'">
+        </div>`).join("");
+    }
+  } catch(e) {}
 }
 
 // ─────────────────────────────────────────

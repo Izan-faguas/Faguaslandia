@@ -133,6 +133,18 @@ CREATE TABLE sesiones_juego (
 ) ENGINE=InnoDB;
 
 -- ==============================
+-- TABLA ACTUALIZACIONES
+-- ==============================
+CREATE TABLE actualizaciones (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_juego BIGINT NOT NULL,
+    titulo VARCHAR(200) NOT NULL,
+    descripcion TEXT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_juego) REFERENCES juegos(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ==============================
 -- DATOS: USUARIOS
 -- ==============================
 INSERT INTO usuarios (id, nombre, email, password, avatar_url, fecha_registro, estado, ultima_actividad) VALUES
@@ -176,6 +188,16 @@ INSERT INTO amigos (id, id_usuario1, id_usuario2, estado, fecha_solicitud) VALUE
 INSERT INTO resenas (id, id_usuario, id_juego, puntuacion, comentario, fecha) VALUES
 (2, 1, 2, 3, 'Buen juego',      '2026-05-07 10:59:38'),
 (3, 1, 1, 2, 'No esta tan mal', '2026-05-07 11:03:10');
+
+-- ==============================
+-- DATOS: ACTUALIZACIONES
+-- ==============================
+INSERT INTO actualizaciones (id_juego, titulo, descripcion, fecha) VALUES
+(1, 'Versión 1.0 — Lanzamiento', 'Primera versión pública del juego.', '2026-02-17 10:00:00'),
+(1, 'Versión 1.1 — Corrección de bugs', 'Se han corregido varios errores de colisión y el juego ya no se congela en la ronda 5.', '2026-03-10 12:00:00'),
+(1, 'Versión 1.2 — Nuevo modo', 'Se añade el modo Supervivencia con oleadas infinitas.', '2026-04-05 09:00:00'),
+(2, 'Versión 1.0 — Lanzamiento', 'Primera versión pública de Mini Golf.', '2026-01-22 10:00:00'),
+(2, 'Versión 1.1 — Nuevos hoyos', 'Se añaden 5 hoyos nuevos al circuito principal.', '2026-02-28 11:00:00');
 
 -- ==============================
 -- DATOS: LOGROS — Eternal Orbit

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface LogroRepository extends JpaRepository<Logro, Long> {
     List<Logro> findByTipo(TipoLogro tipo);
+    List<Logro> findByJuegoId(Long juegoId);
 }

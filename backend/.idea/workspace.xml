@@ -5,37 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/LogroScheduler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/LogroRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/LogroService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/AuthService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Actualizacion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/ActualizacionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/WebConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/CompraController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/CompraController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/ResenaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/ResenaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/SesionJuegoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/SesionJuegoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/JuegoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/JuegoController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/UsuarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/LogroUsuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/LogroUsuario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/TipoLogro.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/TipoLogro.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/CompraRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/CompraRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/LogroRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/LogroRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/LogroUsuarioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/LogroUsuarioRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/ResenaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/ResenaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/CompraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/CompraService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/WebConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/WebConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/CompraController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/CompraController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/ResenaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/ResenaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/JuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/JuegoController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/UsuarioController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/TipoLogro.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/TipoLogro.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/ResenaRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/ResenaRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/CompraService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/CompraService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/CompraRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/CompraRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/LogroRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/LogroRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/LogroUsuarioRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/repository/LogroUsuarioRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../db-init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../db-init/init.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../www/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../www/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/perfil.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,6 +138,8 @@
       <workItem from="1778924017749" duration="2887000" />
       <workItem from="1778961147623" duration="4078000" />
       <workItem from="1779003788230" duration="6839000" />
+      <workItem from="1779049230945" duration="1942000" />
+      <workItem from="1779087672810" duration="8955000" />
     </task>
     <servers />
   </component>
