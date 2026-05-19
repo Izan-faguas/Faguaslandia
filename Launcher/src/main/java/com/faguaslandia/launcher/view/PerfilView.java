@@ -56,8 +56,6 @@ public class PerfilView extends VBox {
     private final Usuario usuario;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private Label lblEstadoActual;
-    private Label lblMensaje;
     private Label lblStatJuegos;
     private Label lblStatHoras;
     private Label lblStatLogros;
@@ -108,11 +106,6 @@ public class PerfilView extends VBox {
         bannerConAvatar.getChildren().add(avatarWrapper);
 
         /* ── NOMBRE + TAG + NIVEL ── */
-        String estadoRaw = usuario.getEstado() != null ? usuario.getEstado() : "online";
-
-        lblEstadoActual = new Label(formatearEstado(estadoRaw));
-        lblEstadoActual.getStyleClass().add("perfil-estado-badge");
-
         Label lblNombre = new Label(usuario.getNombre());
         lblNombre.getStyleClass().add("perfil-nombre");
 
@@ -141,7 +134,7 @@ public class PerfilView extends VBox {
         HBox barraBox = new HBox(10, barraStack, lblNivelPuntos);
         barraBox.setAlignment(Pos.CENTER);
 
-        VBox nombreBox = new VBox(6, lblNombre, lblTag, lblEstadoActual, lblNivelBadge, barraBox);
+        VBox nombreBox = new VBox(6, lblNombre, lblTag, lblNivelBadge, barraBox);
         nombreBox.setAlignment(Pos.CENTER);
         nombreBox.setPadding(new Insets(60, 0, 20, 0));
 
@@ -161,9 +154,6 @@ public class PerfilView extends VBox {
         /* ── INFO DE CUENTA ── */
         VBox seccionCuenta = crearSeccionCuenta();
 
-        /* ── ESTADO ── */
-        VBox seccionEstado = crearSeccionEstado(estadoRaw);
-
         /* ── LOGROS ── */
         VBox seccionLogros = crearSeccionLogros();
 
@@ -177,8 +167,6 @@ public class PerfilView extends VBox {
                 statsRow,
                 separador(),
                 seccionCuenta,
-                separador(),
-                seccionEstado,
                 separador(),
                 seccionLogros,
                 separador(),
@@ -198,10 +186,6 @@ public class PerfilView extends VBox {
         cargarSolicitudes();
         cargarAmigos();
     }
-
-    // ════════════════════════════════════════════════════
-    //  SECCIONES
-    // ════════════════════════════════════════════════════
 
     private VBox crearSeccionCuenta() {
         VBox sec = new VBox(14);
@@ -227,48 +211,6 @@ public class PerfilView extends VBox {
         btnEditar.setOnAction(e -> mostrarModalEditar());
 
         sec.getChildren().addAll(titulo, tarjeta, btnEditar);
-        return sec;
-    }
-
-    private VBox crearSeccionEstado(String estadoActual) {
-        VBox sec = new VBox(14);
-        sec.setPadding(new Insets(24, 40, 24, 40));
-
-        Label titulo = new Label("Estado de presencia");
-        titulo.getStyleClass().add("perfil-section-title");
-
-        FlowPane botonesEstado = new FlowPane(10, 10);
-        botonesEstado.setAlignment(Pos.CENTER_LEFT);
-
-        String[][] opciones = {
-                {"online",      "🟢 En línea"},
-                {"ausente",     "🟡 Ausente"},
-                {"no_molestar", "🔴 No molestar"},
-                {"invisible",   "⚫ Invisible"}
-        };
-
-        ToggleGroup tg = new ToggleGroup();
-        for (String[] op : opciones) {
-            String valor    = op[0];
-            String etiqueta = op[1];
-            ToggleButton btn = new ToggleButton(etiqueta);
-            btn.setToggleGroup(tg);
-            btn.getStyleClass().add("estado-toggle");
-            if (valor.equals(estadoActual)) {
-                btn.setSelected(true);
-                btn.getStyleClass().add("estado-toggle-active");
-            }
-            btn.selectedProperty().addListener((obs, o, n) -> {
-                if (n) { btn.getStyleClass().add("estado-toggle-active");    cambiarEstado(valor); }
-                else     btn.getStyleClass().remove("estado-toggle-active");
-            });
-            botonesEstado.getChildren().add(btn);
-        }
-
-        lblMensaje = new Label("");
-        lblMensaje.getStyleClass().add("perfil-msg");
-
-        sec.getChildren().addAll(titulo, botonesEstado, lblMensaje);
         return sec;
     }
 
@@ -748,31 +690,6 @@ public class PerfilView extends VBox {
                     msgLabel.setText("⚠️ Error de conexión");
                     msgLabel.setStyle("-fx-text-fill: #f47f7f;");
                 });
-            }
-        }).start();
-    }
-
-    // ════════════════════════════════════════════════════
-    //  CAMBIAR ESTADO
-    // ════════════════════════════════════════════════════
-
-    private void cambiarEstado(String nuevoEstado) {
-        usuario.setEstado(nuevoEstado);
-        lblEstadoActual.setText(formatearEstado(nuevoEstado));
-        lblMensaje.setText("");
-        new Thread(() -> {
-            try {
-                String url  = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/estado";
-                String json = "{\"estado\":\"" + nuevoEstado + "\"}";
-                AuthService.getClient().send(
-                        HttpRequest.newBuilder().uri(URI.create(url))
-                                .header("Content-Type", "application/json")
-                                .PUT(HttpRequest.BodyPublishers.ofString(json)).build(),
-                        HttpResponse.BodyHandlers.ofString());
-                Platform.runLater(() -> lblMensaje.setText("✅ Estado actualizado"));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Platform.runLater(() -> lblMensaje.setText("⚠️ No se pudo guardar el estado"));
             }
         }).start();
     }

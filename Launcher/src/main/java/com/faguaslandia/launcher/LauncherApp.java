@@ -3,6 +3,8 @@ package com.faguaslandia.launcher;
 import com.faguaslandia.launcher.model.Usuario;
 import com.faguaslandia.launcher.service.AuthService;
 import com.faguaslandia.launcher.view.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.stage.Stage;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 
 public class LauncherApp extends Application {
 
@@ -120,12 +123,63 @@ public class LauncherApp extends Application {
         juegoDetailView.setCallbackActualizarBiblioteca(bibliotecaView::actualizarBiblioteca
         );
         bibliotecaView.setCallbackAbrirChat(amigoId -> {
+            header.setBadgeAmigos(0);
             header.activarAmigos();
             amigosView.cargarDatos();
             root.setCenter(amigosView);
 
             Platform.runLater(() -> amigosView.abrirChatPorId(amigoId));
         });
+
+        ObjectMapper _mapper = new ObjectMapper();
+    Thread badgeThread = new Thread(() -> {
+        while (true) {
+            try {
+                Thread.sleep(30_000);
+                // Obtener lista de amigos
+                String urlAmigos = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/amigos";
+                HttpResponse<String> respAmigos = AuthService.getClient().send(
+                    HttpRequest.newBuilder().uri(URI.create(urlAmigos)).GET().build(),
+                    HttpResponse.BodyHandlers.ofString()
+                );
+                if (respAmigos.statusCode() != 200) continue;
+
+                JsonNode relaciones = _mapper.readTree(respAmigos.body());
+                long totalNoLeidos = 0;
+
+                for (JsonNode rel : relaciones) {
+                    if (!"aceptado".equals(rel.path("estado").asText())) continue;
+                    JsonNode u1 = rel.path("usuario1");
+                    JsonNode u2 = rel.path("usuario2");
+                    long amigoId = u1.path("id").asLong() == usuario.getId()
+                            ? u2.path("id").asLong()
+                            : u1.path("id").asLong();
+
+                    String urlNoLeidos = Config.API_BASE_URL + "/mensajes/no-leidos/"
+                            + usuario.getId() + "/de/" + amigoId;
+                    HttpResponse<String> respNL = AuthService.getClient().send(
+                        HttpRequest.newBuilder().uri(URI.create(urlNoLeidos)).GET().build(),
+                        HttpResponse.BodyHandlers.ofString()
+                    );
+                    if (respNL.statusCode() == 200) {
+                        JsonNode node = _mapper.readTree(respNL.body());
+                        totalNoLeidos += node.path("total").asLong();
+                    }
+                }
+
+                final long total = totalNoLeidos;
+                Platform.runLater(() -> header.setBadgeAmigos((int) total));
+
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    });
+    badgeThread.setDaemon(true);
+    badgeThread.start();
 
         juegoDetailView.setCallbackVolver(() ->
                 root.setCenter(tiendaView)
@@ -142,6 +196,8 @@ public class LauncherApp extends Application {
                 () -> {
                     amigosView.cargarDatos();
                     root.setCenter(amigosView);
+                    header.setBadgeAmigos(0);
+
                 },
                 () -> root.setCenter(perfilView)
         );

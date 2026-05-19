@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 
 public class HeaderView extends HBox {
 
@@ -13,6 +14,8 @@ public class HeaderView extends HBox {
     private final Label lblTienda;
     private final Label lblAmigos;
     private final Label lblPerfil;
+    private final Label badgeAmigos;
+    private final StackPane amigosWrapper;
 
     private Label activeLabel;
 
@@ -30,12 +33,34 @@ public class HeaderView extends HBox {
         lblAmigos     = makeNav("Amigos");
         lblPerfil     = makeNav("Perfil");
 
+        badgeAmigos = new Label("");
+        badgeAmigos.getStyleClass().add("nav-badge");
+        badgeAmigos.setVisible(false);
+        badgeAmigos.setManaged(false);
+        badgeAmigos.setMouseTransparent(true);
+
+        amigosWrapper = new StackPane(lblAmigos, badgeAmigos);
+        amigosWrapper.setAlignment(Pos.CENTER);
+        StackPane.setAlignment(badgeAmigos, Pos.TOP_RIGHT);
+        StackPane.setMargin(badgeAmigos, new Insets(4, -4, 0, 0));
+
         setActive(lblBiblioteca);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        getChildren().addAll(logo, lblBiblioteca, lblTienda, lblAmigos, lblPerfil, spacer);
+        getChildren().addAll(logo, lblBiblioteca, lblTienda, amigosWrapper, lblPerfil, spacer);
+    }
+
+    public void setBadgeAmigos(int total) {
+        if (total <= 0) {
+            badgeAmigos.setVisible(false);
+            badgeAmigos.setManaged(false);
+        } else {
+            badgeAmigos.setText(total > 99 ? "99+" : String.valueOf(total));
+            badgeAmigos.setVisible(true);
+            badgeAmigos.setManaged(true);
+        }
     }
 
     private Label makeNav(String texto) {
@@ -83,8 +108,10 @@ public class HeaderView extends HBox {
         if (tiendaAction != null)
             lblTienda.setOnMouseClicked(e -> { setActive(lblTienda); tiendaAction.run(); });
 
-        if (amigosAction != null)
-            lblAmigos.setOnMouseClicked(e -> { setActive(lblAmigos); amigosAction.run(); });
+        if (amigosAction != null) {
+            amigosWrapper.setOnMouseClicked(e -> { setActive(lblAmigos); amigosAction.run(); });
+            amigosWrapper.setStyle("-fx-cursor: hand;");
+        }
 
         if (perfilAction != null)
             lblPerfil.setOnMouseClicked(e -> { setActive(lblPerfil); perfilAction.run(); });
@@ -95,7 +122,6 @@ public class HeaderView extends HBox {
         setActions(bibliotecaAction, tiendaAction, null, perfilAction);
     }
 
-    /** Permite activar la pestaña de amigos desde fuera */
     public void activarAmigos() {
         setActive(lblAmigos);
     }

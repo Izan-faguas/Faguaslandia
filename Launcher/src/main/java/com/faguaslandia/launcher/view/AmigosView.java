@@ -16,15 +16,12 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AmigosView extends HBox {
-
 
     // ── Modelo interno ──────────────────────────────────
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,10 +29,8 @@ public class AmigosView extends HBox {
         public Long id;
         public String nombre;
         public String foto;
-        public String estado;   // "online" | "ausente" | "no_molestar" | "invisible" | "offline"
-        public String juegoActual; // puede ser null
-
-        // Para solicitudes pendientes
+        public String estado;
+        public String juegoActual;
         public Long solicitudId;
     }
 
@@ -67,13 +62,10 @@ public class AmigosView extends HBox {
     private final Usuario usuarioActual;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // Panel izquierdo
-    private VBox listaPanel;
     private VBox listaContainer;
     private VBox solicitudesContainer;
     private TextField buscadorField;
 
-    // Panel derecho (chat)
     private StackPane chatArea;
     private VBox chatPanel;
     private VBox mensajesBox;
@@ -83,11 +75,9 @@ public class AmigosView extends HBox {
     private Label chatTitulo;
     private Label chatEstado;
 
-    // Polling
     private Thread pollingThread;
     private volatile boolean pollingActivo = false;
 
-    // Datos
     private List<AmigoDTO> amigos = new ArrayList<>();
 
     public AmigosView(Usuario usuarioActual) {
@@ -104,11 +94,9 @@ public class AmigosView extends HBox {
     private void construir() {
         setSpacing(0);
 
-        // ── Panel IZQUIERDO ──────────────────────────────
         VBox left = new VBox(0);
         left.getStyleClass().add("amigos-left-panel");
 
-        // Cabecera
         HBox cabeceraLeft = new HBox(10);
         cabeceraLeft.getStyleClass().add("amigos-left-header");
         cabeceraLeft.setAlignment(Pos.CENTER_LEFT);
@@ -123,7 +111,6 @@ public class AmigosView extends HBox {
 
         cabeceraLeft.getChildren().addAll(tituloLeft, btnAgregar);
 
-        // Buscador
         buscadorField = new TextField();
         buscadorField.setPromptText("🔍  Buscar amigo...");
         buscadorField.getStyleClass().add("amigos-search");
@@ -132,7 +119,6 @@ public class AmigosView extends HBox {
         buscadorBox.setPadding(new Insets(12, 16, 8, 16));
         HBox.setHgrow(buscadorField, Priority.ALWAYS);
 
-        // Tabs solicitudes / amigos
         HBox tabs = new HBox(0);
         tabs.getStyleClass().add("amigos-tabs");
 
@@ -159,20 +145,15 @@ public class AmigosView extends HBox {
         tabs.getChildren().addAll(tabAmigos, tabSolicitudes);
         tabs.setPadding(new Insets(0, 16, 0, 16));
 
-        // Contenedor scrollable
-        listaContainer     = new VBox(4);
+        listaContainer       = new VBox(4);
         solicitudesContainer = new VBox(4);
         listaContainer.setPadding(new Insets(8, 8, 8, 8));
         solicitudesContainer.setPadding(new Insets(8, 8, 8, 8));
 
         StackPane listaStack = new StackPane(listaContainer);
 
-        tabAmigos.setOnAction(e -> {
-            listaStack.getChildren().setAll(listaContainer);
-        });
-        tabSolicitudes.setOnAction(e -> {
-            listaStack.getChildren().setAll(solicitudesContainer);
-        });
+        tabAmigos.setOnAction(e      -> listaStack.getChildren().setAll(listaContainer));
+        tabSolicitudes.setOnAction(e -> listaStack.getChildren().setAll(solicitudesContainer));
 
         ScrollPane scrollLista = new ScrollPane(listaStack);
         scrollLista.getStyleClass().add("scroll-pane");
@@ -182,12 +163,10 @@ public class AmigosView extends HBox {
 
         left.getChildren().addAll(cabeceraLeft, buscadorBox, tabs, scrollLista);
 
-        // ── Panel DERECHO (chat) ─────────────────────────
         chatArea = new StackPane();
         chatArea.getStyleClass().add("chat-placeholder-area");
         HBox.setHgrow(chatArea, Priority.ALWAYS);
 
-        // Placeholder inicial
         VBox placeholder = new VBox(12);
         placeholder.setAlignment(Pos.CENTER);
         Label iconChat = new Label("💬");
@@ -214,9 +193,8 @@ public class AmigosView extends HBox {
     public void cargarDatos() {
         new Thread(() -> {
             try {
-                List<AmigoDTO> lista = fetchAmigos();
+                List<AmigoDTO> lista       = fetchAmigos();
                 List<AmigoDTO> solicitudes = fetchSolicitudes();
-
                 Platform.runLater(() -> {
                     amigos = lista;
                     renderizarAmigos(lista);
@@ -246,16 +224,13 @@ public class AmigosView extends HBox {
                     .map(r -> {
                         UsuarioDTO otro = r.usuario1.id.equals(usuarioActual.getId())
                                 ? r.usuario2 : r.usuario1;
-
                         AmigoDTO a = new AmigoDTO();
                         a.id     = otro.id;
                         a.nombre = otro.nombre;
                         a.estado = otro.estado;
                         String nombreFoto = (otro.foto != null && !otro.foto.isBlank())
-                                ? otro.foto
-                                : "default_avatar.png";
+                                ? otro.foto : "default_avatar.png";
                         a.foto = Config.IMG_BASE_URL + "/avatars/" + nombreFoto;
-
                         return a;
                     }).toList();
         }
@@ -265,8 +240,8 @@ public class AmigosView extends HBox {
     private List<AmigoDTO> fetchSolicitudes() throws Exception {
         String url = Config.API_BASE_URL + "/usuarios/" + usuarioActual.getId() + "/solicitudes-pendientes";
         HttpResponse<String> resp = AuthService.getClient().send(
-            HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
-            HttpResponse.BodyHandlers.ofString()
+                HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
+                HttpResponse.BodyHandlers.ofString()
         );
         if (resp.statusCode() == 200) {
             return mapper.readValue(resp.body(), new TypeReference<>() {});
@@ -282,22 +257,20 @@ public class AmigosView extends HBox {
         listaContainer.getChildren().clear();
 
         List<AmigoDTO> online  = lista.stream().filter(a -> !"offline".equals(a.estado) && !"invisible".equals(a.estado)).toList();
-        List<AmigoDTO> offline = lista.stream().filter(a ->  "offline".equals(a.estado) || "invisible".equals(a.estado)).toList();
+        List<AmigoDTO> offline = lista.stream().filter(a ->  "offline".equals(a.estado) ||  "invisible".equals(a.estado)).toList();
 
         if (!online.isEmpty()) {
-            Label secOnline = new Label("EN LÍNEA — " + online.size());
-            secOnline.getStyleClass().add("amigos-section-title");
-            listaContainer.getChildren().add(secOnline);
+            Label sec = new Label("EN LÍNEA — " + online.size());
+            sec.getStyleClass().add("amigos-section-title");
+            listaContainer.getChildren().add(sec);
             online.forEach(a -> listaContainer.getChildren().add(crearFilaAmigo(a)));
         }
-
         if (!offline.isEmpty()) {
-            Label secOffline = new Label("DESCONECTADO — " + offline.size());
-            secOffline.getStyleClass().add("amigos-section-title");
-            listaContainer.getChildren().add(secOffline);
+            Label sec = new Label("DESCONECTADO — " + offline.size());
+            sec.getStyleClass().add("amigos-section-title");
+            listaContainer.getChildren().add(sec);
             offline.forEach(a -> listaContainer.getChildren().add(crearFilaAmigo(a)));
         }
-
         if (lista.isEmpty()) {
             Label empty = new Label("Sin amigos todavía.\nUsa \"+ Agregar\" para buscar.");
             empty.getStyleClass().add("amigos-vacio");
@@ -313,10 +286,8 @@ public class AmigosView extends HBox {
         fila.setAlignment(Pos.CENTER_LEFT);
         fila.setMaxWidth(Double.MAX_VALUE);
 
-        // Avatar
         StackPane av = crearAvatar(amigo, 36);
 
-        // Info
         VBox info = new VBox(2);
         HBox.setHgrow(info, Priority.ALWAYS);
 
@@ -328,19 +299,49 @@ public class AmigosView extends HBox {
 
         info.getChildren().addAll(nombre, estadoTxt);
 
-        // Botón chat
-        Button btnChat = new Button("💬");
+        // Badge mensajes no leídos
+        Label badge = new Label("");
+        badge.getStyleClass().add("nav-badge");
+        badge.setVisible(false);
+        badge.setManaged(false);
+
+        Button btnChat = new Button("Chat");
         btnChat.getStyleClass().add("amigo-btn-chat");
-        btnChat.setTooltip(new Tooltip("Abrir chat"));
-        btnChat.setOnAction(e -> abrirChat(amigo));
+        btnChat.setOnAction(e -> {
+            e.consume(); // evitar que el click llegue al setOnMouseClicked de la fila
+            abrirChat(amigo);
+        });
 
-        fila.getChildren().addAll(av, info, btnChat);
-        fila.setOnMouseClicked(e -> abrirChat(amigo));
+        fila.getChildren().addAll(av, info, badge, btnChat);
+        fila.setOnMouseClicked(e -> abrirPerfilAmigo(amigo));
 
-        // Resaltar si es el seleccionado
         if (amigoSeleccionado != null && amigoSeleccionado.id.equals(amigo.id)) {
             fila.getStyleClass().add("amigo-row-selected");
         }
+
+        // Consultar no leídos en background
+        new Thread(() -> {
+            try {
+                String url = Config.API_BASE_URL + "/mensajes/no-leidos/"
+                        + usuarioActual.getId() + "/de/" + amigo.id;
+                HttpResponse<String> resp = AuthService.getClient().send(
+                        HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
+                        HttpResponse.BodyHandlers.ofString()
+                );
+                if (resp.statusCode() == 200) {
+                    long total = mapper.readTree(resp.body()).path("total").asLong();
+                    Platform.runLater(() -> {
+                        if (total > 0) {
+                            badge.setText(total > 99 ? "99+" : String.valueOf(total));
+                            badge.setVisible(true);
+                            badge.setManaged(true);
+                        }
+                    });
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start();
 
         return fila;
     }
@@ -352,7 +353,6 @@ public class AmigosView extends HBox {
         av.getStyleClass().add("amigo-avatar");
 
         if (amigo.foto != null && !amigo.foto.isBlank()) {
-            System.out.println("Cargando avatar: " + amigo.foto); // log temporal
             Image image = new Image(amigo.foto, true);
             ImageView img = new ImageView(image);
             img.setFitWidth(size);
@@ -360,20 +360,16 @@ public class AmigosView extends HBox {
             Circle clip = new Circle(size / 2, size / 2, size / 2);
             img.setClip(clip);
             image.errorProperty().addListener((obs, old, error) -> {
-                if (error) {
-                    System.out.println("Error cargando: " + amigo.foto); // log temporal
-                    Platform.runLater(() -> {
-                        av.getChildren().clear();
-                        av.getChildren().add(letraAvatar(amigo, size));
-                    });
-                }
+                if (error) Platform.runLater(() -> {
+                    av.getChildren().clear();
+                    av.getChildren().add(letraAvatar(amigo, size));
+                });
             });
             av.getChildren().add(img);
         } else {
             av.getChildren().add(letraAvatar(amigo, size));
         }
 
-        // Indicador de estado
         Label dot = new Label();
         dot.getStyleClass().add("estado-dot");
         dot.getStyleClass().add("estado-dot-" + estadoDotClass(amigo.estado));
@@ -387,7 +383,7 @@ public class AmigosView extends HBox {
 
     private Label letraAvatar(AmigoDTO amigo, double size) {
         Label l = new Label(amigo.nombre != null && !amigo.nombre.isEmpty()
-            ? String.valueOf(amigo.nombre.charAt(0)).toUpperCase() : "?");
+                ? String.valueOf(amigo.nombre.charAt(0)).toUpperCase() : "?");
         l.setStyle("-fx-text-fill: #e6f0f8; -fx-font-weight: bold; -fx-font-size: " + (size * 0.4) + "px;");
         return l;
     }
@@ -482,13 +478,13 @@ public class AmigosView extends HBox {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/solicitudes/" + sol.solicitudId + "/" + endpoint;
                 AuthService.getClient().send(
-                    HttpRequest.newBuilder().uri(URI.create(url))
-                        .POST(HttpRequest.BodyPublishers.noBody()).build(),
-                    HttpResponse.BodyHandlers.ofString()
+                        HttpRequest.newBuilder().uri(URI.create(url))
+                                .POST(HttpRequest.BodyPublishers.noBody()).build(),
+                        HttpResponse.BodyHandlers.ofString()
                 );
                 Platform.runLater(() -> {
                     solicitudesContainer.getChildren().remove(card);
-                    if (aceptar) cargarDatos(); // recargar lista amigos
+                    if (aceptar) cargarDatos();
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -507,8 +503,8 @@ public class AmigosView extends HBox {
         }
         String lower = texto.toLowerCase();
         List<AmigoDTO> filtrados = amigos.stream()
-            .filter(a -> a.nombre != null && a.nombre.toLowerCase().contains(lower))
-            .toList();
+                .filter(a -> a.nombre != null && a.nombre.toLowerCase().contains(lower))
+                .toList();
         renderizarAmigos(filtrados);
     }
 
@@ -528,7 +524,6 @@ public class AmigosView extends HBox {
         chatPanel.setMaxHeight(Double.MAX_VALUE);
         chatArea.getChildren().add(chatPanel);
 
-        // ── Cabecera chat ──
         HBox cabecera = new HBox(12);
         cabecera.getStyleClass().add("chat-header");
         cabecera.setAlignment(Pos.CENTER_LEFT);
@@ -552,7 +547,6 @@ public class AmigosView extends HBox {
 
         cabecera.getChildren().addAll(avChat, infoChat, btnCerrar);
 
-        // ── Mensajes ──
         mensajesBox = new VBox(10);
         mensajesBox.setPadding(new Insets(16));
         mensajesBox.setFillWidth(true);
@@ -563,17 +557,13 @@ public class AmigosView extends HBox {
         scrollMsgs.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox.setVgrow(scrollMsgs, Priority.ALWAYS);
 
-        // Auto-scroll al final
-        mensajesBox.heightProperty().addListener((obs, o, n) ->
-            scrollMsgs.setVvalue(1.0)
-        );
+        mensajesBox.heightProperty().addListener((obs, o, n) -> scrollMsgs.setVvalue(1.0));
 
-        // ── Input ──
         HBox inputBox = new HBox(10);
         inputBox.getStyleClass().add("chat-input-box");
         inputBox.setAlignment(Pos.CENTER);
 
-        msgField  = new TextField();
+        msgField = new TextField();
         msgField.setPromptText("Escribe un mensaje...");
         msgField.getStyleClass().add("chat-input");
         HBox.setHgrow(msgField, Priority.ALWAYS);
@@ -586,15 +576,22 @@ public class AmigosView extends HBox {
         msgField.setOnAction(e -> enviarMensaje());
 
         inputBox.getChildren().addAll(msgField, enviarBtn);
-
         chatPanel.getChildren().addAll(cabecera, scrollMsgs, inputBox);
 
-        // Cargar mensajes y arrancar polling
         cargarMensajes(amigo.id);
         iniciarPolling(amigo.id);
-
-        // Resaltar en lista
         renderizarAmigos(amigos);
+    }
+
+    private void abrirPerfilAmigo(AmigoDTO amigo) {
+        detenerPolling();
+        amigoSeleccionado = null;
+
+        PerfilAmigoView perfilView = new PerfilAmigoView(usuarioActual, amigo);
+        perfilView.setOnVolver(this::cerrarChat);
+        perfilView.setOnChatear(() -> abrirChat(amigo));
+
+        chatArea.getChildren().setAll(perfilView);
     }
 
     private void cerrarChat() {
@@ -648,27 +645,19 @@ public class AmigosView extends HBox {
         msgField.clear();
         enviarBtn.setDisable(true);
 
-        // Mostrar optimísticamente
-        MensajeDTO local = new MensajeDTO();
-        local.emisor = new UsuarioDTO();
-        local.emisor.id = usuarioActual.getId();
-        local.emisor.nombre = usuarioActual.getNombre();
-        local.contenido = texto;
-        local.fechaEnvio = java.time.LocalDateTime.now().toString();
-
         new Thread(() -> {
             try {
-                String url = Config.API_BASE_URL + "/mensajes";
+                String url  = Config.API_BASE_URL + "/mensajes";
                 String json = String.format(
                         "{\"receptorId\":%d,\"contenido\":\"%s\"}",
                         amigoSeleccionado.id,
                         texto.replace("\"", "\\\"")
                 );
                 AuthService.getClient().send(
-                    HttpRequest.newBuilder().uri(URI.create(url))
-                        .header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(json)).build(),
-                    HttpResponse.BodyHandlers.ofString()
+                        HttpRequest.newBuilder().uri(URI.create(url))
+                                .header("Content-Type", "application/json")
+                                .POST(HttpRequest.BodyPublishers.ofString(json)).build(),
+                        HttpResponse.BodyHandlers.ofString()
                 );
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -697,7 +686,6 @@ public class AmigosView extends HBox {
 
         VBox stack = new VBox(3, bubble, hora);
         stack.setAlignment(mio ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-        hora.setAlignment(mio ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
 
         HBox row = new HBox(stack);
         row.setMaxWidth(Double.MAX_VALUE);
@@ -706,7 +694,7 @@ public class AmigosView extends HBox {
     }
 
     // ════════════════════════════════════════════════════
-    //  POLLING (actualizar mensajes cada 5s)
+    //  POLLING
     // ════════════════════════════════════════════════════
 
     private void iniciarPolling(Long amigoId) {
@@ -720,7 +708,6 @@ public class AmigosView extends HBox {
                     Platform.runLater(() -> {
                         int actual = mensajesBox.getChildren().size();
                         if (nuevos.size() > actual) {
-                            // añadir solo los nuevos
                             for (int i = actual; i < nuevos.size(); i++) {
                                 mensajesBox.getChildren().add(crearBurbuja(nuevos.get(i)));
                             }
@@ -740,9 +727,7 @@ public class AmigosView extends HBox {
 
     private void detenerPolling() {
         pollingActivo = false;
-        if (pollingThread != null) {
-            pollingThread.interrupt();
-        }
+        if (pollingThread != null) pollingThread.interrupt();
     }
 
     // ════════════════════════════════════════════════════
@@ -754,11 +739,8 @@ public class AmigosView extends HBox {
         dialog.setTitle("Agregar amigo");
         dialog.setHeaderText(null);
 
-        // Estilo oscuro al dialog
         DialogPane dp = dialog.getDialogPane();
-        dp.getStylesheets().add(
-            getClass().getResource("/styles/index.css").toExternalForm()
-        );
+        dp.getStylesheets().add(getClass().getResource("/styles/index.css").toExternalForm());
         dp.getStyleClass().add("login-box");
         dp.setStyle("-fx-background-color: #121a24; -fx-border-color: rgba(102,192,244,0.2); -fx-border-radius: 12; -fx-background-radius: 12;");
 
@@ -774,10 +756,8 @@ public class AmigosView extends HBox {
         msg.getStyleClass().add("perfil-msg");
 
         VBox contenido = new VBox(14, titulo,
-            new Label("Introduce el email del usuario:") {{
-                setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 13px;");
-            }},
-            emailField, msg
+                new Label("Introduce el email del usuario:") {{ setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 13px;"); }},
+                emailField, msg
         );
         contenido.setPadding(new Insets(10, 0, 10, 0));
         dp.setContent(contenido);
@@ -786,21 +766,16 @@ public class AmigosView extends HBox {
         ButtonType cancelType = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
         dp.getButtonTypes().addAll(enviarType, cancelType);
 
-        // Estilo botones
-        Button btnEnviar  = (Button) dp.lookupButton(enviarType);
+        Button btnEnviar   = (Button) dp.lookupButton(enviarType);
         Button btnCancelar = (Button) dp.lookupButton(cancelType);
         btnEnviar.getStyleClass().add("btn-play");
         btnCancelar.getStyleClass().add("btn-secondary");
 
         btnEnviar.setOnAction(e -> {
             String email = emailField.getText().trim();
-            if (email.isEmpty()) {
-                msg.setText("⚠️ Introduce un email");
-                e.consume();
-                return;
-            }
+            if (email.isEmpty()) { msg.setText("⚠️ Introduce un email"); e.consume(); return; }
             enviarSolicitudAmistad(email, msg, dialog);
-            e.consume(); // evitar cierre automático
+            e.consume();
         });
 
         dialog.setResultConverter(bt -> bt == enviarType ? emailField.getText() : null);
@@ -810,18 +785,15 @@ public class AmigosView extends HBox {
     private void enviarSolicitudAmistad(String email, Label msg, Dialog<?> dialog) {
         new Thread(() -> {
             try {
-                String url = Config.API_BASE_URL + "/usuarios/solicitudes";
-                String json = String.format(
-                    "{\"remitenteId\":%d,\"destinatarioEmail\":\"%s\"}",
-                    usuarioActual.getId(), email
-                );
+                String url  = Config.API_BASE_URL + "/usuarios/solicitudes";
+                String json = String.format("{\"remitenteId\":%d,\"destinatarioEmail\":\"%s\"}",
+                        usuarioActual.getId(), email);
                 HttpResponse<String> resp = AuthService.getClient().send(
-                    HttpRequest.newBuilder().uri(URI.create(url))
-                        .header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(json)).build(),
-                    HttpResponse.BodyHandlers.ofString()
+                        HttpRequest.newBuilder().uri(URI.create(url))
+                                .header("Content-Type", "application/json")
+                                .POST(HttpRequest.BodyPublishers.ofString(json)).build(),
+                        HttpResponse.BodyHandlers.ofString()
                 );
-
                 Platform.runLater(() -> {
                     if (resp.statusCode() == 200 || resp.statusCode() == 201) {
                         msg.setText("✅ Solicitud enviada a " + email);
@@ -846,13 +818,8 @@ public class AmigosView extends HBox {
 
     public void abrirChatPorId(Long id) {
         if (amigos == null) return;
-
-        amigos.stream()
-                .filter(a -> a.id.equals(id))
-                .findFirst()
-                .ifPresent(this::abrirChat);
+        amigos.stream().filter(a -> a.id.equals(id)).findFirst().ifPresent(this::abrirChat);
     }
-
 
     public void detener() {
         detenerPolling();
