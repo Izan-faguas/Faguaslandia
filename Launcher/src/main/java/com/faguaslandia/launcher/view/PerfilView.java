@@ -68,6 +68,9 @@ public class PerfilView extends VBox {
     private VBox listaLogrosBox;
     private VBox listaSolicitudesBox;
     private VBox listaAmigosBox;
+    private Runnable onLogout;
+    public void setOnLogout(Runnable r) { this.onLogout = r; }
+
 
     public PerfilView(Usuario usuario) {
         this.usuario = usuario;
@@ -159,9 +162,20 @@ public class PerfilView extends VBox {
 
         /* ── AMIGOS ── */
         VBox seccionAmigos = crearSeccionAmigos();
+        Button btnLogout = new Button("Cerrar sesión");
+        btnLogout.getStyleClass().add("btn-secondary");
+        btnLogout.setStyle("-fx-font-size: 12px; -fx-padding: 6 16 6 16;");
+        btnLogout.setOnAction(e -> {
+            if (onLogout != null) onLogout.run();
+        });
+
+        HBox logoutBox = new HBox(btnLogout);
+        logoutBox.setAlignment(Pos.CENTER_RIGHT);
+        logoutBox.setPadding(new Insets(12, 24, 0, 0));
 
         /* ── SCROLL ── */
         VBox contenido = new VBox(
+                logoutBox,
                 bannerConAvatar,
                 nombreBox,
                 statsRow,

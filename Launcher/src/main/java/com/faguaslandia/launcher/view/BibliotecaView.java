@@ -206,7 +206,8 @@ public class BibliotecaView {
             mostrarJuego(juego);
             marcarSeleccion(card);
         });
-
+        card.getProperties().put("titulo", juego.getTitulo());
+        card.getProperties().put("juego", juego);
         return card;
     }
 
@@ -262,7 +263,7 @@ public class BibliotecaView {
                     Platform.runLater(() -> {
                         jugar.setDisable(false);
                         jugar.setText("▶  JUGAR");
-                        installer.launch(gameName);
+                        installer.launch(gameName, usuarioId, juego.getId());
                     });
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -298,5 +299,36 @@ public class BibliotecaView {
         detallePanel.getChildren().clear();
         selectedCard = null;
         cargarBiblioteca();
+    }
+
+    /**
+     * Lanza un juego por nombre. Usado desde LauncherApp cuando se arranca
+     * el launcher con el argumento --launch NombreJuego desde un acceso directo.
+     */
+    public void lanzarJuegoPorNombre(String nombre) {
+        if (juegosContainer == null) return;
+        // Buscar el juego en la lista cargada
+        juegosContainer.getChildren().forEach(node -> {
+            if (node instanceof StackPane card) {
+                // El título está guardado en las propiedades del nodo
+                Object tituloObj = card.getProperties().get("titulo");
+                if (tituloObj != null && nombre.equals(tituloObj.toString().replace(" ", "_"))) {
+                    mostrarJuego((Juego) card.getProperties().get("juego"));
+                    marcarSeleccion(card);
+                }
+            }
+        });
+
+        // Lanzar en background
+        new Thread(() -> {
+            try {
+                String gameName = nombre;
+                String downloadUrl = null; // se resuelve en install si hace falta
+                if (!installer.isInstalled(gameName)) return; // si no está instalado no lanzar
+                Platform.runLater(() -> installer.launch(gameName));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start();
     }
 }

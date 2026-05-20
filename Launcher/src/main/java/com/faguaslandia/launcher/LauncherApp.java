@@ -8,27 +8,42 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
+import java.util.List;
 
 public class LauncherApp extends Application {
 
     private AuthService authService;
     private Scene scene;
 
+    // Argumento --launch pasado desde el acceso directo
+    private static String juegoAutoLanzar = null;
+
+    public static void main(String[] args) {
+        // Parsear --launch NombreJuego antes de arrancar JavaFX
+        for (int i = 0; i < args.length - 1; i++) {
+            if ("--launch".equals(args[i])) {
+                juegoAutoLanzar = args[i + 1];
+                break;
+            }
+        }
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) {
         authService = new AuthService();
 
-        // ── LOGIN ──
-        LoginView loginView = new LoginView();
-
-        scene = new Scene(loginView, 1200, 760);
+        scene = new Scene(new StackPane(), 1200, 760);
         scene.getStylesheets().add(
                 getClass().getResource("/styles/index.css").toExternalForm()
         );
@@ -40,7 +55,49 @@ public class LauncherApp extends Application {
         stage.setMaximized(true);
         stage.show();
 
-        // ── Acción login ──
+        // ── Intentar login automático primero ──
+        mostrarCargando("Iniciando sesión...");
+
+        new Thread(() -> {
+            Usuario usuario = authService.loginAutomatico();
+            Platform.runLater(() -> {
+                if (usuario != null) {
+                    arrancarHeartbeat();
+                    mostrarLauncher(usuario);
+                } else {
+                    mostrarLogin();
+                }
+            });
+        }).start();
+    }
+
+    // ════════════════════════════════════════════════════
+    //  PANTALLA DE CARGA
+    // ════════════════════════════════════════════════════
+
+    private void mostrarCargando(String mensaje) {
+        VBox cargando = new VBox(16);
+        cargando.setAlignment(Pos.CENTER);
+        cargando.setStyle("-fx-background-color: #0b1118;");
+
+        Label logo = new Label("🎮 Faguáslandia");
+        logo.getStyleClass().add("login-title");
+
+        Label msg = new Label(mensaje);
+        msg.setStyle("-fx-text-fill: #5b7a99; -fx-font-size: 13px;");
+
+        cargando.getChildren().addAll(logo, msg);
+        scene.setRoot(cargando);
+    }
+
+    // ════════════════════════════════════════════════════
+    //  LOGIN MANUAL
+    // ════════════════════════════════════════════════════
+
+    private void mostrarLogin() {
+        LoginView loginView = new LoginView();
+        scene.setRoot(loginView);
+
         loginView.getLoginBtn().setOnAction(e -> {
             String email = loginView.getUsuario().getText().trim();
             String pass  = loginView.getPassword().getText();
@@ -61,27 +118,8 @@ public class LauncherApp extends Application {
                     Platform.runLater(() -> {
                         loginView.getLoginBtn().setDisable(false);
                         if (usuario != null) {
+                            arrancarHeartbeat();
                             mostrarLauncher(usuario);
-                            Thread heartbeat = new Thread(() -> {
-                                while (true) {
-                                    try {
-                                        Thread.sleep(60000);
-                                        HttpRequest req = HttpRequest.newBuilder()
-                                                .uri(URI.create(Config.API_BASE_URL + "/presencia/heartbeat"))
-                                                .POST(HttpRequest.BodyPublishers.noBody())
-                                                .build();
-                                        AuthService.getClient().send(req, HttpResponse.BodyHandlers.discarding());
-                                    } catch (InterruptedException ie) {
-                                        Thread.currentThread().interrupt();
-                                        break;
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                            });
-                            heartbeat.setDaemon(true);
-                            heartbeat.start();
-
                         } else {
                             loginView.getMensaje().getStyleClass().remove("login-ok");
                             loginView.getMensaje().getStyleClass().add("login-error");
@@ -104,6 +142,10 @@ public class LauncherApp extends Application {
         loginView.getUsuario().setOnAction(e  -> loginView.getPassword().requestFocus());
     }
 
+    // ════════════════════════════════════════════════════
+    //  LAUNCHER PRINCIPAL
+    // ════════════════════════════════════════════════════
+
     private void mostrarLauncher(Usuario usuario) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #0b1118;");
@@ -119,97 +161,125 @@ public class LauncherApp extends Application {
         AmigosView      amigosView      = new AmigosView(usuario);
         PerfilView      perfilView      = new PerfilView(usuario);
 
-        // Callbacks cruzados tienda ↔ detalle
-        juegoDetailView.setCallbackActualizarBiblioteca(bibliotecaView::actualizarBiblioteca
-        );
+        // Callbacks cruzados
+        juegoDetailView.setCallbackActualizarBiblioteca(bibliotecaView::actualizarBiblioteca);
+
         bibliotecaView.setCallbackAbrirChat(amigoId -> {
             header.setBadgeAmigos(0);
             header.activarAmigos();
             amigosView.cargarDatos();
             root.setCenter(amigosView);
-
             Platform.runLater(() -> amigosView.abrirChatPorId(amigoId));
         });
 
-        ObjectMapper _mapper = new ObjectMapper();
-    Thread badgeThread = new Thread(() -> {
-        while (true) {
-            try {
-                Thread.sleep(30_000);
-                // Obtener lista de amigos
-                String urlAmigos = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/amigos";
-                HttpResponse<String> respAmigos = AuthService.getClient().send(
-                    HttpRequest.newBuilder().uri(URI.create(urlAmigos)).GET().build(),
-                    HttpResponse.BodyHandlers.ofString()
-                );
-                if (respAmigos.statusCode() != 200) continue;
+        juegoDetailView.setCallbackVolver(() -> root.setCenter(tiendaView));
 
-                JsonNode relaciones = _mapper.readTree(respAmigos.body());
-                long totalNoLeidos = 0;
-
-                for (JsonNode rel : relaciones) {
-                    if (!"aceptado".equals(rel.path("estado").asText())) continue;
-                    JsonNode u1 = rel.path("usuario1");
-                    JsonNode u2 = rel.path("usuario2");
-                    long amigoId = u1.path("id").asLong() == usuario.getId()
-                            ? u2.path("id").asLong()
-                            : u1.path("id").asLong();
-
-                    String urlNoLeidos = Config.API_BASE_URL + "/mensajes/no-leidos/"
-                            + usuario.getId() + "/de/" + amigoId;
-                    HttpResponse<String> respNL = AuthService.getClient().send(
-                        HttpRequest.newBuilder().uri(URI.create(urlNoLeidos)).GET().build(),
-                        HttpResponse.BodyHandlers.ofString()
-                    );
-                    if (respNL.statusCode() == 200) {
-                        JsonNode node = _mapper.readTree(respNL.body());
-                        totalNoLeidos += node.path("total").asLong();
-                    }
-                }
-
-                final long total = totalNoLeidos;
-                Platform.runLater(() -> header.setBadgeAmigos((int) total));
-
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-                break;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    });
-    badgeThread.setDaemon(true);
-    badgeThread.start();
-
-        juegoDetailView.setCallbackVolver(() ->
-                root.setCenter(tiendaView)
-        );
         tiendaView.setCallbackJuegoDetalle(j -> {
             juegoDetailView.setJuego(j);
             root.setCenter(juegoDetailView);
         });
+
+        perfilView.setOnLogout(() -> {
+            authService.logout();
+            mostrarLogin();
+        });
+
+        // ── Polling badge mensajes ──
+        ObjectMapper _mapper = new ObjectMapper();
+        Thread badgeThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(30_000);
+                    String urlAmigos = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/amigos";
+                    HttpResponse<String> respAmigos = AuthService.getClient().send(
+                            HttpRequest.newBuilder().uri(URI.create(urlAmigos)).GET().build(),
+                            HttpResponse.BodyHandlers.ofString()
+                    );
+                    if (respAmigos.statusCode() != 200) continue;
+
+                    JsonNode relaciones = _mapper.readTree(respAmigos.body());
+                    long totalNoLeidos = 0;
+
+                    for (JsonNode rel : relaciones) {
+                        if (!"aceptado".equals(rel.path("estado").asText())) continue;
+                        JsonNode u1 = rel.path("usuario1");
+                        JsonNode u2 = rel.path("usuario2");
+                        long amigoId = u1.path("id").asLong() == usuario.getId()
+                                ? u2.path("id").asLong()
+                                : u1.path("id").asLong();
+
+                        String urlNL = Config.API_BASE_URL + "/mensajes/no-leidos/"
+                                + usuario.getId() + "/de/" + amigoId;
+                        HttpResponse<String> respNL = AuthService.getClient().send(
+                                HttpRequest.newBuilder().uri(URI.create(urlNL)).GET().build(),
+                                HttpResponse.BodyHandlers.ofString()
+                        );
+                        if (respNL.statusCode() == 200) {
+                            totalNoLeidos += _mapper.readTree(respNL.body()).path("total").asLong();
+                        }
+                    }
+
+                    final long total = totalNoLeidos;
+                    Platform.runLater(() -> header.setBadgeAmigos((int) total));
+
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        badgeThread.setDaemon(true);
+        badgeThread.start();
 
         // ── Navegación header ──
         header.setActions(
                 () -> root.setCenter(bibliotecaView.getView()),
                 () -> root.setCenter(tiendaView),
                 () -> {
+                    header.setBadgeAmigos(0);
                     amigosView.cargarDatos();
                     root.setCenter(amigosView);
-                    header.setBadgeAmigos(0);
-
                 },
                 () -> root.setCenter(perfilView)
         );
 
-        // Pantalla inicial: biblioteca
+        // ── Pantalla inicial ──
         root.setCenter(bibliotecaView.getView());
-
         scene.setRoot(root);
+
+        // ── Auto-lanzar juego si viene de acceso directo ──
+        if (juegoAutoLanzar != null) {
+            String nombreJuego = juegoAutoLanzar;
+            juegoAutoLanzar = null; // solo una vez
+            Platform.runLater(() -> bibliotecaView.lanzarJuegoPorNombre(nombreJuego));
+        }
     }
 
+    // ════════════════════════════════════════════════════
+    //  HEARTBEAT
+    // ════════════════════════════════════════════════════
 
-    public static void main(String[] args) {
-        launch();
+    private void arrancarHeartbeat() {
+        Thread heartbeat = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(60_000);
+                    HttpRequest req = HttpRequest.newBuilder()
+                            .uri(URI.create(Config.API_BASE_URL + "/presencia/heartbeat"))
+                            .POST(HttpRequest.BodyPublishers.noBody())
+                            .build();
+                    AuthService.getClient().send(req, HttpResponse.BodyHandlers.discarding());
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        heartbeat.setDaemon(true);
+        heartbeat.start();
     }
 }

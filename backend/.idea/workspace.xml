@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="" />
+    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/SessionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/GameInstallerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/GameInstallerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www.zip" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -119,7 +129,8 @@
       <workItem from="1779087672810" duration="8955000" />
       <workItem from="1779113137407" duration="2569000" />
       <workItem from="1779174389090" duration="944000" />
-      <workItem from="1779200774228" duration="1725000" />
+      <workItem from="1779200774228" duration="2240000" />
+      <workItem from="1779259536042" duration="3315000" />
     </task>
     <servers />
   </component>
