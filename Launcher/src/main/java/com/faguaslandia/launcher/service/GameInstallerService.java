@@ -53,6 +53,15 @@ public class GameInstallerService {
         }
     }
 
+    private void listarArchivos(File dir, String indent) {
+        File[] files = dir.listFiles();
+        if (files == null) return;
+        for (File f : files) {
+            System.out.println(indent + f.getName());
+            if (f.isDirectory()) listarArchivos(f, indent + "  ");
+        }
+    }
+
     // ════════════════════════════════════════════════════
     //  LANZAMIENTO CON REGISTRO DE SESIÓN
     // ════════════════════════════════════════════════════
@@ -64,7 +73,14 @@ public class GameInstallerService {
     public void launch(String gameName, Long usuarioId, Long juegoId) {
         try {
             File dir = new File(BASE_DIR + gameName);
+            System.out.println("Buscando en: " + dir.getAbsolutePath());
+            System.out.println("Existe: " + dir.exists());
+
+            // Listar todos los archivos recursivamente
+            listarArchivos(dir, "");
+
             File exe = findExe(dir);
+            System.out.println("EXE encontrado: " + exe);
             if (exe == null) {
                 System.out.println("No se encontró .exe para: " + gameName);
                 return;
