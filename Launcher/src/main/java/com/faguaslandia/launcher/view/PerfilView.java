@@ -291,22 +291,39 @@ public class PerfilView extends VBox {
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/stats";
+
                 HttpResponse<String> resp = AuthService.getClient().send(
-                        HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
-                        HttpResponse.BodyHandlers.ofString());
+                        HttpRequest.newBuilder()
+                                .uri(URI.create(url))
+                                .GET()
+                                .build(),
+                        HttpResponse.BodyHandlers.ofString()
+                );
+
                 if (resp.statusCode() == 200) {
+
                     JsonNode j = mapper.readTree(resp.body());
+
                     Platform.runLater(() -> {
+
                         lblStatJuegos.setText(j.get("juegos").asText());
                         lblStatHoras.setText(j.get("horas").asInt() + "h");
                         lblStatLogros.setText(j.get("logros").asText());
+
                         lblNivelBadge.setText("Nivel " + j.get("nivel").asInt());
                         lblNivelPuntos.setText(j.get("puntos").asInt() + " pts");
-                        double progreso = Math.min(j.get("progreso").asDouble(), 100);
+
+                        double progreso = j.get("progreso").asDouble();
+
+                        progreso = Math.max(0, Math.min(progreso, 100));
+
                         nivelBarraFill.setPrefWidth(200 * progreso / 100.0);
                     });
                 }
-            } catch (Exception ex) { ex.printStackTrace(); }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
 

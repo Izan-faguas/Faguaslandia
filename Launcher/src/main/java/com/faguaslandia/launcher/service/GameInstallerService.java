@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mslinks.ShellLink;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -169,7 +170,10 @@ public class GameInstallerService {
                 return;
             }
 
-            String escritorio = System.getProperty("user.home") + "/Desktop";
+            String escritorio = FileSystemView
+                    .getFileSystemView()
+                    .getHomeDirectory()
+                    .getAbsolutePath();
             String lnkPath    = escritorio + "/" + gameName + ".lnk";
 
             ShellLink sl = ShellLink.createLink(LAUNCHER_EXE)
