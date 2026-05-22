@@ -891,35 +891,45 @@ public class PerfilView extends VBox {
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/logros-pendientes";
+                System.out.println("[Toast] Consultando: " + url);
+
                 HttpResponse<String> resp = AuthService.getClient().send(
                         HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
                         HttpResponse.BodyHandlers.ofString());
 
+                System.out.println("[Toast] Status: " + resp.statusCode());
+                System.out.println("[Toast] Body: " + resp.body());
+
                 if (resp.statusCode() == 200) {
                     List<LogroDTO> pendientes = mapper.readValue(resp.body(), new TypeReference<>() {});
+                    System.out.println("[Toast] Pendientes: " + pendientes.size());
+
                     for (int i = 0; i < pendientes.size(); i++) {
                         final LogroDTO logro = pendientes.get(i);
                         final long delay = i * 1200L;
-                        Platform.runLater(() -> {
-                            new Thread(() -> {
-                                try { Thread.sleep(delay); } catch (InterruptedException ignored) {}
-                                Platform.runLater(() -> mostrarToastLogro(logro));
-                            }).start();
-                        });
+                        new Thread(() -> {
+                            try { Thread.sleep(delay); } catch (InterruptedException ignored) {}
+                            Platform.runLater(() -> {
+                                System.out.println("[Toast] Mostrando toast: " + logro.nombre);
+                                mostrarToastLogro(logro);
+                            });
+                        }).start();
                     }
-                    // Refrescar stats y logros si hubo nuevos
-                    if (!pendientes.isEmpty()) {
-                        Platform.runLater(this::refrescar);
-                    }
+                    if (!pendientes.isEmpty()) Platform.runLater(this::refrescar);
                 }
             } catch (Exception ex) { ex.printStackTrace(); }
         }).start();
     }
-
-    // ════════════════════════════════════════════════════
-//  TOAST DE LOGRO
-// ════════════════════════════════════════════════════
     private void mostrarToastLogro(LogroDTO logro) {
+        javafx.scene.Scene scene = null;
+        for (javafx.stage.Window w : javafx.stage.Window.getWindows()) {
+            if (w.isShowing() && w instanceof javafx.stage.Stage) {
+                scene = ((javafx.stage.Stage) w).getScene();
+                break;
+            }
+        }
+        if (scene == null) return;
+
         Label icono = new Label(logro.icono != null ? logro.icono : "🏆");
         icono.setStyle("-fx-font-size: 32px;");
 
@@ -935,8 +945,9 @@ public class PerfilView extends VBox {
         desc.setMaxWidth(220);
 
         VBox texto = new VBox(3, titulo, nombre, desc);
-
         HBox toast = new HBox(14, icono, texto);
+        toast.setMaxWidth(320);
+        toast.setMaxHeight(Region.USE_PREF_SIZE);
         toast.setAlignment(Pos.CENTER_LEFT);
         toast.setPadding(new Insets(14, 18, 14, 18));
         toast.setStyle("""
@@ -950,32 +961,40 @@ public class PerfilView extends VBox {
         toast.setMaxWidth(320);
         toast.setOpacity(0);
 
-        // Añadir al root de la escena en esquina inferior derecha
-        javafx.scene.Scene scene = getScene();
-        if (scene == null) return;
         javafx.scene.layout.Pane overlay = (javafx.scene.layout.Pane) scene.getRoot();
 
-        overlay.getChildren().add(toast);
+// Usar un StackPane temporal como capa flotante
+        javafx.scene.layout.StackPane.setAlignment(toast, javafx.geometry.Pos.BOTTOM_RIGHT);
+        javafx.scene.layout.StackPane.setMargin(toast, new Insets(0, 24, 24, 0));
 
-        // Posicionar en esquina inferior derecha
-        toast.layoutBoundsProperty().addListener((obs, o, bounds) -> {
-            toast.setLayoutX(overlay.getWidth() - bounds.getWidth() - 24);
-            toast.setLayoutY(overlay.getHeight() - bounds.getHeight() - 24);
-        });
+// Si el root es BorderPane, necesitamos un StackPane encima
+        if (overlay instanceof javafx.scene.layout.StackPane sp) {
+            sp.getChildren().add(toast);
+        } else {
+            // Envolver el root en un StackPane si aún no lo está
+            javafx.scene.layout.StackPane wrapper = new javafx.scene.layout.StackPane(overlay);
+            wrapper.getChildren().add(toast);
+            javafx.scene.layout.StackPane.setAlignment(toast, javafx.geometry.Pos.BOTTOM_RIGHT);
+            javafx.scene.layout.StackPane.setMargin(toast, new Insets(0, 24, 24, 0));
+            scene.setRoot(wrapper);
+        }
 
-        // Fade in
         javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
                 javafx.util.Duration.millis(300), toast);
         fadeIn.setFromValue(0); fadeIn.setToValue(1);
 
-        // Fade out tras 4 segundos
         javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
                 javafx.util.Duration.millis(400), toast);
         fadeOut.setFromValue(1); fadeOut.setToValue(0);
         fadeOut.setDelay(javafx.util.Duration.seconds(4));
-        fadeOut.setOnFinished(e -> overlay.getChildren().remove(toast));
+        fadeOut.setOnFinished(e -> {
+            javafx.scene.layout.Pane parent = (javafx.scene.layout.Pane) toast.getParent();
+            if (parent != null) parent.getChildren().remove(toast);
+        });
 
         fadeIn.play();
         fadeOut.play();
     }
+
+
 }
