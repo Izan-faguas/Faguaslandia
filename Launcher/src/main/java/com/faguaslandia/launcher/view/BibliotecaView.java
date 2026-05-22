@@ -245,10 +245,14 @@ public class BibliotecaView {
             meta.getChildren().add(cat);
         }
 
+        // ── Botones ──────────────────────────────────────────
         Button jugar = new Button("▶  JUGAR");
         jugar.getStyleClass().add("btn-play");
 
-        String gameName = juego.getTitulo().replace(" ", "_");
+        Button actualizar = new Button("🔄  ACTUALIZAR");
+        actualizar.getStyleClass().add("btn-secondary");
+
+        String gameName   = juego.getTitulo().replace(" ", "_");
         String downloadUrl = Config.API_BASE_URL + "/juegos/download/" + juego.getId();
 
         jugar.setOnAction(e -> {
@@ -267,20 +271,50 @@ public class BibliotecaView {
                     });
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    Platform.runLater(() -> {
-                        jugar.setDisable(false);
-                        jugar.setText("▶  JUGAR");
-                    });
+                    Platform.runLater(() -> { jugar.setDisable(false); jugar.setText("▶  JUGAR"); });
                 }
             }).start();
         });
 
-        VBox info = new VBox(14, titulo, desc, meta, jugar);
+        actualizar.setOnAction(e -> {
+            actualizar.setDisable(true);
+            actualizar.setText("⏳  Actualizando...");
+            new Thread(() -> {
+                try {
+                    installer.install(gameName, downloadUrl);
+                    Platform.runLater(() -> { actualizar.setDisable(false); actualizar.setText("✅  Actualizado"); });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Platform.runLater(() -> { actualizar.setDisable(false); actualizar.setText("🔄  ACTUALIZAR"); });
+                }
+            }).start();
+        });
+
+        HBox botonesBox = new HBox(12, jugar, actualizar);
+        botonesBox.setAlignment(Pos.CENTER_LEFT);
+
+        // ── Secciones inferiores ─────────────────────────────
+        VBox secActualizaciones = crearSeccionActualizaciones(juego.getId());
+        VBox secLogros          = crearSeccionLogros(juego.getId());
+        VBox secAmigos          = crearSeccionAmigosJuego(juego.getId());
+
+        HBox dosColumnas = new HBox(20, secActualizaciones, secAmigos);
+        HBox.setHgrow(secActualizaciones, Priority.ALWAYS);
+        HBox.setHgrow(secAmigos, Priority.ALWAYS);
+        dosColumnas.setPadding(new Insets(0, 30, 20, 30));
+
+        VBox info = new VBox(14, titulo, desc, meta, botonesBox, secLogros, dosColumnas);
         info.getStyleClass().add("detalle-info");
         info.setMaxWidth(Double.MAX_VALUE);
 
-        detallePanel.getChildren().addAll(imgContainer, info);
-        VBox.setVgrow(info, Priority.ALWAYS);
+        ScrollPane scroll = new ScrollPane(new VBox(imgContainer, info));
+        scroll.getStyleClass().add("scroll-pane");
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+
+        detallePanel.getChildren().add(scroll);
+        VBox.setVgrow(detallePanel, Priority.ALWAYS);
     }
 
     private void marcarSeleccion(StackPane card) {
@@ -330,5 +364,181 @@ public class BibliotecaView {
                 ex.printStackTrace();
             }
         }).start();
+    }
+    // ── SECCIÓN ACTUALIZACIONES ───────────────────────────────
+    private VBox crearSeccionActualizaciones(Long juegoId) {
+        VBox sec = new VBox(8);
+        sec.setPadding(new Insets(16, 0, 0, 0));
+
+        Label titulo = new Label("📋 ACTUALIZACIONES");
+        titulo.getStyleClass().add("amigos-section-title");
+
+        VBox lista = new VBox(8);
+        Label cargando = new Label("Cargando...");
+        cargando.getStyleClass().add("amigos-vacio");
+        lista.getChildren().add(cargando);
+
+        sec.getChildren().addAll(titulo, lista);
+
+        new Thread(() -> {
+            try {
+                var resp = com.faguaslandia.launcher.service.AuthService.getClient().send(
+                        java.net.http.HttpRequest.newBuilder()
+                                .uri(java.net.URI.create(Config.API_BASE_URL + "/juegos/" + juegoId + "/actualizaciones"))
+                                .GET().build(),
+                        java.net.http.HttpResponse.BodyHandlers.ofString());
+
+                var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                var acts   = mapper.readValue(resp.body(), new com.fasterxml.jackson.core.type.TypeReference<java.util.List<java.util.Map<String, Object>>>() {});
+
+                Platform.runLater(() -> {
+                    lista.getChildren().clear();
+                    if (acts.isEmpty()) {
+                        Label empty = new Label("Sin actualizaciones aún.");
+                        empty.getStyleClass().add("amigos-vacio");
+                        lista.getChildren().add(empty);
+                    } else {
+                        for (var a : acts) {
+                            Label lTitulo = new Label("🔹 " + a.get("titulo"));
+                            lTitulo.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 12px; -fx-font-weight: bold;");
+                            Label lFecha = new Label(a.get("fecha").toString());
+                            lFecha.setStyle("-fx-text-fill: #5b7a99; -fx-font-size: 11px;");
+                            Label lDesc = new Label(a.get("descripcion").toString());
+                            lDesc.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 12px;");
+                            lDesc.setWrapText(true);
+                            VBox item = new VBox(3, new javafx.scene.layout.HBox(10, lTitulo, lFecha), lDesc);
+                            item.getStyleClass().add("perfil-card");
+                            item.setPadding(new Insets(10));
+                            lista.getChildren().add(item);
+                        }
+                    }
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
+
+        return sec;
+    }
+
+    // ── SECCIÓN LOGROS ────────────────────────────────────────
+    private VBox crearSeccionLogros(Long juegoId) {
+        VBox sec = new VBox(8);
+        sec.setPadding(new Insets(16, 30, 0, 30));
+
+        Label titulo = new Label("🏆 LOGROS");
+        titulo.getStyleClass().add("amigos-section-title");
+
+        javafx.scene.layout.HBox iconos = new javafx.scene.layout.HBox(6);
+        iconos.setAlignment(Pos.CENTER_LEFT);
+
+        Label txt = new Label("Cargando...");
+        txt.getStyleClass().add("amigos-vacio");
+
+        sec.getChildren().addAll(titulo, iconos, txt);
+
+        new Thread(() -> {
+            try {
+                var resp = com.faguaslandia.launcher.service.AuthService.getClient().send(
+                        java.net.http.HttpRequest.newBuilder()
+                                .uri(java.net.URI.create(Config.API_BASE_URL + "/juegos/" + juegoId + "/logros"))
+                                .GET().build(),
+                        java.net.http.HttpResponse.BodyHandlers.ofString());
+
+                var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                var logros = mapper.readValue(resp.body(), new com.fasterxml.jackson.core.type.TypeReference<java.util.List<java.util.Map<String, Object>>>() {});
+
+                Platform.runLater(() -> {
+                    iconos.getChildren().clear();
+                    txt.setText("");
+
+                    if (logros.isEmpty()) {
+                        txt.setText("Sin logros para este juego.");
+                        return;
+                    }
+
+                    long desbloqueados = logros.stream().filter(l -> Boolean.TRUE.equals(l.get("desbloqueado"))).count();
+
+                    for (var l : logros) {
+                        boolean bloqueado = !Boolean.TRUE.equals(l.get("desbloqueado"));
+                        Label icono = new Label(l.get("icono") != null ? l.get("icono").toString() : "🏆");
+                        icono.setStyle("-fx-font-size: 22px; -fx-opacity: " + (bloqueado ? "0.3" : "1.0") + ";");
+                        icono.setTooltip(new javafx.scene.control.Tooltip(l.get("nombre") + ": " + l.get("descripcion")));
+                        iconos.getChildren().add(icono);
+                    }
+
+                    txt.setText(desbloqueados + " / " + logros.size() + " logros desbloqueados");
+                    txt.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 12px;");
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
+
+        return sec;
+    }
+
+    // ── SECCIÓN AMIGOS CON EL JUEGO ───────────────────────────
+    private VBox crearSeccionAmigosJuego(Long juegoId) {
+        VBox sec = new VBox(8);
+        sec.setPadding(new Insets(16, 0, 0, 0));
+
+        Label titulo = new Label("👥 AMIGOS CON ESTE JUEGO");
+        titulo.getStyleClass().add("amigos-section-title");
+
+        javafx.scene.layout.HBox avatares = new javafx.scene.layout.HBox(8);
+        avatares.setAlignment(Pos.CENTER_LEFT);
+
+        Label txt = new Label("Cargando...");
+        txt.getStyleClass().add("amigos-vacio");
+
+        sec.getChildren().addAll(titulo, avatares, txt);
+
+        new Thread(() -> {
+            try {
+                var resp = com.faguaslandia.launcher.service.AuthService.getClient().send(
+                        java.net.http.HttpRequest.newBuilder()
+                                .uri(java.net.URI.create(Config.API_BASE_URL + "/juegos/" + juegoId + "/amigos-con-juego"))
+                                .GET().build(),
+                        java.net.http.HttpResponse.BodyHandlers.ofString());
+
+                var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                var amigos = mapper.readValue(resp.body(), new com.fasterxml.jackson.core.type.TypeReference<java.util.List<java.util.Map<String, Object>>>() {});
+
+                Platform.runLater(() -> {
+                    avatares.getChildren().clear();
+                    txt.setText("");
+
+                    if (amigos.isEmpty()) {
+                        txt.setText("Ningún amigo tiene este juego.");
+                        return;
+                    }
+
+                    for (var a : amigos) {
+                        String nombre = a.get("nombre").toString();
+                        String horas  = a.get("horas").toString();
+
+                        Label letra = new Label(nombre.substring(0, 1).toUpperCase());
+                        letra.setStyle("-fx-text-fill: #66c0f4; -fx-font-weight: bold; -fx-font-size: 14px;");
+
+                        StackPane av = new StackPane(letra);
+                        av.setMinSize(36, 36);
+                        av.setMaxSize(36, 36);
+                        av.getStyleClass().add("amigo-avatar");
+                        javafx.scene.control.Tooltip.install(av, new javafx.scene.control.Tooltip(nombre + " · " + horas + "h jugadas"));
+
+                        // Intentar cargar foto
+                        String fotoUrl = Config.IMG_BASE_URL + "/avatars/" + a.get("foto");
+                        javafx.scene.image.Image img = new javafx.scene.image.Image(fotoUrl, true);
+                        javafx.scene.image.ImageView iv = new javafx.scene.image.ImageView(img);
+                        iv.setFitWidth(36); iv.setFitHeight(36);
+                        iv.setClip(new javafx.scene.shape.Circle(18, 18, 18));
+                        img.errorProperty().addListener((obs, o, err) -> {
+                            if (err) Platform.runLater(() -> { av.getChildren().clear(); av.getChildren().add(letra); });
+                        });
+                        av.getChildren().add(iv);
+                        avatares.getChildren().add(av);
+                    }
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
+
+        return sec;
     }
 }

@@ -235,14 +235,25 @@ public class LauncherApp extends Application {
 
         // ── Navegación header ──
         header.setActions(
-                () -> root.setCenter(bibliotecaView.getView()),
-                () -> root.setCenter(tiendaView),
                 () -> {
+                    perfilView.detenerPollingLogros();
+                    root.setCenter(bibliotecaView.getView());
+                },
+                () -> {
+                    perfilView.detenerPollingLogros();
+                    root.setCenter(tiendaView);
+                },
+                () -> {
+                    perfilView.detenerPollingLogros();
                     header.setBadgeAmigos(0);
                     amigosView.cargarDatos();
                     root.setCenter(amigosView);
                 },
-                () -> root.setCenter(perfilView)
+                () -> {
+                    perfilView.refrescar();
+                    perfilView.iniciarPollingLogros();
+                    root.setCenter(perfilView);
+                }
         );
 
         // ── Pantalla inicial ──

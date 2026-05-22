@@ -122,6 +122,7 @@ public class PerfilView extends VBox {
         nivelBarraFill = new Region();
         nivelBarraFill.getStyleClass().add("nivel-barra-fill");
         nivelBarraFill.setPrefWidth(0);
+        nivelBarraFill.setMaxWidth(0);
 
         Region nivelBarraBg = new Region();
         nivelBarraBg.getStyleClass().add("nivel-barra-bg");
@@ -317,7 +318,9 @@ public class PerfilView extends VBox {
 
                         progreso = Math.max(0, Math.min(progreso, 100));
 
-                        nivelBarraFill.setPrefWidth(200 * progreso / 100.0);
+                        double anchoPx = 200 * progreso / 100.0;
+                        nivelBarraFill.setPrefWidth(anchoPx);
+                        nivelBarraFill.setMaxWidth(anchoPx);
                     });
                 }
 
@@ -848,5 +851,131 @@ public class PerfilView extends VBox {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
         a.setHeaderText(null);
         a.showAndWait();
+    }
+    // ════════════════════════════════════════════════════
+//  REFRESCO PÚBLICO — llámalo cuando el usuario vuelve al perfil
+// ════════════════════════════════════════════════════
+    public void refrescar() {
+        cargarStats();
+        cargarLogros();
+        cargarSolicitudes();
+        cargarAmigos();
+    }
+
+    // ════════════════════════════════════════════════════
+//  POLLING DE LOGROS PENDIENTES
+// ════════════════════════════════════════════════════
+    private javafx.animation.Timeline logroPolling;
+
+    public void iniciarPollingLogros() {
+        if (logroPolling != null) logroPolling.stop();
+
+        logroPolling = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(
+                        javafx.util.Duration.seconds(15),
+                        e -> comprobarLogrosPendientes()
+                )
+        );
+        logroPolling.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        logroPolling.play();
+
+        // También comprobar al arrancar
+        comprobarLogrosPendientes();
+    }
+
+    public void detenerPollingLogros() {
+        if (logroPolling != null) logroPolling.stop();
+    }
+
+    private void comprobarLogrosPendientes() {
+        new Thread(() -> {
+            try {
+                String url = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/logros-pendientes";
+                HttpResponse<String> resp = AuthService.getClient().send(
+                        HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
+                        HttpResponse.BodyHandlers.ofString());
+
+                if (resp.statusCode() == 200) {
+                    List<LogroDTO> pendientes = mapper.readValue(resp.body(), new TypeReference<>() {});
+                    for (int i = 0; i < pendientes.size(); i++) {
+                        final LogroDTO logro = pendientes.get(i);
+                        final long delay = i * 1200L;
+                        Platform.runLater(() -> {
+                            new Thread(() -> {
+                                try { Thread.sleep(delay); } catch (InterruptedException ignored) {}
+                                Platform.runLater(() -> mostrarToastLogro(logro));
+                            }).start();
+                        });
+                    }
+                    // Refrescar stats y logros si hubo nuevos
+                    if (!pendientes.isEmpty()) {
+                        Platform.runLater(this::refrescar);
+                    }
+                }
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
+    }
+
+    // ════════════════════════════════════════════════════
+//  TOAST DE LOGRO
+// ════════════════════════════════════════════════════
+    private void mostrarToastLogro(LogroDTO logro) {
+        Label icono = new Label(logro.icono != null ? logro.icono : "🏆");
+        icono.setStyle("-fx-font-size: 32px;");
+
+        Label titulo = new Label("🏆 Logro desbloqueado");
+        titulo.setStyle("-fx-text-fill: #66c0f4; -fx-font-size: 11px; -fx-font-weight: bold;");
+
+        Label nombre = new Label(logro.nombre);
+        nombre.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 13px; -fx-font-weight: bold;");
+
+        Label desc = new Label(logro.descripcion);
+        desc.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 11px;");
+        desc.setWrapText(true);
+        desc.setMaxWidth(220);
+
+        VBox texto = new VBox(3, titulo, nombre, desc);
+
+        HBox toast = new HBox(14, icono, texto);
+        toast.setAlignment(Pos.CENTER_LEFT);
+        toast.setPadding(new Insets(14, 18, 14, 18));
+        toast.setStyle("""
+        -fx-background-color: #16202d;
+        -fx-border-color: rgba(102,192,244,0.4);
+        -fx-border-width: 1;
+        -fx-border-radius: 10;
+        -fx-background-radius: 10;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 16, 0, 0, 4);
+        """);
+        toast.setMaxWidth(320);
+        toast.setOpacity(0);
+
+        // Añadir al root de la escena en esquina inferior derecha
+        javafx.scene.Scene scene = getScene();
+        if (scene == null) return;
+        javafx.scene.layout.Pane overlay = (javafx.scene.layout.Pane) scene.getRoot();
+
+        overlay.getChildren().add(toast);
+
+        // Posicionar en esquina inferior derecha
+        toast.layoutBoundsProperty().addListener((obs, o, bounds) -> {
+            toast.setLayoutX(overlay.getWidth() - bounds.getWidth() - 24);
+            toast.setLayoutY(overlay.getHeight() - bounds.getHeight() - 24);
+        });
+
+        // Fade in
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
+                javafx.util.Duration.millis(300), toast);
+        fadeIn.setFromValue(0); fadeIn.setToValue(1);
+
+        // Fade out tras 4 segundos
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
+                javafx.util.Duration.millis(400), toast);
+        fadeOut.setFromValue(1); fadeOut.setToValue(0);
+        fadeOut.setDelay(javafx.util.Duration.seconds(4));
+        fadeOut.setOnFinished(e -> overlay.getChildren().remove(toast));
+
+        fadeIn.play();
+        fadeOut.play();
     }
 }
