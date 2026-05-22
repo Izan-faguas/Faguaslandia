@@ -161,7 +161,8 @@ INSERT INTO usuarios (id, nombre, email, password, avatar_url, fecha_registro, e
 -- ==============================
 INSERT INTO juegos (id, titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio) VALUES
 (1, 'Eternal Orbit', 'Un juego simple sin mucho esfuerzo realizado.', 30.00, 'img/Eternal_Orbit.png', 'Rogue-like', 'Antonio Novejarque Escamilla', '2026-02-17', 2.00),
-(2, 'Mini Golf',     'Un juego de minigolf 2D.',                       7.99,  'img/algo.png',          'Estrategia', 'FaguasStudio',                '2026-01-22', 3.00);
+(2, 'Mini Golf',     'Un juego de minigolf 2D.',                       7.99,  'img/MiniGolf.png',          'Estrategia', 'FaguasStudio',                '2026-01-22', 3.00),
+(3, 'Smashy Road',     'Un juego de minigolf 2D.',                       29.99,  'img/SmashyRoad.png',          'Acción', 'FaguasStudio',                '2026-05-22', 3.00);
 
 -- ==============================
 -- DATOS: COMPRAS
@@ -169,7 +170,9 @@ INSERT INTO juegos (id, titulo, descripcion, precio, imagen_url, categoria, desa
 INSERT INTO compras (id, id_usuario, id_juego, fecha_compra) VALUES
 (1, 1, 2, '2026-03-18 09:12:31'),
 (2, 1, 1, '2026-04-01 10:25:33'),
-(3, 4, 1, '2026-04-14 11:14:39');
+(3, 4, 1, '2026-04-14 11:14:39'),
+(4, 1, 3, '2026-05-22 18:25:08');
+
 
 -- ==============================
 -- DATOS: AMIGOS
@@ -229,6 +232,18 @@ INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
 (27, 'Hoyo 13 Completado', 'Supera el decimotercer hoyo del circuito.', '🏆', 'especial', 2),
 (28, 'Hoyo 14 Completado', 'Supera el decimocuarto hoyo del circuito.', '🏅', 'especial', 2),
 (29, 'Hoyo 15 Completado', 'Supera el decimoquinto hoyo del circuito.', '👑', 'especial', 2);
+
+INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
+(30, 'Primera Fuga',        'Inicia tu primera partida en SmashyRoad.',     '🚗', 'especial',   3),
+(31, '5 Policías Caídos',   'Destruye 5 coches de policía en total.',       '💥', 'especial',   3),
+(32, '10 Policías Caídos',  'Destruye 10 coches de policía en total.',      '🔥', 'especial',   3),
+(33, '20 Policías Caídos',  'Destruye 20 coches de policía en total.',      '☠️', 'especial',   3),
+(34, 'Fugitivo Novel',      'Alcanza 1.000 puntos en una sesión.',          '🏅', 'puntuacion', 3),
+(35, 'Fugitivo Experto',    'Alcanza 5.000 puntos en una sesión.',          '🥈', 'puntuacion', 3),
+(36, 'Fugitivo Legendario', 'Alcanza 10.000 puntos en una sesión.',        '🥇', 'puntuacion', 3),
+(37, 'Piel de Acero I',     'Sobrevive 1 minuto sin recibir daño.',        '🛡️', 'especial',   3),
+(38, 'Piel de Acero II',    'Sobrevive 2 minutos sin recibir daño.',       '⚔️', 'especial',   3),
+(39, 'Intocable',           'Sobrevive 5 minutos sin recibir daño.',       '👑', 'especial',   3);
 
 -- ==============================
 -- DATOS: LOGROS GLOBALES

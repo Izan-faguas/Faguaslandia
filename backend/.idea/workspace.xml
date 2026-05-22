@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Launcher/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/MiniGolf.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/SmashyRoad.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../db-init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../db-init/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/logout.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/theme.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/updateUsuario.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +50,7 @@
     "Spring Boot.FaguaslandiaApplication.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/izan/Faguaslandia/backend/games",
+    "last_opened_file_path": "/home/izan/Faguaslandia/backend/uploads/img",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -55,6 +61,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/uploads/img" />
       <recent name="$PROJECT_DIR$/games" />
       <recent name="$PROJECT_DIR$/uploads/avatars" />
       <recent name="$PROJECT_DIR$/uploads" />
@@ -124,7 +131,7 @@
       <workItem from="1779200774228" duration="2240000" />
       <workItem from="1779259536042" duration="5873000" />
       <workItem from="1779350641703" duration="3662000" />
-      <workItem from="1779431671485" duration="4811000" />
+      <workItem from="1779431671485" duration="6661000" />
     </task>
     <servers />
   </component>
