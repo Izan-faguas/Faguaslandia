@@ -91,7 +91,10 @@ public class GameInstallerService {
             Long sesionId = iniciarSesion(usuarioId, juegoId);
 
             // Lanzar el proceso del juego
-            Process proceso = new ProcessBuilder(exe.getAbsolutePath())
+            Process proceso = new ProcessBuilder(
+                    exe.getAbsolutePath(),
+                    "--usuarioId=" + usuarioId,
+                    "--juegoId=" + juegoId)
                     .directory(exe.getParentFile())
                     .start();
 
@@ -267,4 +270,5 @@ public class GameInstallerService {
         }
         dir.delete();
     }
+
 }

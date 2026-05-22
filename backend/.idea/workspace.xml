@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/LogroController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/GameInstallerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/GameInstallerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/SesionJuegoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/SesionJuegoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/LogroService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/LogroService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/LogroService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/LogroService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../db-init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../db-init/init.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +129,9 @@
       <workItem from="1779113137407" duration="2569000" />
       <workItem from="1779174389090" duration="944000" />
       <workItem from="1779200774228" duration="2240000" />
-      <workItem from="1779259536042" duration="5672000" />
+      <workItem from="1779259536042" duration="5873000" />
+      <workItem from="1779350641703" duration="3662000" />
+      <workItem from="1779431671485" duration="805000" />
     </task>
     <servers />
   </component>

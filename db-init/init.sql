@@ -213,13 +213,22 @@ INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
 -- ==============================
 -- DATOS: LOGROS — Mini Golf
 -- ==============================
-INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Hole in One',        'Consigue un hoyo en uno.',                        '⛳', 'especial',   2),
-('Eagle',              'Termina un hoyo con 2 golpes menos del par.',     '🦅', 'especial',   2),
-('Ronda Perfecta',     'Completa una ronda sin sobrepasar el par.',       '🏆', 'especial',   2),
-('Golfista Novato',    'Completa tu primera partida de Mini Golf.',       '🏌️', 'especial',   2),
-('Comprador Golfista', 'Compra Mini Golf.',                               '🛒', 'compra',     2),
-('Critico Golfista',   'Deja una reseña de Mini Golf.',                   '✍️', 'reseña',     2);
+INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
+(15, 'Hoyo 1 Completado', 'Supera el primer hoyo del circuito.',   '1️⃣', 'especial', 2),
+(16, 'Hoyo 2 Completado', 'Supera el segundo hoyo del circuito.',  '2️⃣', 'especial', 2),
+(17, 'Hoyo 3 Completado', 'Supera el tercer hoyo del circuito.',   '3️⃣', 'especial', 2),
+(18, 'Hoyo 4 Completado', 'Supera el cuarto hoyo del circuito.',   '4️⃣', 'especial', 2),
+(19, 'Hoyo 5 Completado', 'Supera el quinto hoyo del circuito.',   '5️⃣', 'especial', 2),
+(20, 'Hoyo 6 Completado', 'Supera el sexto hoyo del circuito.',    '6️⃣', 'especial', 2),
+(21, 'Hoyo 7 Completado', 'Supera el séptimo hoyo del circuito.',  '7️⃣', 'especial', 2),
+(22, 'Hoyo 8 Completado', 'Supera el octavo hoyo del circuito.',   '8️⃣', 'especial', 2),
+(23, 'Hoyo 9 Completado', 'Supera el noveno hoyo del circuito.',   '9️⃣', 'especial', 2),
+(24, 'Hoyo 10 Completado', 'Supera el décimo hoyo del circuito.',  '🔟', 'especial', 2),
+(25, 'Hoyo 11 Completado', 'Supera el undécimo hoyo del circuito.', '🏌️', 'especial', 2),
+(26, 'Hoyo 12 Completado', 'Supera el duodécimo hoyo del circuito.', '⛳', 'especial', 2),
+(27, 'Hoyo 13 Completado', 'Supera el decimotercer hoyo del circuito.', '🏆', 'especial', 2),
+(28, 'Hoyo 14 Completado', 'Supera el decimocuarto hoyo del circuito.', '🏅', 'especial', 2),
+(29, 'Hoyo 15 Completado', 'Supera el decimoquinto hoyo del circuito.', '👑', 'especial', 2);
 
 -- ==============================
 -- DATOS: LOGROS GLOBALES

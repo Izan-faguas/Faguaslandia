@@ -37,7 +37,7 @@ public class LogroService {
     // ─────────────────────────────────────────────────────────
     // MÉTODO CENTRAL: conceder un logro si no lo tiene ya
     // ─────────────────────────────────────────────────────────
-    private void conceder(Long usuarioId, Logro logro) {
+    public void concederLogro(Long usuarioId, Logro logro) {
         boolean yaTiene = logroUsuarioRepository
                 .findByUsuarioId(usuarioId)
                 .stream()
@@ -137,5 +137,9 @@ public class LogroService {
         onAmistad(usuarioId);
         onResena(usuarioId);
         onSesion(usuarioId);
+    }
+
+    private void conceder(Long usuarioId, Logro logro) {
+        concederLogro(usuarioId, logro);
     }
 }

@@ -1,13 +1,16 @@
 package com.faguaslandia.controller;
 
 import com.faguaslandia.model.Juego;
+import com.faguaslandia.model.Logro;
 import com.faguaslandia.model.SesionJuego;
 import com.faguaslandia.model.Usuario;
 import com.faguaslandia.repository.JuegoRepository;
+import com.faguaslandia.repository.LogroRepository;
 import com.faguaslandia.repository.SesionJuegoRepository;
 import com.faguaslandia.repository.UsuarioRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,15 +27,17 @@ public class SesionJuegoController {
     private final SesionJuegoRepository sesionRepository;
     private final UsuarioRepository usuarioRepository;
     private final JuegoRepository juegoRepository;
+    private final LogroRepository logroRepository;
     private final LogroService logroService;
 
     public SesionJuegoController(SesionJuegoRepository sesionRepository,
                                  UsuarioRepository usuarioRepository,
-                                 JuegoRepository juegoRepository,
+                                 JuegoRepository juegoRepository, LogroRepository logroRepository,
                                  LogroService logroService) {
         this.sesionRepository = sesionRepository;
         this.usuarioRepository = usuarioRepository;
         this.juegoRepository = juegoRepository;
+        this.logroRepository = logroRepository;
         this.logroService = logroService;
     }
 
@@ -94,5 +99,19 @@ public class SesionJuegoController {
             @PathVariable Long juegoId) {
         Double horas = sesionRepository.totalHorasByUsuarioAndJuego(usuarioId, juegoId);
         return Map.of("usuarioId", usuarioId, "juegoId", juegoId, "horas", horas);
+    }
+
+    // POST /logros/conceder
+// Body: { "usuarioId": 1, "logroId": 5 }
+    @PostMapping("/logros/conceder")
+    public ResponseEntity<?> concederDesdeJuego(@RequestBody Map<String, Long> body) {
+        Long usuarioId = body.get("usuarioId");
+        Long logroId   = body.get("logroId");
+
+        Logro logro = logroRepository.findById(logroId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Logro no encontrado"));
+
+        logroService.concederLogro(usuarioId, logro); // ver paso 2
+        return ResponseEntity.ok(Map.of("mensaje", "Logro concedido"));
     }
 }
