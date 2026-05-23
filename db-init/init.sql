@@ -160,9 +160,10 @@ INSERT INTO usuarios (id, nombre, email, password, avatar_url, fecha_registro, e
 -- DATOS: JUEGOS
 -- ==============================
 INSERT INTO juegos (id, titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio) VALUES
-(1, 'Eternal Orbit', 'Un juego simple sin mucho esfuerzo realizado.', 30.00, 'img/Eternal_Orbit.png', 'Rogue-like', 'Antonio Novejarque Escamilla', '2026-02-17', 2.00),
-(2, 'Mini Golf',     'Un juego de minigolf 2D.',                       7.99,  'img/MiniGolf.png',          'Estrategia', 'FaguasStudio',                '2026-01-22', 3.00),
-(3, 'Smashy Road',     'Un juego de minigolf 2D.',                       29.99,  'img/SmashyRoad.png',          'Acción', 'FaguasStudio',                '2026-05-22', 3.00);
+(1, 'Eternal Orbit', 'Un juego simple sin mucho esfuerzo realizado.', 30.00, 'img/Eternal_Orbit.png', 'Rogue-like', 'Antonio Novejarque Escamilla', '2026-02-17', 0.00),
+(2, 'Mini Golf',     'Un juego de minigolf 2D.',                       7.99,  'img/MiniGolf.png',          'Estrategia', 'FaguasStudio',                '2026-01-22', 0.00),
+(3, 'Smashy Road',     'Un juego de minigolf 2D.',                       29.99,  'img/SmashyRoad.png',          'Acción', 'FaguasStudio',                '2026-05-22', 0.00),
+(4, 'Dodge Rush', 'Eres un cuadrado blanco atrapado en una arena caótica. Bloques de colores se lanzan hacia ti desde todos los ángulos: rápidos, gigantes, en zigzag, en onda... Tu único objetivo es sobrevivir el mayor tiempo posible. Sin armas, sin atajos. Solo tú, tus reflejos y el caos.', 15.00, 'img/DodgeRush.png', 'Arcade', 'FaguasStudio', '2026-05-23', 0.00);
 
 -- ==============================
 -- DATOS: COMPRAS
@@ -200,7 +201,12 @@ INSERT INTO actualizaciones (id_juego, titulo, descripcion, fecha) VALUES
 (1, 'Versión 1.1 — Corrección de bugs', 'Se han corregido varios errores de colisión y el juego ya no se congela en la ronda 5.', '2026-03-10 12:00:00'),
 (1, 'Versión 1.2 — Nuevo modo', 'Se añade el modo Supervivencia con oleadas infinitas.', '2026-04-05 09:00:00'),
 (2, 'Versión 1.0 — Lanzamiento', 'Primera versión pública de Mini Golf.', '2026-01-22 10:00:00'),
-(2, 'Versión 1.1 — Nuevos hoyos', 'Se añaden 5 hoyos nuevos al circuito principal.', '2026-02-28 11:00:00');
+(2, 'Versión 1.1 — Nuevos hoyos', 'Se añaden 5 hoyos nuevos al circuito principal.', '2026-02-28 11:00:00'),
+
+(4, 'Versión 1.0 — Lanzamiento', 'Primera versión pública de Dodge Rush. Cinco tipos de enemigos disponibles: normal, rápido, grande, zigzag, onda sinusoidal y contracción.', '2026-05-23 10:00:00'),
+(4, 'Versión 1.1 — Nuevos efectos', 'Se añaden efectos de partículas al morir y trails de luz en los enemigos para mejorar la legibilidad visual.', '2026-05-23 14:00:00'),
+(4, 'Versión 1.2 — Equilibrio de dificultad', 'Se ajusta la tasa de aparición de enemigos y se añade un límite mínimo de intervalo para evitar que la pantalla se sature demasiado pronto.', '2026-05-23 18:00:00');
+
 
 -- ==============================
 -- DATOS: LOGROS — Eternal Orbit
@@ -244,6 +250,22 @@ INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
 (37, 'Piel de Acero I',     'Sobrevive 1 minuto sin recibir daño.',        '🛡️', 'especial',   3),
 (38, 'Piel de Acero II',    'Sobrevive 2 minutos sin recibir daño.',       '⚔️', 'especial',   3),
 (39, 'Intocable',           'Sobrevive 5 minutos sin recibir daño.',       '👑', 'especial',   3);
+
+-- ==============================
+-- LOGROS: DODGE RUSH
+-- ==============================
+INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
+(40, 'Primeros pasos',      'Sobrevive 15 segundos.',         '⏱️', 'especial', 4),
+(41, 'Medio minuto',        'Sobrevive 30 segundos.',         '🕐', 'especial', 4),
+(42, 'Sin prisa',           'Sobrevive 45 segundos.',         '🚶', 'especial', 4),
+(43, 'Un minuto exacto',    'Sobrevive 60 segundos.',         '⌛', 'especial', 4),
+(44, 'Calentando motores',  'Sobrevive 75 segundos.',         '🔥', 'especial', 4),
+(45, 'Minuto y medio',      'Sobrevive 90 segundos.',         '💨', 'especial', 4),
+(46, 'Casi dos minutos',    'Sobrevive 105 segundos.',        '😰', 'especial', 4),
+(47, 'Dos minutos',         'Sobrevive 120 segundos.',        '🏆', 'especial', 4),
+(48, 'Estatua de piedra I',  'Sobrevive 10 segundos sin moverte.',  '🗿', 'especial', 4),
+(49, 'Estatua de piedra II', 'Sobrevive 20 segundos sin moverte.',  '🪨', 'especial', 4),
+(50, 'Estatua de piedra III','Sobrevive 30 segundos sin moverte.',  '👑', 'especial', 4);
 
 -- ==============================
 -- DATOS: LOGROS GLOBALES
