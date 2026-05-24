@@ -75,6 +75,14 @@
   import CONFIG from "./config.js";
   import { getSessionUser } from "./session.js";
 
+  // ── Helper imágenes ───────────────────────────────────
+  function imgUrl(imagen_url, variante) {
+    if (!imagen_url) return `${CONFIG.API_BASE_URL}/uploads/img/default.png`;
+    const base = `${CONFIG.API_BASE_URL}/uploads/${imagen_url.replace(/\.png$/i, '')}`;
+    if (!variante) return `${CONFIG.API_BASE_URL}/uploads/${imagen_url}`;
+    return `${base}${variante}.png`;
+  }
+
   const listaJuegosDiv = document.getElementById("listaJuegos");
 
   const inputBusqueda   = document.getElementById("busqueda");
@@ -139,7 +147,7 @@
 
       juegoSection.innerHTML = `
         <div class="hero-media">
-          <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url ?? 'img/default.png'}">
+          <img src="${imgUrl(juego.imagen_url, '920')}" onerror="this.onerror=null;this.src='${imgUrl(juego.imagen_url, null)}'">
           ${comprado ? '<span class="badge-comprado">✔ En tu biblioteca</span>' : ""}
         </div>
 

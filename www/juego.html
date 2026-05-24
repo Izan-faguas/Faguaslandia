@@ -39,6 +39,14 @@
 import CONFIG from "./config.js";
 import { getSessionUser } from "./session.js";
 
+// ── Helper imágenes ───────────────────────────────────
+function imgUrl(imagen_url, variante) {
+  if (!imagen_url) return `${CONFIG.API_BASE_URL}/uploads/img/default.png`;
+  const base = `${CONFIG.API_BASE_URL}/uploads/${imagen_url.replace(/\.png$/i, '')}`;
+  if (!variante) return `${CONFIG.API_BASE_URL}/uploads/${imagen_url}`;
+  return `${base}${variante}.png`;
+}
+
 const container = document.getElementById("juegoContainer");
 const params    = new URLSearchParams(window.location.search);
 const juegoId   = params.get("id");
@@ -76,14 +84,14 @@ async function cargarJuego() {
       <div class="game-page">
 
         <div class="game-hero">
-          <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url ?? 'img/default.png'}"> 
+          <img src="${imgUrl(juego.imagen_url, '1232')}" onerror="this.onerror=null;this.src='${imgUrl(juego.imagen_url, null)}'">
           <div class="game-overlay"></div>
           <h1>${juego.titulo}</h1>
         </div>
 
         <div class="game-content">
           <div class="game-left">
-            <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url ?? 'img/default.png'}" class="game-main-img">
+            <img src="${imgUrl(juego.imagen_url, '920')}" onerror="this.onerror=null;this.src='${imgUrl(juego.imagen_url, null)}'" class="game-main-img">
           </div>
           <div class="game-right">
             <div class="game-card">

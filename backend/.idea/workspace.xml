@@ -5,10 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/games/Dodge_Rush.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/DodgeRush1232.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/DodgeRush920.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/DodgeRushLogo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/MiniGolf1232.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/MiniGolf920.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/MiniGolfLogo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/SmashyRoad1232.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/SmashyRoad920.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/SmashyRoadLogo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/logros/default.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/JuegoDetailView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/JuegoDetailView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/TiendaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/TiendaView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/resources/styles/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/resources/styles/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/Smashy Road.zip" beforeDir="false" afterPath="$PROJECT_DIR$/games/Smashy_Road.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../db-init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../db-init/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/juego.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/juego.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/tienda.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/tienda.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +74,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/games" />
       <recent name="$PROJECT_DIR$/uploads/img" />
+      <recent name="$PROJECT_DIR$/games" />
       <recent name="$PROJECT_DIR$/uploads/avatars" />
       <recent name="$PROJECT_DIR$/uploads" />
     </key>
@@ -129,7 +145,9 @@
       <workItem from="1779259536042" duration="5873000" />
       <workItem from="1779350641703" duration="3662000" />
       <workItem from="1779431671485" duration="7863000" />
-      <workItem from="1779526548646" duration="2247000" />
+      <workItem from="1779526548646" duration="9142000" />
+      <workItem from="1779572122458" duration="2546000" />
+      <workItem from="1779611626196" duration="918000" />
     </task>
     <servers />
   </component>

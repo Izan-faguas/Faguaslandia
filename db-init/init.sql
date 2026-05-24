@@ -172,7 +172,8 @@ INSERT INTO compras (id, id_usuario, id_juego, fecha_compra) VALUES
 (1, 1, 2, '2026-03-18 09:12:31'),
 (2, 1, 1, '2026-04-01 10:25:33'),
 (3, 4, 1, '2026-04-14 11:14:39'),
-(4, 1, 3, '2026-05-22 18:25:08');
+(4, 1, 3, '2026-05-22 18:25:08'),
+(5, 1, 4, '2026-05-23 09:12:52');
 
 
 -- ==============================
@@ -212,80 +213,83 @@ INSERT INTO actualizaciones (id_juego, titulo, descripcion, fecha) VALUES
 -- DATOS: LOGROS — Eternal Orbit
 -- ==============================
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Primera Orbita',     'Completa tu primera partida.',                    '🚀', 'especial',   1),
-('Sin Escudos',        'Sobrevive 5 minutos sin recibir daño.',           '🛡️', 'especial',   1),
-('Coleccionista EO',   'Recoge 50 objetos en una sola partida.',          '📦', 'especial',   1),
-('Orbita Infinita',    'Alcanza la ronda 10.',                            '🌌', 'especial',   1),
-('Comprador Espacial', 'Compra Eternal Orbit.',                           '🛒', 'compra',     1),
-('Critico Espacial',   'Deja una reseña de Eternal Orbit.',               '✍️', 'reseña',     1);
+('Primera Orbita',     'Completa tu primera partida.',                    'logros/eternal_orbit/primera_orbita.png',     'especial',   1),
+('Sin Escudos',        'Sobrevive 5 minutos sin recibir daño.',           'logros/eternal_orbit/sin_escudos.png',        'especial',   1),
+('Coleccionista EO',   'Recoge 50 objetos en una sola partida.',          'logros/eternal_orbit/coleccionista_eo.png',   'especial',   1),
+('Orbita Infinita',    'Alcanza la ronda 10.',                            'logros/eternal_orbit/orbita_infinita.png',    'especial',   1),
+('Comprador Espacial', 'Compra Eternal Orbit.',                           'logros/eternal_orbit/comprador_espacial.png', 'compra',     1),
+('Critico Espacial',   'Deja una reseña de Eternal Orbit.',               'logros/eternal_orbit/critico_espacial.png',   'reseña',     1);
 
 -- ==============================
 -- DATOS: LOGROS — Mini Golf
 -- ==============================
 INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
-(15, 'Hoyo 1 Completado', 'Supera el primer hoyo del circuito.',   '1️⃣', 'especial', 2),
-(16, 'Hoyo 2 Completado', 'Supera el segundo hoyo del circuito.',  '2️⃣', 'especial', 2),
-(17, 'Hoyo 3 Completado', 'Supera el tercer hoyo del circuito.',   '3️⃣', 'especial', 2),
-(18, 'Hoyo 4 Completado', 'Supera el cuarto hoyo del circuito.',   '4️⃣', 'especial', 2),
-(19, 'Hoyo 5 Completado', 'Supera el quinto hoyo del circuito.',   '5️⃣', 'especial', 2),
-(20, 'Hoyo 6 Completado', 'Supera el sexto hoyo del circuito.',    '6️⃣', 'especial', 2),
-(21, 'Hoyo 7 Completado', 'Supera el séptimo hoyo del circuito.',  '7️⃣', 'especial', 2),
-(22, 'Hoyo 8 Completado', 'Supera el octavo hoyo del circuito.',   '8️⃣', 'especial', 2),
-(23, 'Hoyo 9 Completado', 'Supera el noveno hoyo del circuito.',   '9️⃣', 'especial', 2),
-(24, 'Hoyo 10 Completado', 'Supera el décimo hoyo del circuito.',  '🔟', 'especial', 2),
-(25, 'Hoyo 11 Completado', 'Supera el undécimo hoyo del circuito.', '🏌️', 'especial', 2),
-(26, 'Hoyo 12 Completado', 'Supera el duodécimo hoyo del circuito.', '⛳', 'especial', 2),
-(27, 'Hoyo 13 Completado', 'Supera el decimotercer hoyo del circuito.', '🏆', 'especial', 2),
-(28, 'Hoyo 14 Completado', 'Supera el decimocuarto hoyo del circuito.', '🏅', 'especial', 2),
-(29, 'Hoyo 15 Completado', 'Supera el decimoquinto hoyo del circuito.', '👑', 'especial', 2);
+(15, 'Hoyo 1 Completado',  'Supera el primer hoyo del circuito.',            'logros/minigolf/hoyo_1.png',  'especial', 2),
+(16, 'Hoyo 2 Completado',  'Supera el segundo hoyo del circuito.',           'logros/minigolf/hoyo_2.png',  'especial', 2),
+(17, 'Hoyo 3 Completado',  'Supera el tercer hoyo del circuito.',            'logros/minigolf/hoyo_3.png',  'especial', 2),
+(18, 'Hoyo 4 Completado',  'Supera el cuarto hoyo del circuito.',            'logros/minigolf/hoyo_4.png',  'especial', 2),
+(19, 'Hoyo 5 Completado',  'Supera el quinto hoyo del circuito.',            'logros/minigolf/hoyo_5.png',  'especial', 2),
+(20, 'Hoyo 6 Completado',  'Supera el sexto hoyo del circuito.',             'logros/minigolf/hoyo_6.png',  'especial', 2),
+(21, 'Hoyo 7 Completado',  'Supera el séptimo hoyo del circuito.',           'logros/minigolf/hoyo_7.png',  'especial', 2),
+(22, 'Hoyo 8 Completado',  'Supera el octavo hoyo del circuito.',            'logros/minigolf/hoyo_8.png',  'especial', 2),
+(23, 'Hoyo 9 Completado',  'Supera el noveno hoyo del circuito.',            'logros/minigolf/hoyo_9.png',  'especial', 2),
+(24, 'Hoyo 10 Completado', 'Supera el décimo hoyo del circuito.',            'logros/minigolf/hoyo_10.png', 'especial', 2),
+(25, 'Hoyo 11 Completado', 'Supera el undécimo hoyo del circuito.',          'logros/minigolf/hoyo_11.png', 'especial', 2),
+(26, 'Hoyo 12 Completado', 'Supera el duodécimo hoyo del circuito.',         'logros/minigolf/hoyo_12.png', 'especial', 2),
+(27, 'Hoyo 13 Completado', 'Supera el decimotercer hoyo del circuito.',      'logros/minigolf/hoyo_13.png', 'especial', 2),
+(28, 'Hoyo 14 Completado', 'Supera el decimocuarto hoyo del circuito.',      'logros/minigolf/hoyo_14.png', 'especial', 2),
+(29, 'Hoyo 15 Completado', 'Supera el decimoquinto hoyo del circuito.',      'logros/minigolf/hoyo_15.png', 'especial', 2);
 
+-- ==============================
+-- DATOS: LOGROS — Smashy Road
+-- ==============================
 INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
-(30, 'Primera Fuga',        'Inicia tu primera partida en SmashyRoad.',     '🚗', 'especial',   3),
-(31, '5 Policías Caídos',   'Destruye 5 coches de policía en total.',       '💥', 'especial',   3),
-(32, '10 Policías Caídos',  'Destruye 10 coches de policía en total.',      '🔥', 'especial',   3),
-(33, '20 Policías Caídos',  'Destruye 20 coches de policía en total.',      '☠️', 'especial',   3),
-(34, 'Fugitivo Novel',      'Alcanza 1.000 puntos en una sesión.',          '🏅', 'puntuacion', 3),
-(35, 'Fugitivo Experto',    'Alcanza 5.000 puntos en una sesión.',          '🥈', 'puntuacion', 3),
-(36, 'Fugitivo Legendario', 'Alcanza 10.000 puntos en una sesión.',        '🥇', 'puntuacion', 3),
-(37, 'Piel de Acero I',     'Sobrevive 1 minuto sin recibir daño.',        '🛡️', 'especial',   3),
-(38, 'Piel de Acero II',    'Sobrevive 2 minutos sin recibir daño.',       '⚔️', 'especial',   3),
-(39, 'Intocable',           'Sobrevive 5 minutos sin recibir daño.',       '👑', 'especial',   3);
+(30, 'Primera Fuga',        'Inicia tu primera partida en SmashyRoad.',     'logros/smashyroad/primera_fuga.png',         'especial',   3),
+(31, '5 Policías Caídos',   'Destruye 5 coches de policía en total.',       'logros/smashyroad/5_policias_caidos.png',    'especial',   3),
+(32, '10 Policías Caídos',  'Destruye 10 coches de policía en total.',      'logros/smashyroad/10_policias_caidos.png',   'especial',   3),
+(33, '20 Policías Caídos',  'Destruye 20 coches de policía en total.',      'logros/smashyroad/20_policias_caidos.png',   'especial',   3),
+(34, 'Fugitivo Novel',      'Alcanza 1.000 puntos en una sesión.',          'logros/smashyroad/fugitivo_novel.png',       'puntuacion', 3),
+(35, 'Fugitivo Experto',    'Alcanza 5.000 puntos en una sesión.',          'logros/smashyroad/fugitivo_experto.png',     'puntuacion', 3),
+(36, 'Fugitivo Legendario', 'Alcanza 10.000 puntos en una sesión.',         'logros/smashyroad/fugitivo_legendario.png',  'puntuacion', 3),
+(37, 'Piel de Acero I',     'Sobrevive 1 minuto sin recibir daño.',         'logros/smashyroad/piel_de_acero_1.png',      'especial',   3),
+(38, 'Piel de Acero II',    'Sobrevive 2 minutos sin recibir daño.',        'logros/smashyroad/piel_de_acero_2.png',      'especial',   3),
+(39, 'Intocable',           'Sobrevive 5 minutos sin recibir daño.',        'logros/smashyroad/intocable.png',            'especial',   3);
 
 -- ==============================
 -- LOGROS: DODGE RUSH
 -- ==============================
 INSERT INTO logros (id, nombre, descripcion, icono_url, tipo, id_juego) VALUES
-(40, 'Primeros pasos',      'Sobrevive 15 segundos.',         '⏱️', 'especial', 4),
-(41, 'Medio minuto',        'Sobrevive 30 segundos.',         '🕐', 'especial', 4),
-(42, 'Sin prisa',           'Sobrevive 45 segundos.',         '🚶', 'especial', 4),
-(43, 'Un minuto exacto',    'Sobrevive 60 segundos.',         '⌛', 'especial', 4),
-(44, 'Calentando motores',  'Sobrevive 75 segundos.',         '🔥', 'especial', 4),
-(45, 'Minuto y medio',      'Sobrevive 90 segundos.',         '💨', 'especial', 4),
-(46, 'Casi dos minutos',    'Sobrevive 105 segundos.',        '😰', 'especial', 4),
-(47, 'Dos minutos',         'Sobrevive 120 segundos.',        '🏆', 'especial', 4),
-(48, 'Estatua de piedra I',  'Sobrevive 10 segundos sin moverte.',  '🗿', 'especial', 4),
-(49, 'Estatua de piedra II', 'Sobrevive 20 segundos sin moverte.',  '🪨', 'especial', 4),
-(50, 'Estatua de piedra III','Sobrevive 30 segundos sin moverte.',  '👑', 'especial', 4);
+(40, 'Primeros pasos',       'Sobrevive 15 segundos.',                    'logros/dodge_rush/primeros_pasos.png',        'especial', 4),
+(41, 'Medio minuto',         'Sobrevive 30 segundos.',                    'logros/dodge_rush/medio_minuto.png',          'especial', 4),
+(42, 'Sin prisa',            'Sobrevive 45 segundos.',                    'logros/dodge_rush/sin_prisa.png',             'especial', 4),
+(43, 'Un minuto exacto',     'Sobrevive 60 segundos.',                    'logros/dodge_rush/un_minuto_exacto.png',      'especial', 4),
+(44, 'Calentando motores',   'Sobrevive 75 segundos.',                    'logros/dodge_rush/calentando_motores.png',    'especial', 4),
+(45, 'Minuto y medio',       'Sobrevive 90 segundos.',                    'logros/dodge_rush/minuto_y_medio.png',        'especial', 4),
+(46, 'Casi dos minutos',     'Sobrevive 105 segundos.',                   'logros/dodge_rush/casi_dos_minutos.png',      'especial', 4),
+(47, 'Dos minutos',          'Sobrevive 120 segundos.',                   'logros/dodge_rush/dos_minutos.png',           'especial', 4),
+(48, 'Estatua de piedra I',  'Sobrevive 10 segundos sin moverte.',        'logros/dodge_rush/estatua_piedra_1.png',      'especial', 4),
+(49, 'Estatua de piedra II', 'Sobrevive 20 segundos sin moverte.',        'logros/dodge_rush/estatua_piedra_2.png',      'especial', 4),
+(50, 'Estatua de piedra III','Sobrevive 30 segundos sin moverte.',        'logros/dodge_rush/estatua_piedra_3.png',      'especial', 4);
 
 -- ==============================
 -- DATOS: LOGROS GLOBALES
 -- ==============================
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Primer juego',   'Compra tu primer juego en Faguaslandia', '🛒', 'compra', NULL),
-('Coleccionista',  'Compra 3 juegos en total',               '📦', 'compra', NULL),
-('Fanatico',       'Compra 5 juegos en total',               '🎮', 'compra', NULL);
+('Primer juego',   'Compra tu primer juego en Faguaslandia', 'logros/globales/primer_juego.png',   'compra', NULL),
+('Coleccionista',  'Compra 3 juegos en total',               'logros/globales/coleccionista.png',  'compra', NULL),
+('Fanatico',       'Compra 5 juegos en total',               'logros/globales/fanatico.png',       'compra', NULL);
 
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Primer amigo',         'Añade a tu primer amigo',   '🤝', 'amistad', NULL),
-('Bien acompañado',      'Ten 3 amigos a la vez',     '👫', 'amistad', NULL),
-('El alma de la fiesta', 'Ten 5 amigos a la vez',     '🎉', 'amistad', NULL);
+('Primer amigo',         'Añade a tu primer amigo',   'logros/globales/primer_amigo.png',         'amistad', NULL),
+('Bien acompañado',      'Ten 3 amigos a la vez',     'logros/globales/bien_acompanado.png',      'amistad', NULL),
+('El alma de la fiesta', 'Ten 5 amigos a la vez',     'logros/globales/alma_de_la_fiesta.png',    'amistad', NULL);
 
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Critico novel',       'Escribe tu primera reseña', '✍️', 'reseña', NULL),
-('Critico experto',     'Escribe 3 reseñas en total','📝', 'reseña', NULL),
-('Critico profesional', 'Escribe 5 reseñas en total','🏅', 'reseña', NULL);
+('Critico novel',       'Escribe tu primera reseña',  'logros/globales/critico_novel.png',        'reseña', NULL),
+('Critico experto',     'Escribe 3 reseñas en total', 'logros/globales/critico_experto.png',      'reseña', NULL),
+('Critico profesional', 'Escribe 5 reseñas en total', 'logros/globales/critico_profesional.png',  'reseña', NULL);
 
 INSERT INTO logros (nombre, descripcion, icono_url, tipo, id_juego) VALUES
-('Primera hora',    'Juega tu primera hora en total', '⏱️', 'puntuacion', NULL),
-('Maratonista',     'Acumula 10 horas de juego',      '🏃', 'puntuacion', NULL),
-('Sin vida social', 'Acumula 50 horas de juego',      '🛋️', 'puntuacion', NULL);
+('Primera hora',    'Juega tu primera hora en total', 'logros/globales/primera_hora.png',    'puntuacion', NULL),
+('Maratonista',     'Acumula 10 horas de juego',      'logros/globales/maratonista.png',     'puntuacion', NULL),
+('Sin vida social', 'Acumula 50 horas de juego',      'logros/globales/sin_vida_social.png', 'puntuacion', NULL);

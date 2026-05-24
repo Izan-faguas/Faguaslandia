@@ -26,7 +26,6 @@ import java.util.List;
 
 public class PerfilView extends VBox {
 
-    // ── DTOs internos ────────────────────────────────────
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class LogroDTO {
         public String nombre;
@@ -52,7 +51,6 @@ public class PerfilView extends VBox {
         public String estado;
     }
 
-    // ── Campos ───────────────────────────────────────────
     private final Usuario usuario;
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -69,8 +67,10 @@ public class PerfilView extends VBox {
     private VBox listaSolicitudesBox;
     private VBox listaAmigosBox;
     private Runnable onLogout;
-    public void setOnLogout(Runnable r) { this.onLogout = r; }
 
+    public void setOnLogout(Runnable r) {
+        this.onLogout = r;
+    }
 
     public PerfilView(Usuario usuario) {
         this.usuario = usuario;
@@ -80,13 +80,8 @@ public class PerfilView extends VBox {
         construirVista();
     }
 
-    // ════════════════════════════════════════════════════
-    //  CONSTRUCCIÓN UI
-    // ════════════════════════════════════════════════════
-
     private void construirVista() {
 
-        /* ── BANNER + AVATAR ── */
         StackPane banner = new StackPane();
         banner.getStyleClass().add("perfil-banner");
         banner.setMinHeight(160);
@@ -100,15 +95,13 @@ public class PerfilView extends VBox {
         avatarInitial = new Label(inicial);
         avatarInitial.getStyleClass().add("perfil-avatar-initial");
 
-        cargarAvatarEn(avatarWrapper, avatarInitial,
-                usuario.getFoto(), 100);
+        cargarAvatarEn(avatarWrapper, avatarInitial, usuario.getFoto(), 100);
 
         StackPane bannerConAvatar = new StackPane(banner);
         StackPane.setAlignment(avatarWrapper, Pos.BOTTOM_CENTER);
         StackPane.setMargin(avatarWrapper, new Insets(0, 0, -50, 0));
         bannerConAvatar.getChildren().add(avatarWrapper);
 
-        /* ── NOMBRE + TAG + NIVEL ── */
         Label lblNombre = new Label(usuario.getNombre());
         lblNombre.getStyleClass().add("perfil-nombre");
 
@@ -118,7 +111,6 @@ public class PerfilView extends VBox {
         lblNivelBadge = new Label("Nivel 1");
         lblNivelBadge.getStyleClass().add("nivel-badge");
 
-        // Barra de nivel
         nivelBarraFill = new Region();
         nivelBarraFill.getStyleClass().add("nivel-barra-fill");
         nivelBarraFill.setPrefWidth(0);
@@ -142,27 +134,22 @@ public class PerfilView extends VBox {
         nombreBox.setAlignment(Pos.CENTER);
         nombreBox.setPadding(new Insets(60, 0, 20, 0));
 
-        /* ── STATS ── */
         lblStatJuegos = new Label("—");
-        lblStatHoras  = new Label("—");
+        lblStatHoras = new Label("—");
         lblStatLogros = new Label("—");
 
         HBox statsRow = new HBox(20,
-                crearStatCard("🎮", "Juegos",  lblStatJuegos),
-                crearStatCard("⏱️", "Horas",   lblStatHoras),
-                crearStatCard("🏆", "Logros",  lblStatLogros)
+                crearStatCard("🎮", "Juegos", lblStatJuegos),
+                crearStatCard("⏱️", "Horas", lblStatHoras),
+                crearStatCard("🏆", "Logros", lblStatLogros)
         );
         statsRow.setAlignment(Pos.CENTER);
         statsRow.setPadding(new Insets(0, 40, 20, 40));
 
-        /* ── INFO DE CUENTA ── */
         VBox seccionCuenta = crearSeccionCuenta();
-
-        /* ── LOGROS ── */
         VBox seccionLogros = crearSeccionLogros();
-
-        /* ── AMIGOS ── */
         VBox seccionAmigos = crearSeccionAmigos();
+
         Button btnLogout = new Button("Cerrar sesión");
         btnLogout.getStyleClass().add("btn-secondary");
         btnLogout.setStyle("-fx-font-size: 12px; -fx-padding: 6 16 6 16;");
@@ -174,18 +161,11 @@ public class PerfilView extends VBox {
         logoutBox.setAlignment(Pos.CENTER_RIGHT);
         logoutBox.setPadding(new Insets(12, 24, 0, 0));
 
-        /* ── SCROLL ── */
         VBox contenido = new VBox(
-                logoutBox,
-                bannerConAvatar,
-                nombreBox,
-                statsRow,
-                separador(),
-                seccionCuenta,
-                separador(),
-                seccionLogros,
-                separador(),
-                seccionAmigos
+                logoutBox, bannerConAvatar, nombreBox, statsRow,
+                separador(), seccionCuenta,
+                separador(), seccionLogros,
+                separador(), seccionAmigos
         );
 
         ScrollPane scroll = new ScrollPane(contenido);
@@ -195,7 +175,6 @@ public class PerfilView extends VBox {
         VBox.setVgrow(scroll, Priority.ALWAYS);
         getChildren().add(scroll);
 
-        // Cargar datos
         cargarStats();
         cargarLogros();
         cargarSolicitudes();
@@ -216,11 +195,9 @@ public class PerfilView extends VBox {
                 separador(),
                 filaDato("✉️  Correo electrónico", usuario.getEmail()),
                 separador(),
-                filaDato("🆔  Código amigo",
-                        usuario.getNombre() + "#" + usuario.getId())
+                filaDato("🆔  Código amigo", usuario.getNombre() + "#" + usuario.getId())
         );
 
-        // Botón editar
         Button btnEditar = new Button("✏️  Editar perfil");
         btnEditar.getStyleClass().add("btn-play");
         btnEditar.setOnAction(e -> mostrarModalEditar());
@@ -237,7 +214,6 @@ public class PerfilView extends VBox {
         titulo.getStyleClass().add("perfil-section-title");
 
         listaLogrosBox = new VBox(10);
-
         Label cargando = new Label("Cargando logros...");
         cargando.getStyleClass().add("amigos-vacio");
         listaLogrosBox.getChildren().add(cargando);
@@ -253,7 +229,6 @@ public class PerfilView extends VBox {
         Label titulo = new Label("👥 Amigos");
         titulo.getStyleClass().add("perfil-section-title");
 
-        // Campo agregar amigo
         TextField codigoField = new TextField();
         codigoField.setPromptText("Buscar por Nombre#id");
         codigoField.getStyleClass().add("login-field");
@@ -266,16 +241,12 @@ public class PerfilView extends VBox {
         agregarBox.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(codigoField, Priority.ALWAYS);
 
-        // Solicitudes
         Label tituloSol = new Label("Solicitudes pendientes");
         tituloSol.getStyleClass().add("amigos-section-title");
-
         listaSolicitudesBox = new VBox(8);
 
-        // Amigos
         Label tituloAmigos = new Label("Lista de amigos");
         tituloAmigos.getStyleClass().add("amigos-section-title");
-
         listaAmigosBox = new VBox(8);
 
         sec.getChildren().addAll(titulo, agregarBox,
@@ -292,38 +263,23 @@ public class PerfilView extends VBox {
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/stats";
-
                 HttpResponse<String> resp = AuthService.getClient().send(
-                        HttpRequest.newBuilder()
-                                .uri(URI.create(url))
-                                .GET()
-                                .build(),
-                        HttpResponse.BodyHandlers.ofString()
-                );
-
+                        HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
+                        HttpResponse.BodyHandlers.ofString());
                 if (resp.statusCode() == 200) {
-
                     JsonNode j = mapper.readTree(resp.body());
-
                     Platform.runLater(() -> {
-
                         lblStatJuegos.setText(j.get("juegos").asText());
                         lblStatHoras.setText(j.get("horas").asInt() + "h");
                         lblStatLogros.setText(j.get("logros").asText());
-
                         lblNivelBadge.setText("Nivel " + j.get("nivel").asInt());
                         lblNivelPuntos.setText(j.get("puntos").asInt() + " pts");
-
-                        double progreso = j.get("progreso").asDouble();
-
-                        progreso = Math.max(0, Math.min(progreso, 100));
-
+                        double progreso = Math.max(0, Math.min(j.get("progreso").asDouble(), 100));
                         double anchoPx = 200 * progreso / 100.0;
                         nivelBarraFill.setPrefWidth(anchoPx);
                         nivelBarraFill.setMaxWidth(anchoPx);
                     });
                 }
-
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -338,10 +294,13 @@ public class PerfilView extends VBox {
                         HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
                         HttpResponse.BodyHandlers.ofString());
                 if (resp.statusCode() == 200) {
-                    List<LogroDTO> logros = mapper.readValue(resp.body(), new TypeReference<>() {});
+                    List<LogroDTO> logros = mapper.readValue(resp.body(), new TypeReference<>() {
+                    });
                     Platform.runLater(() -> renderizarLogros(logros));
                 }
-            } catch (Exception ex) { ex.printStackTrace(); }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
 
@@ -353,10 +312,13 @@ public class PerfilView extends VBox {
                         HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
                         HttpResponse.BodyHandlers.ofString());
                 if (resp.statusCode() == 200) {
-                    List<AmigoRelacionDTO> lista = mapper.readValue(resp.body(), new TypeReference<>() {});
+                    List<AmigoRelacionDTO> lista = mapper.readValue(resp.body(), new TypeReference<>() {
+                    });
                     Platform.runLater(() -> renderizarSolicitudes(lista));
                 }
-            } catch (Exception ex) { ex.printStackTrace(); }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
 
@@ -368,10 +330,13 @@ public class PerfilView extends VBox {
                         HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
                         HttpResponse.BodyHandlers.ofString());
                 if (resp.statusCode() == 200) {
-                    List<AmigoRelacionDTO> lista = mapper.readValue(resp.body(), new TypeReference<>() {});
+                    List<AmigoRelacionDTO> lista = mapper.readValue(resp.body(), new TypeReference<>() {
+                    });
                     Platform.runLater(() -> renderizarAmigos(lista));
                 }
-            } catch (Exception ex) { ex.printStackTrace(); }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
 
@@ -393,8 +358,7 @@ public class PerfilView extends VBox {
             fila.setAlignment(Pos.CENTER_LEFT);
             fila.setPadding(new Insets(12, 16, 12, 16));
 
-            Label icono = new Label(l.icono != null ? l.icono : "🏆");
-            icono.setStyle("-fx-font-size: 28px;");
+            ImageView icono = cargarIconoLogro(l.icono, 36);
 
             VBox info = new VBox(3);
             Label nombre = new Label(l.nombre);
@@ -406,7 +370,8 @@ public class PerfilView extends VBox {
             String fechaTexto = "";
             if (l.fechaDesbloqueo != null && l.fechaDesbloqueo.length() >= 10) {
                 String[] partes = l.fechaDesbloqueo.substring(0, 10).split("-");
-                if (partes.length == 3) fechaTexto = "Desbloqueado el " + partes[2] + "/" + partes[1] + "/" + partes[0];
+                if (partes.length == 3)
+                    fechaTexto = "Desbloqueado el " + partes[2] + "/" + partes[1] + "/" + partes[0];
             }
             Label fecha = new Label(fechaTexto);
             fecha.setStyle("-fx-text-fill: #5e7a96; -fx-font-size: 11px;");
@@ -416,6 +381,51 @@ public class PerfilView extends VBox {
             fila.getChildren().addAll(icono, info);
             listaLogrosBox.getChildren().add(fila);
         }
+    }
+
+    // ── Carga asíncrona (para listas) ────────────────────
+    private ImageView cargarIconoLogro(String ruta, double size) {
+        ImageView iv = new ImageView();
+        iv.setFitWidth(size);
+        iv.setFitHeight(size);
+        iv.setPreserveRatio(true);
+        iv.setSmooth(true);
+
+        String url = (ruta != null && !ruta.isBlank())
+                ? Config.IMG_BASE_URL + "/" + ruta
+                : Config.IMG_BASE_URL + "/logros/default.png";
+
+        Image img = new Image(url, true); // asíncrono está bien en listas
+        img.errorProperty().addListener((obs, o, err) -> {
+            if (err) Platform.runLater(() ->
+                    iv.setImage(new Image(Config.IMG_BASE_URL + "/logros/default.png", true)));
+        });
+        iv.setImage(img);
+        return iv;
+    }
+
+    // ── Carga síncrona (para el toast, que ya está en el hilo FX) ──
+    private ImageView cargarIconoLogroSync(String ruta, double size) {
+        ImageView iv = new ImageView();
+        iv.setFitWidth(size);
+        iv.setFitHeight(size);
+        iv.setPreserveRatio(true);
+        iv.setSmooth(true);
+
+        String url = (ruta != null && !ruta.isBlank())
+                ? Config.IMG_BASE_URL + "/" + ruta
+                : Config.IMG_BASE_URL + "/logros/default.png";
+
+        try {
+            Image img = new Image(url); // SIN true → síncrono
+            if (img.isError()) {
+                img = new Image(Config.IMG_BASE_URL + "/logros/default.png");
+            }
+            iv.setImage(img);
+        } catch (Exception e) {
+            iv.setImage(new Image(Config.IMG_BASE_URL + "/logros/default.png"));
+        }
+        return iv;
     }
 
     private void renderizarSolicitudes(List<AmigoRelacionDTO> lista) {
@@ -430,23 +440,20 @@ public class PerfilView extends VBox {
         }
         for (AmigoRelacionDTO sol : pendientes) {
             UsuarioMinDTO solicitante = sol.usuario1;
-
             HBox fila = new HBox(12);
             fila.getStyleClass().add("solicitud-card");
             fila.setAlignment(Pos.CENTER_LEFT);
 
             StackPane av = crearAvatarMin(solicitante, 36);
-
             Label nombre = new Label(solicitante.nombre + "#" + solicitante.id);
             nombre.getStyleClass().add("amigo-nombre");
             HBox.setHgrow(nombre, Priority.ALWAYS);
 
-            Button btnAceptar  = new Button("✔ Aceptar");
+            Button btnAceptar = new Button("✔ Aceptar");
             btnAceptar.getStyleClass().add("btn-aceptar");
             Button btnRechazar = new Button("✖ Rechazar");
             btnRechazar.getStyleClass().add("btn-rechazar");
-
-            btnAceptar.setOnAction(e  -> responderSolicitud(sol.id, true));
+            btnAceptar.setOnAction(e -> responderSolicitud(sol.id, true));
             btnRechazar.setOnAction(e -> responderSolicitud(sol.id, false));
 
             HBox btns = new HBox(8, btnRechazar, btnAceptar);
@@ -468,19 +475,17 @@ public class PerfilView extends VBox {
         for (AmigoRelacionDTO rel : aceptados) {
             UsuarioMinDTO otro = rel.usuario1.id.equals(usuario.getId())
                     ? rel.usuario2 : rel.usuario1;
-            String estado = otro.estado != null ? otro.estado : "offline";
 
             HBox fila = new HBox(12);
             fila.getStyleClass().add("amigo-row");
             fila.setAlignment(Pos.CENTER_LEFT);
 
             StackPane av = crearAvatarMin(otro, 36);
-
             VBox info = new VBox(2);
             HBox.setHgrow(info, Priority.ALWAYS);
             Label nombre = new Label(otro.nombre);
             nombre.getStyleClass().add("amigo-nombre");
-            Label estadoLbl = new Label(formatearEstado(estado));
+            Label estadoLbl = new Label(formatearEstado(otro.estado != null ? otro.estado : "offline"));
             estadoLbl.getStyleClass().add("amigo-estado-txt");
             info.getChildren().addAll(nombre, estadoLbl);
 
@@ -503,9 +508,16 @@ public class PerfilView extends VBox {
             return;
         }
         long id2;
-        try { id2 = Long.parseLong(codigo.split("#")[1]); }
-        catch (NumberFormatException e) { mostrarAlerta("ID inválido"); return; }
-        if (id2 == usuario.getId()) { mostrarAlerta("No puedes agregarte a ti mismo"); return; }
+        try {
+            id2 = Long.parseLong(codigo.split("#")[1]);
+        } catch (NumberFormatException e) {
+            mostrarAlerta("ID inválido");
+            return;
+        }
+        if (id2 == usuario.getId()) {
+            mostrarAlerta("No puedes agregarte a ti mismo");
+            return;
+        }
 
         new Thread(() -> {
             try {
@@ -518,9 +530,7 @@ public class PerfilView extends VBox {
                     if (resp.statusCode() == 200) {
                         campo.clear();
                         mostrarAlerta("✅ Solicitud enviada");
-                    } else {
-                        mostrarAlerta("Error: " + resp.body());
-                    }
+                    } else mostrarAlerta("Error: " + resp.body());
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -531,7 +541,7 @@ public class PerfilView extends VBox {
 
     private void responderSolicitud(Long solicitudId, boolean aceptar) {
         String endpoint = aceptar ? "aceptar" : "rechazar";
-        String method   = aceptar ? "PUT"     : "DELETE";
+        String method = aceptar ? "PUT" : "DELETE";
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/solicitud/" + solicitudId + "/" + endpoint;
@@ -544,14 +554,15 @@ public class PerfilView extends VBox {
                     cargarSolicitudes();
                     if (aceptar) cargarAmigos();
                 });
-            } catch (Exception ex) { ex.printStackTrace(); }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
 
     private void eliminarAmigo(Long relacionId, Long amigoId, String nombre) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Eliminar a " + nombre + " de tus amigos?",
-                ButtonType.YES, ButtonType.NO);
+                "¿Eliminar a " + nombre + " de tus amigos?", ButtonType.YES, ButtonType.NO);
         confirm.setTitle("Confirmar");
         confirm.setHeaderText(null);
         confirm.showAndWait().ifPresent(bt -> {
@@ -563,7 +574,9 @@ public class PerfilView extends VBox {
                                 HttpRequest.newBuilder().uri(URI.create(url)).DELETE().build(),
                                 HttpResponse.BodyHandlers.ofString());
                         Platform.runLater(this::cargarAmigos);
-                    } catch (Exception ex) { ex.printStackTrace(); }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }).start();
             }
         });
@@ -579,8 +592,7 @@ public class PerfilView extends VBox {
         dialog.setHeaderText(null);
 
         DialogPane dp = dialog.getDialogPane();
-        dp.getStylesheets().add(
-                getClass().getResource("/styles/index.css").toExternalForm());
+        dp.getStylesheets().add(getClass().getResource("/styles/index.css").toExternalForm());
         dp.getStyleClass().add("login-box");
         dp.setStyle("-fx-background-color: #121a24; -fx-border-color: rgba(102,192,244,0.2);"
                 + "-fx-border-radius: 12; -fx-background-radius: 12;");
@@ -594,7 +606,6 @@ public class PerfilView extends VBox {
         TextField correoField = new TextField(usuario.getEmail());
         correoField.getStyleClass().add("login-field");
 
-        // Selector de foto
         Label lblFotoElegida = new Label("Sin archivo elegido");
         lblFotoElegida.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 12px;");
         final File[] fotoElegida = {null};
@@ -624,16 +635,15 @@ public class PerfilView extends VBox {
                 etiqueta("Nombre"), nombreField,
                 etiqueta("Correo"), correoField,
                 etiqueta("Foto de perfil"), fotoBox,
-                msgEditar
-        );
+                msgEditar);
         contenido.setPadding(new Insets(10, 0, 10, 0));
         dp.setContent(contenido);
 
         ButtonType guardarType = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelType  = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType cancelType = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
         dp.getButtonTypes().addAll(guardarType, cancelType);
 
-        Button btnGuardar  = (Button) dp.lookupButton(guardarType);
+        Button btnGuardar = (Button) dp.lookupButton(guardarType);
         Button btnCancelar = (Button) dp.lookupButton(cancelType);
         btnGuardar.getStyleClass().add("btn-play");
         btnCancelar.getStyleClass().add("btn-secondary");
@@ -660,18 +670,15 @@ public class PerfilView extends VBox {
             try {
                 String boundary = "----FormBoundary" + System.currentTimeMillis();
                 StringBuilder sb = new StringBuilder();
-
                 sb.append("--").append(boundary).append("\r\n");
                 sb.append("Content-Disposition: form-data; name=\"nombre\"\r\n\r\n");
                 sb.append(nombre).append("\r\n");
-
                 sb.append("--").append(boundary).append("\r\n");
                 sb.append("Content-Disposition: form-data; name=\"email\"\r\n\r\n");
                 sb.append(correo).append("\r\n");
 
                 byte[] prefixBytes = sb.toString().getBytes();
                 byte[] suffix = ("\r\n--" + boundary + "--\r\n").getBytes();
-
                 byte[] body;
                 String contentType;
 
@@ -681,12 +688,11 @@ public class PerfilView extends VBox {
                             + "Content-Disposition: form-data; name=\"foto\"; filename=\"" + foto.getName() + "\"\r\n"
                             + "Content-Type: image/jpeg\r\n\r\n";
                     byte[] fileHeaderBytes = fileHeader.getBytes();
-
                     body = new byte[prefixBytes.length + fileHeaderBytes.length + fileBytes.length + suffix.length];
-                    System.arraycopy(prefixBytes,     0, body, 0,                                                   prefixBytes.length);
-                    System.arraycopy(fileHeaderBytes, 0, body, prefixBytes.length,                                  fileHeaderBytes.length);
-                    System.arraycopy(fileBytes,       0, body, prefixBytes.length + fileHeaderBytes.length,         fileBytes.length);
-                    System.arraycopy(suffix,          0, body, prefixBytes.length + fileHeaderBytes.length + fileBytes.length, suffix.length);
+                    System.arraycopy(prefixBytes, 0, body, 0, prefixBytes.length);
+                    System.arraycopy(fileHeaderBytes, 0, body, prefixBytes.length, fileHeaderBytes.length);
+                    System.arraycopy(fileBytes, 0, body, prefixBytes.length + fileHeaderBytes.length, fileBytes.length);
+                    System.arraycopy(suffix, 0, body, prefixBytes.length + fileHeaderBytes.length + fileBytes.length, suffix.length);
                     contentType = "multipart/form-data; boundary=" + boundary;
                 } else {
                     body = (sb + suffix.toString()).getBytes();
@@ -707,7 +713,6 @@ public class PerfilView extends VBox {
                         if (foto != null) {
                             String filename = "user_" + usuario.getId() + ".jpg";
                             usuario.setFoto(filename);
-                            // Recargar avatar
                             avatarWrapper.getChildren().clear();
                             cargarAvatarEn(avatarWrapper, avatarInitial, filename, 100);
                         }
@@ -732,12 +737,11 @@ public class PerfilView extends VBox {
     //  HELPERS
     // ════════════════════════════════════════════════════
 
-    private void cargarAvatarEn(StackPane wrapper, Label fallback,
-                                String nombreFoto, double size) {
+    private void cargarAvatarEn(StackPane wrapper, Label fallback, String nombreFoto, double size) {
         try {
-            String fn  = (nombreFoto != null && !nombreFoto.isBlank()) ? nombreFoto : "default_avatar.png";
+            String fn = (nombreFoto != null && !nombreFoto.isBlank()) ? nombreFoto : "default_avatar.png";
             String url = Config.IMG_BASE_URL + "/avatars/" + fn;
-            Image img  = new Image(url, true);
+            Image img = new Image(url, true);
             ImageView iv = new ImageView(img);
             iv.setFitWidth(size);
             iv.setFitHeight(size);
@@ -760,9 +764,9 @@ public class PerfilView extends VBox {
         av.setMaxSize(size, size);
         av.getStyleClass().add("amigo-avatar");
 
-        String fn  = (u.foto != null && !u.foto.isBlank()) ? u.foto : "default_avatar.png";
+        String fn = (u.foto != null && !u.foto.isBlank()) ? u.foto : "default_avatar.png";
         String url = Config.IMG_BASE_URL + "/avatars/" + fn;
-        Image img  = new Image(url, true);
+        Image img = new Image(url, true);
         ImageView iv = new ImageView(img);
         iv.setFitWidth(size);
         iv.setFitHeight(size);
@@ -780,7 +784,6 @@ public class PerfilView extends VBox {
         });
         av.getChildren().add(iv);
 
-        // Dot de estado
         Label dot = new Label();
         dot.getStyleClass().add("estado-dot");
         dot.getStyleClass().add("estado-dot-" + dotClass(u.estado));
@@ -794,10 +797,10 @@ public class PerfilView extends VBox {
 
     private String dotClass(String estado) {
         return switch (estado == null ? "offline" : estado) {
-            case "ausente"     -> "ausente";
+            case "ausente" -> "ausente";
             case "no_molestar" -> "no-molestar";
-            case "online"      -> "online";
-            default            -> "offline";
+            case "online" -> "online";
+            default -> "offline";
         };
     }
 
@@ -839,11 +842,11 @@ public class PerfilView extends VBox {
 
     private String formatearEstado(String raw) {
         return switch (raw == null ? "offline" : raw) {
-            case "ausente"     -> "🟡 Ausente";
+            case "ausente" -> "🟡 Ausente";
             case "no_molestar" -> "🔴 No molestar";
-            case "invisible"   -> "⚫ Invisible";
-            case "online"      -> "🟢 En línea";
-            default            -> "⚫ Desconectado";
+            case "invisible" -> "⚫ Invisible";
+            case "online" -> "🟢 En línea";
+            default -> "⚫ Desconectado";
         };
     }
 
@@ -852,9 +855,11 @@ public class PerfilView extends VBox {
         a.setHeaderText(null);
         a.showAndWait();
     }
+
     // ════════════════════════════════════════════════════
-//  REFRESCO PÚBLICO — llámalo cuando el usuario vuelve al perfil
-// ════════════════════════════════════════════════════
+    //  REFRESCO PÚBLICO
+    // ════════════════════════════════════════════════════
+
     public void refrescar() {
         cargarStats();
         cargarLogros();
@@ -863,13 +868,13 @@ public class PerfilView extends VBox {
     }
 
     // ════════════════════════════════════════════════════
-//  POLLING DE LOGROS PENDIENTES
-// ════════════════════════════════════════════════════
+    //  POLLING DE LOGROS PENDIENTES
+    // ════════════════════════════════════════════════════
+
     private javafx.animation.Timeline logroPolling;
 
     public void iniciarPollingLogros() {
         if (logroPolling != null) logroPolling.stop();
-
         logroPolling = new javafx.animation.Timeline(
                 new javafx.animation.KeyFrame(
                         javafx.util.Duration.seconds(15),
@@ -878,8 +883,6 @@ public class PerfilView extends VBox {
         );
         logroPolling.setCycleCount(javafx.animation.Animation.INDEFINITE);
         logroPolling.play();
-
-        // También comprobar al arrancar
         comprobarLogrosPendientes();
     }
 
@@ -891,36 +894,35 @@ public class PerfilView extends VBox {
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/usuarios/" + usuario.getId() + "/logros-pendientes";
-                System.out.println("[Toast] Consultando: " + url);
-
                 HttpResponse<String> resp = AuthService.getClient().send(
                         HttpRequest.newBuilder().uri(URI.create(url)).GET().build(),
                         HttpResponse.BodyHandlers.ofString());
 
-                System.out.println("[Toast] Status: " + resp.statusCode());
-                System.out.println("[Toast] Body: " + resp.body());
-
                 if (resp.statusCode() == 200) {
-                    List<LogroDTO> pendientes = mapper.readValue(resp.body(), new TypeReference<>() {});
-                    System.out.println("[Toast] Pendientes: " + pendientes.size());
-
+                    List<LogroDTO> pendientes = mapper.readValue(resp.body(), new TypeReference<>() {
+                    });
                     for (int i = 0; i < pendientes.size(); i++) {
                         final LogroDTO logro = pendientes.get(i);
                         final long delay = i * 1200L;
                         new Thread(() -> {
-                            try { Thread.sleep(delay); } catch (InterruptedException ignored) {}
-                            Platform.runLater(() -> {
-                                System.out.println("[Toast] Mostrando toast: " + logro.nombre);
-                                mostrarToastLogro(logro);
-                            });
+                            try {
+                                Thread.sleep(delay);
+                            } catch (InterruptedException ignored) {
+                            }
+                            Platform.runLater(() -> mostrarToastLogro(logro));
                         }).start();
                     }
                     if (!pendientes.isEmpty()) Platform.runLater(this::refrescar);
                 }
-            } catch (Exception ex) { ex.printStackTrace(); }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
+
     private void mostrarToastLogro(LogroDTO logro) {
+        System.out.println("[Toast] Icono ruta BBDD: " + logro.icono);
+
         javafx.scene.Scene scene = null;
         for (javafx.stage.Window w : javafx.stage.Window.getWindows()) {
             if (w.isShowing() && w instanceof javafx.stage.Stage) {
@@ -930,71 +932,94 @@ public class PerfilView extends VBox {
         }
         if (scene == null) return;
 
-        Label icono = new Label(logro.icono != null ? logro.icono : "🏆");
-        icono.setStyle("-fx-font-size: 32px;");
+        final javafx.scene.Scene sceneFinal = scene;
 
-        Label titulo = new Label("🏆 Logro desbloqueado");
-        titulo.setStyle("-fx-text-fill: #66c0f4; -fx-font-size: 11px; -fx-font-weight: bold;");
+        new Thread(() -> {
+            String urlIcono = (logro.icono != null && !logro.icono.isBlank())
+                    ? Config.IMG_BASE_URL + "/" + logro.icono
+                    : Config.IMG_BASE_URL + "/logros/default.png";
 
-        Label nombre = new Label(logro.nombre);
-        nombre.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 13px; -fx-font-weight: bold;");
+            System.out.println("[Toast] URL completa icono: " + urlIcono);
 
-        Label desc = new Label(logro.descripcion);
-        desc.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 11px;");
-        desc.setWrapText(true);
-        desc.setMaxWidth(220);
+            Image img;
+            try {
+                img = new Image(urlIcono);
+                System.out.println("[Toast] isError: " + img.isError());
+                if (img.isError()) {
+                    img = new Image(Config.IMG_BASE_URL + "/logros/default.png");
+                    System.out.println("[Toast] Default isError: " + img.isError());
+                }
+            } catch (Exception e) {
+                System.out.println("[Toast] Excepción: " + e.getMessage());
+                img = new Image(Config.IMG_BASE_URL + "/logros/default.png");
+            }
 
-        VBox texto = new VBox(3, titulo, nombre, desc);
-        HBox toast = new HBox(14, icono, texto);
-        toast.setMaxWidth(320);
-        toast.setMaxHeight(Region.USE_PREF_SIZE);
-        toast.setAlignment(Pos.CENTER_LEFT);
-        toast.setPadding(new Insets(14, 18, 14, 18));
-        toast.setStyle("""
-        -fx-background-color: #16202d;
-        -fx-border-color: rgba(102,192,244,0.4);
-        -fx-border-width: 1;
-        -fx-border-radius: 10;
-        -fx-background-radius: 10;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 16, 0, 0, 4);
-        """);
-        toast.setMaxWidth(320);
-        toast.setOpacity(0);
+            final Image imgFinal = img;
 
-        javafx.scene.layout.Pane overlay = (javafx.scene.layout.Pane) scene.getRoot();
+            Platform.runLater(() -> {
+                ImageView icono = new ImageView(imgFinal);
+                icono.setFitWidth(40);
+                icono.setFitHeight(40);
+                icono.setPreserveRatio(true);
+                icono.setSmooth(true);
 
-// Usar un StackPane temporal como capa flotante
-        javafx.scene.layout.StackPane.setAlignment(toast, javafx.geometry.Pos.BOTTOM_RIGHT);
-        javafx.scene.layout.StackPane.setMargin(toast, new Insets(0, 24, 24, 0));
+                Label titulo = new Label("🏆 Logro desbloqueado");
+                titulo.setStyle("-fx-text-fill: #66c0f4; -fx-font-size: 11px; -fx-font-weight: bold;");
 
-// Si el root es BorderPane, necesitamos un StackPane encima
-        if (overlay instanceof javafx.scene.layout.StackPane sp) {
-            sp.getChildren().add(toast);
-        } else {
-            // Envolver el root en un StackPane si aún no lo está
-            javafx.scene.layout.StackPane wrapper = new javafx.scene.layout.StackPane(overlay);
-            wrapper.getChildren().add(toast);
-            javafx.scene.layout.StackPane.setAlignment(toast, javafx.geometry.Pos.BOTTOM_RIGHT);
-            javafx.scene.layout.StackPane.setMargin(toast, new Insets(0, 24, 24, 0));
-            scene.setRoot(wrapper);
-        }
+                Label nombre = new Label(logro.nombre);
+                nombre.setStyle("-fx-text-fill: #e6f0f8; -fx-font-size: 13px; -fx-font-weight: bold;");
 
-        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
-                javafx.util.Duration.millis(300), toast);
-        fadeIn.setFromValue(0); fadeIn.setToValue(1);
+                Label desc = new Label(logro.descripcion);
+                desc.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 11px;");
+                desc.setWrapText(true);
+                desc.setMaxWidth(220);
 
-        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
-                javafx.util.Duration.millis(400), toast);
-        fadeOut.setFromValue(1); fadeOut.setToValue(0);
-        fadeOut.setDelay(javafx.util.Duration.seconds(4));
-        fadeOut.setOnFinished(e -> {
-            javafx.scene.layout.Pane parent = (javafx.scene.layout.Pane) toast.getParent();
-            if (parent != null) parent.getChildren().remove(toast);
-        });
+                VBox texto = new VBox(3, titulo, nombre, desc);
+                HBox toast = new HBox(14, icono, texto);
+                toast.setMaxWidth(320);
+                toast.setMaxHeight(Region.USE_PREF_SIZE);
+                toast.setAlignment(Pos.CENTER_LEFT);
+                toast.setPadding(new Insets(14, 18, 14, 18));
+                toast.setStyle("""
+                    -fx-background-color: #16202d;
+                    -fx-border-color: rgba(102,192,244,0.4);
+                    -fx-border-width: 1;
+                    -fx-border-radius: 10;
+                    -fx-background-radius: 10;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 16, 0, 0, 4);
+                    """);
+                toast.setOpacity(0);
 
-        fadeIn.play();
-        fadeOut.play();
+                javafx.scene.layout.Pane overlay = (javafx.scene.layout.Pane) sceneFinal.getRoot();
+                javafx.scene.layout.StackPane.setAlignment(toast, javafx.geometry.Pos.BOTTOM_RIGHT);
+                javafx.scene.layout.StackPane.setMargin(toast, new Insets(0, 24, 24, 0));
+
+                if (overlay instanceof javafx.scene.layout.StackPane sp) {
+                    sp.getChildren().add(toast);
+                } else {
+                    javafx.scene.layout.StackPane wrapper = new javafx.scene.layout.StackPane(overlay);
+                    wrapper.getChildren().add(toast);
+                    javafx.scene.layout.StackPane.setAlignment(toast, javafx.geometry.Pos.BOTTOM_RIGHT);
+                    javafx.scene.layout.StackPane.setMargin(toast, new Insets(0, 24, 24, 0));
+                    sceneFinal.setRoot(wrapper);
+                }
+
+                javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
+                        javafx.util.Duration.millis(300), toast);
+                fadeIn.setFromValue(0); fadeIn.setToValue(1);
+
+                javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
+                        javafx.util.Duration.millis(400), toast);
+                fadeOut.setFromValue(1); fadeOut.setToValue(0);
+                fadeOut.setDelay(javafx.util.Duration.seconds(4));
+                fadeOut.setOnFinished(e -> {
+                    javafx.scene.layout.Pane parent = (javafx.scene.layout.Pane) toast.getParent();
+                    if (parent != null) parent.getChildren().remove(toast);
+                });
+
+                fadeIn.play();
+                fadeOut.play();
+            });
+        }).start();
     }
-
-
 }

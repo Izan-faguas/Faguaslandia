@@ -76,6 +76,19 @@ let chatAmigoId = null;
 let chatPollInterval = null;
 let amigosPollInterval = null;
 
+// ── Helper imágenes ───────────────────────────────────
+function imgUrl(imagen_url, variante) {
+  // variante: "920" | "1232" | "Logo" | null (original)
+  if (!imagen_url) return `${CONFIG.API_BASE_URL}/uploads/img/default.png`;
+  const base = `${CONFIG.API_BASE_URL}/uploads/${imagen_url.replace(/\.png$/i, '')}`;
+  if (!variante) return `${CONFIG.API_BASE_URL}/uploads/${imagen_url}`;
+  return `${base}${variante}.png`;
+}
+function imgConFallback(el, imagen_url, variante) {
+  el.src = imgUrl(imagen_url, variante);
+  el.onerror = () => { el.onerror = null; el.src = imgUrl(imagen_url, null); };
+}
+
 // ─────────────────────────────────────────
 // BIBLIOTECA
 // ─────────────────────────────────────────
@@ -94,7 +107,7 @@ async function actualizarBiblioteca() {
 
     juegos.forEach((juego, i) => {
       const img = document.createElement("img");
-      img.src = `${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url}` || "default.png";
+      imgConFallback(img, juego.imagen_url, "920");
       img.classList.add("game-cover");
       img.addEventListener("click", () => { mostrarJuego(juego, detalle); seleccionar(img); });
       juegosGrid.appendChild(img);
@@ -119,9 +132,11 @@ function seleccionar(img) {
 }
 
 function mostrarJuego(juego, detalle) {
+  const img1232 = imgUrl(juego.imagen_url, "1232");
+  const imgFallback = imgUrl(juego.imagen_url, null);
   detalle.innerHTML = `
     <div class="detalle-container">
-      <img src="${CONFIG.API_BASE_URL}/uploads/${juego.imagen_url || 'img/default.png'}" class="detalle-img">
+      <img src="${img1232}" onerror="this.onerror=null;this.src='${imgFallback}'" class="detalle-img">
       <div class="detalle-info">
         <h1>${juego.titulo}</h1>
         <p class="detalle-desc">${juego.descripcion || "Sin descripción disponible"}</p>

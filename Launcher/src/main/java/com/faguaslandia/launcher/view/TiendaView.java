@@ -156,13 +156,13 @@ public class TiendaView extends VBox {
     private VBox crearTarjeta(Juego j) {
         boolean comprado = compradosSet != null && compradosSet.contains(j.getId());
 
-        /* ── Imagen ── */
-        String imgUrl = Config.IMG_BASE_URL + "/" + j.getImagen_url();
-        ImageView img = new ImageView(new Image(imgUrl, true));
+        /* ── Imagen con fallback ── */
+        ImageView img = new ImageView();
         img.setFitWidth(220);
         img.setFitHeight(124);
         img.setPreserveRatio(false);
         img.setSmooth(true);
+        setImagenConFallback(img, j.getImagen_url(), "920");
 
         StackPane imgPane = new StackPane(img);
         imgPane.setMaxWidth(220);
@@ -223,5 +223,18 @@ public class TiendaView extends VBox {
 
     public interface CallbackJuegoDetalle {
         void mostrarJuegoDetalle(Juego juego);
+    }
+
+    // ── Helper imágenes con fallback ──────────────────────
+    private void setImagenConFallback(ImageView iv, String imagenUrl, String variante) {
+        String base   = Config.IMG_BASE_URL + "/" + imagenUrl.replaceAll("(?i)\\.png$", "");
+        String urlVar = base + variante + ".png";
+        String urlFb  = Config.IMG_BASE_URL + "/" + imagenUrl;
+
+        Image img = new Image(urlVar, true);
+        iv.setImage(img);
+        img.errorProperty().addListener((obs, o, err) -> {
+            if (err) javafx.application.Platform.runLater(() -> iv.setImage(new Image(urlFb, true)));
+        });
     }
 }
