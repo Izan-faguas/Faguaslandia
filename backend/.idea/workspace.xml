@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/Eternal_Orbit.zip" beforeDir="false" afterPath="$PROJECT_DIR$/games/Eternal_Orbit.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/Eternal_Orbit.zip" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +131,7 @@
       <workItem from="1779611626196" duration="918000" />
       <workItem from="1779620367343" duration="7464000" />
       <workItem from="1779651920643" duration="4851000" />
-      <workItem from="1779708002885" duration="8401000" />
+      <workItem from="1779708002885" duration="8731000" />
     </task>
     <servers />
   </component>
