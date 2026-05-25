@@ -1,6 +1,4 @@
-/* =========================
-   🎮 VARIABLES
-========================= */
+/* Variables */
 
 :root {
   --bg-dark: #0b1118;
@@ -20,9 +18,6 @@
   --offline: #777;
 }
 
-/* =========================
-   RESET
-========================= */
 
 * {
   margin: 0;
@@ -36,9 +31,7 @@ body {
   color: var(--text-main);
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 header {
   background: rgba(15, 23, 34, 0.9);
@@ -80,19 +73,13 @@ header {
   width: 100%;
 }
 
-/* =========================
-   LAYOUT PRINCIPAL
-========================= */
-
 .catalogo {
   display: grid;
   grid-template-columns: 260px 1fr 240px;
   height: calc(100vh - 70px);
 }
 
-/* =========================
-   📚 LISTA IZQUIERDA
-========================= */
+/* Lista biblioteca */
 
 .juego {
   background: linear-gradient(180deg, #0f1722, #0b1118);
@@ -115,8 +102,9 @@ header {
 
 .game-cover {
   width: 100%;
-  height: 70px;
-  object-fit: cover;
+  height: 110px;       
+  object-fit: contain;  
+  background: #0f1722;  
   border-radius: 8px;
   cursor: pointer;
   transition: 0.25s;
@@ -133,9 +121,7 @@ header {
   filter: brightness(1);
 }
 
-/* =========================
-   🎮 DETALLE CENTRO
-========================= */
+/* Detalle del juego*/
 
 .detalle-juego {
   display: flex;
@@ -151,10 +137,14 @@ header {
 
 .detalle-img {
   width: 100%;
-  height: 320px;
-  object-fit: cover;
+  height: auto;
+  max-height: 600px;
+  object-fit: contain;  
+  background: #0b1118; 
   border-bottom: 1px solid var(--border);
 }
+
+
 
 .detalle-info {
   padding: 30px;
@@ -178,7 +168,6 @@ header {
   margin: 4px 0 0;
 }
 
-/* ── DOS COLUMNAS ────────────────────────────────────────── */
 .detalle-dos-columnas {
   display: flex;
   gap: 16px;
@@ -205,7 +194,7 @@ header {
   padding-left: 14px;
 }
 
-/* ── ACTUALIZACIONES ─────────────────────────────────────── */
+/* Actualizaciones */
 .act-item {
   padding: 8px 0;
   border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
@@ -240,7 +229,6 @@ header {
   line-height: 1.4;
 }
 
-/* ── STEAM LABEL ─────────────────────────────────────────── */
 .steam-label {
   font-size: 10px;
   font-weight: 700;
@@ -251,7 +239,6 @@ header {
   margin-bottom: 8px;
 }
 
-/* ── STEAM ROWS (der) ────────────────────────────────────── */
 .steam-row {
   padding: 10px 0;
   border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
@@ -259,7 +246,28 @@ header {
 
 .steam-row:last-child { border-bottom: none; }
 
-/* ── LOGROS ──────────────────────────────────────────────── */
+/* Logros */
+.logro-icono img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.steam-logro-icono img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.toast-icono img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
 .steam-logros-fila {
   display: flex;
   flex-direction: column;
@@ -315,7 +323,7 @@ header {
   white-space: nowrap;
 }
 
-/* ── AMIGOS ──────────────────────────────────────────────── */
+/* Amigos */
 .steam-amigos-fila {
   display: flex;
   flex-wrap: wrap;
@@ -337,9 +345,7 @@ header {
   border-color: var(--accent);
 }
 
-/* =========================
-   👥 PANEL AMIGOS BIBLIOTECA (DERECHA)
-========================= */
+/* Panel amigos */
 
 .amigos-panel {
   background: linear-gradient(180deg, #0f1722, #0b1118);
@@ -437,9 +443,7 @@ header {
   opacity: 1;
 }
 
-/* =========================
-   🔵 PUNTOS DE ESTADO
-========================= */
+/* Estado */
 
 .estado-dot {
   width: 8px;
@@ -469,7 +473,6 @@ header {
   background: var(--offline);
 }
 
-/* estado badge (perfil) */
 .estado-badge {
   display: inline-block;
   width: 9px;
@@ -479,7 +482,6 @@ header {
   flex-shrink: 0;
 }
 
-/* estado (antiguo, compatibilidad) */
 .estado {
   width: 10px;
   height: 10px;
@@ -493,9 +495,7 @@ header {
 .estado.ausente { background-color: orange; }
 .estado.ocupado { background-color: red; }
 
-/* =========================
-   💬 CHAT FLOTANTE (index)
-========================= */
+/* Chat (flotante) */
 
 #chatFloat {
   display: none;
@@ -596,9 +596,7 @@ header {
   transform: translateY(-1px);
 }
 
-/* =========================
-   💬 BURBUJAS DE MENSAJE
-========================= */
+/* Notificación mensaje */
 
 .msg {
   max-width: 82%;
@@ -632,10 +630,6 @@ header {
   text-align: right;
 }
 
-/* =========================
-   🔢 BADGE MENSAJES NO LEÍDOS
-========================= */
-
 .badge-msg,
 .badge-no-leidos {
   display: inline-block;
@@ -648,10 +642,6 @@ header {
   margin-left: 6px;
   vertical-align: middle;
 }
-
-/* =========================
-   📌 ESTADO SELECTOR (header)
-========================= */
 
 .estado-selector {
   margin-left: auto;
@@ -678,10 +668,6 @@ header {
   border-color: var(--accent);
 }
 
-/* =========================
-   SCROLL
-========================= */
-
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -691,63 +677,79 @@ header {
   border-radius: 10px;
 }
 
-/* =========================
-   🛒 TIENDA
-========================= */
+/* Tienda */
 
 .tienda {
-  max-width: 1100px;
-  margin: auto;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 25px;
-  background: linear-gradient(135deg, #16202d, #0f1722);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-  transition: 0.25s;
-  box-shadow: 0 10px 25px var(--shadow);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 0;
+    background: linear-gradient(135deg, #16202d, #0f1722);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.2s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    cursor: pointer;
 }
 
 .hero:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px var(--shadow);
+    border-color: rgba(102, 192, 244, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
 }
 
 .hero-media {
-  width: 100%;
-  height: 160px;
-  overflow: hidden;
-  border-radius: 8px;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
 }
 
 .hero-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.hero:hover .hero-media img {
+    transform: scale(1.04);
 }
 
 .hero-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 24px;
+    justify-content: space-between;
 }
 
 .hero-info h2 {
-  font-size: 20px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #e6f0f8;
+    margin: 0;
+    line-height: 1.2;
 }
 
 .hero-info p {
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.4;
+    color: #8b9db0;
+    font-size: 13px;
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .hero-thumbs {
@@ -764,8 +766,37 @@ header {
   transition: 0.2s;
 }
 
+.hero-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.hero-tag {
+    background: rgba(102, 192, 244, 0.1);
+    color: #66c0f4;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(102, 192, 244, 0.2);
+}
+
+.hero-tag.dev {
+    background: rgba(255,255,255,0.04);
+    color: #8b9db0;
+    border-color: rgba(255,255,255,0.08);
+}
+
 .hero-thumbs img:hover {
   opacity: 1;
+}
+
+.hero-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
 }
 
 .hero-price {
@@ -773,14 +804,23 @@ header {
 }
 
 .price {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--accent);
+    font-size: 20px;
+    font-weight: bold;
+    color: #66c0f4;
 }
 
-/* =========================
-   🔍 BUSCADOR TIENDA
-========================= */
+.price.comprado {
+    font-size: 14px;
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.hero-rating {
+    font-size: 13px;
+    color: #f4c430;
+}
+
+/* Buscador */
 
 .buscador {
   display: flex;
@@ -808,10 +848,6 @@ header {
   outline: none;
   border-color: var(--accent);
 }
-
-/* =========================
-   🎮 GAME PAGE
-========================= */
 
 .game-page {
   display: flex;
@@ -925,9 +961,7 @@ header {
   transform: scale(1.05);
 }
 
-/* =========================
-   👤 PERFIL
-========================= */
+/* Perfil */
 
 .perfil {
   max-width: 1000px;
@@ -1044,10 +1078,6 @@ header {
   cursor: pointer;
 }
 
-/* =========================
-   STATS
-========================= */
-
 .perfil-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1115,10 +1145,6 @@ header {
   font-size: 11px;
 }
 
-/* =========================
-   MODAL EDITAR PERFIL
-========================= */
-
 #editarPerfilModal {
   position: fixed;
   inset: 0;
@@ -1183,10 +1209,6 @@ header {
   border: 1px solid var(--border);
 }
 
-/* =========================
-   👥 SECCIÓN AMIGOS (perfil)
-========================= */
-
 .perfil-amigos {
   margin: 0 30px 30px;
   padding: 25px;
@@ -1210,9 +1232,6 @@ header {
   padding-bottom: 8px;
 }
 
-/* =========================
-   ➕ AGREGAR AMIGO
-========================= */
 
 .agregar-amigo {
   display: flex;
@@ -1252,10 +1271,6 @@ header {
   box-shadow: 0 6px 15px rgba(102,192,244,0.25);
 }
 
-/* =========================
-   📩 SOLICITUDES Y LISTA AMIGOS (perfil)
-========================= */
-
 #listaSolicitudes,
 #listaAmigos {
   display: flex;
@@ -1286,7 +1301,6 @@ header {
   font-weight: 500;
 }
 
-/* botón aceptar solicitud */
 .solicitud-item button,
 .btn-aceptar {
   padding: 8px 14px;
@@ -1305,7 +1319,6 @@ header {
   box-shadow: 0 5px 12px rgba(142,214,41,0.3);
 }
 
-/* botones de acción amigo */
 .amigo-actions {
   display: flex;
   gap: 8px;
@@ -1343,10 +1356,6 @@ header {
 .btn-rechazar:hover {
   background: rgba(255,80,80,0.18);
 }
-
-/* =========================
-   💬 CHAT MODAL (perfil)
-========================= */
 
 #chatModal {
   display: none;
@@ -1410,7 +1419,6 @@ header {
   gap: 10px;
 }
 
-/* burbujas en chat modal (más grandes que el flotante) */
 .chat-messages .msg {
   max-width: 78%;
   padding: 10px 14px;
@@ -1462,10 +1470,6 @@ header {
   transform: translateY(-1px);
 }
 
-/* =========================
-   EMPTY STATE
-========================= */
-
 .empty-state {
   color: var(--text-muted);
   font-size: 13px;
@@ -1473,9 +1477,7 @@ header {
   padding: 18px 0;
 }
 
-/* =========================
-   🔐 LOGIN / FORMULARIO
-========================= */
+/* Login */
 
 .formulario {
   max-width: 400px;
@@ -1543,13 +1545,27 @@ header {
   font-weight: bold;
 }
 
+.form-link {
+    text-align: center;
+    font-size: 13px;
+    color: #9fb3c8;
+    margin-top: 8px;
+}
+
+.form-link a {
+    color: #66c0f4;
+    text-decoration: none;
+}
+
+.form-link a:hover {
+    text-decoration: underline;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-/* ==============================
-   RESEÑAS
-============================== */
+
 .game-resenas {
   max-width: 900px;
   width: 100%;
@@ -1658,36 +1674,30 @@ header {
   margin: 0;
 }
 
-/* Tienda — juegos comprados */
 .hero-media {
   position: relative;
 }
 
 .badge-comprado {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(102,192,244,0.15);
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: bold;
-  padding: 4px 10px;
-  border-radius: 20px;
-  backdrop-filter: blur(4px);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(76, 175, 80, 0.85);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 4px;
 }
 
 .price.comprado {
   color: var(--accent);
   font-size: 15px;
 }
-/* =========================
-   📱 RESPONSIVE MÓVIL
-========================= */
+
 
 @media (max-width: 768px) {
 
-  /* HEADER */
   .menu {
     padding: 10px 16px;
     gap: 12px;
@@ -1695,7 +1705,6 @@ header {
     font-size: 13px;
   }
 
-  /* BIBLIOTECA — resetear el grid de 3 columnas */
   .catalogo {
     display: flex;
     flex-direction: column;
@@ -1703,7 +1712,6 @@ header {
     min-height: 100vh;
   }
 
-  /* Panel izquierdo: lista de juegos horizontal */
   .juego {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -1727,12 +1735,14 @@ header {
   }
 
   .game-cover {
-    width: 110px;
-    height: 65px;
+    width: 140px;   
+    height: 85px;  
     flex-shrink: 0;
+    object-fit: contain;
+    background: #0f1722;
   }
 
-  /* Panel centro: detalle del juego */
+
   .detalle-juego {
     flex: 1;
   }
@@ -1750,7 +1760,6 @@ header {
     font-size: 20px;
   }
 
-  /* Panel derecho: amigos abajo */
   .amigos-panel {
     border-left: none;
     border-top: 1px solid var(--border);
@@ -1759,7 +1768,6 @@ header {
     overflow-y: auto;
   }
 
-  /* TIENDA */
   .tienda {
     padding: 14px;
     gap: 16px;
@@ -1786,7 +1794,6 @@ header {
     min-width: unset;
   }
 
-  /* JUEGO DETALLE (juego.html) */
   .game-hero {
     height: 160px;
   }
@@ -1807,7 +1814,6 @@ header {
     padding: 0 14px 28px;
   }
 
-  /* PERFIL */
   .perfil {
     margin: 0;
     border-radius: 0;
@@ -1883,7 +1889,6 @@ header {
     justify-content: flex-end;
   }
 
-  /* CHAT FLOTANTE */
   #chatFloat {
     width: 100%;
     right: 0;
@@ -1894,7 +1899,6 @@ header {
     height: 200px;
   }
 
-  /* CHAT MODAL */
   .chat-box {
     width: 95vw;
     max-height: 88vh;
@@ -1904,19 +1908,16 @@ header {
     height: 220px;
   }
 
-  /* LOGIN / FORMULARIO */
   .formulario {
     margin: 20px 14px;
     padding: 20px 16px;
   }
 
-  /* MODAL EDITAR PERFIL */
   .modal-content {
     width: 92vw;
     padding: 18px;
   }
 
-  /* RESEÑAS */
   .resena-header {
     flex-direction: column;
     align-items: flex-start;
@@ -1930,9 +1931,102 @@ header {
   .estrellas-input .estrella {
     font-size: 24px;
   }
+
+  .game-page {
+    gap: 0;
+  }
+
+  .game-hero {
+    height: 200px;
+  }
+
+  .game-hero h1 {
+    font-size: 22px;
+    left: 16px;
+    bottom: 12px;
+  }
+
+  .game-content {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .game-left {
+    order: 2;
+  }
+
+  .game-right {
+    order: 1;
+  }
+
+  .game-main-img {
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  .game-card {
+    padding: 14px;
+  }
+
+  .game-desc {
+    font-size: 14px;
+  }
+
+  .price {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  #comprarBtn {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .game-resenas {
+    padding: 0 14px 28px;
+    margin-top: 16px;
+  }
+
+  .game-resenas h2 {
+    font-size: 18px;
+  }
+
+  .resena-form {
+    padding: 14px;
+  }
+
+  .resena-item {
+    padding: 12px;
+  }
+
+  .resena-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .resena-fecha {
+    margin-left: 0;
+  }
+
+  .estrellas-input .estrella {
+    font-size: 26px;
+  }
+
+  #toastContainer {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .toast-logro {
+    min-width: unset;
+    width: 100%;
+  }
+
 }
 
-/* ── TOAST LOGROS ────────────────────────────────────── */
 #toastContainer {
   position: fixed;
   bottom: 24px;

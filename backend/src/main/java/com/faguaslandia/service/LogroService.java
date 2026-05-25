@@ -34,9 +34,6 @@ public class LogroService {
         this.sesionJuegoRepository  = sesionJuegoRepository;
     }
 
-    // ─────────────────────────────────────────────────────────
-    // MÉTODO CENTRAL: conceder un logro si no lo tiene ya
-    // ─────────────────────────────────────────────────────────
     public void concederLogro(Long usuarioId, Logro logro) {
         boolean yaTiene = logroUsuarioRepository
                 .findByUsuarioId(usuarioId)
@@ -53,10 +50,6 @@ public class LogroService {
         logroUsuarioRepository.save(lu);
     }
 
-    // ─────────────────────────────────────────────────────────
-    // COMPRAS
-    // Logros: primera compra, 3 juegos, 5 juegos
-    // ─────────────────────────────────────────────────────────
     public void onCompra(Long usuarioId) {
         long totalCompras = compraRepository.findByUsuarioId(usuarioId).size();
         List<Logro> logros = logroRepository.findByTipo(TipoLogro.compra);
@@ -70,10 +63,6 @@ public class LogroService {
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // AMISTAD
-    // Logros: primer amigo, 3 amigos, 5 amigos
-    // ─────────────────────────────────────────────────────────
     public void onAmistad(Long usuarioId) {
         long totalAmigos = amigoRepository
                 .findByUsuario1IdOrUsuario2Id(usuarioId, usuarioId)
@@ -92,10 +81,6 @@ public class LogroService {
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // RESEÑAS
-    // Logros: primera reseña, 3 reseñas, 5 reseñas
-    // ─────────────────────────────────────────────────────────
     public void onResena(Long usuarioId) {
         long totalResenas = resenaRepository.countByUsuarioId(usuarioId);
 
@@ -110,10 +95,6 @@ public class LogroService {
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // HORAS JUGADAS
-    // Logros: 1h, 10h, 50h en total
-    // ─────────────────────────────────────────────────────────
     public void onSesion(Long usuarioId) {
         Double totalHoras = sesionJuegoRepository.totalHorasByUsuario(usuarioId);
         if (totalHoras == null) totalHoras = 0.0;
@@ -129,9 +110,6 @@ public class LogroService {
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // COMPROBAR TODOS (login + scheduler)
-    // ─────────────────────────────────────────────────────────
     public void comprobarTodos(Long usuarioId) {
         onCompra(usuarioId);
         onAmistad(usuarioId);

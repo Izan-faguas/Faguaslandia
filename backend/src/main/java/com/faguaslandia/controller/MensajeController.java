@@ -27,10 +27,6 @@ public class MensajeController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    /**
-     * POST /mensajes
-     * Body: { "emisorId": 1, "receptorId": 2, "contenido": "Hola!" }
-     */
     @PostMapping
     public Mensaje enviar(@RequestBody MensajeRequest req, HttpSession session) {
         Usuario sesion = (Usuario) session.getAttribute("usuario");
@@ -52,10 +48,6 @@ public class MensajeController {
         return mensajeRepository.save(mensaje);
     }
 
-    /**
-     * GET /mensajes/conversacion?id1=X&id2=Y
-     * Devuelve todos los mensajes entre los dos usuarios y marca como leídos los del receptor en sesión.
-     */
     @GetMapping("/conversacion")
     public List<Mensaje> getConversacion(
             @RequestParam Long id1,
@@ -69,7 +61,6 @@ public class MensajeController {
 
         List<Mensaje> mensajes = mensajeRepository.findConversacion(id1, id2);
 
-        // Marcar como leídos los que recibe el usuario en sesión
         mensajes.stream()
                 .filter(m -> m.getReceptor().getId().equals(sesion.getId()) && !m.isLeido())
                 .forEach(m -> {
@@ -80,10 +71,6 @@ public class MensajeController {
         return mensajes;
     }
 
-    /**
-     * GET /mensajes/no-leidos/{receptorId}/de/{emisorId}
-     * Mensajes no leídos de un emisor concreto hacia un receptor.
-     */
     @GetMapping("/no-leidos/{receptorId}/de/{emisorId}")
     public Map<String, Long> noLeidosDe(
             @PathVariable Long receptorId,

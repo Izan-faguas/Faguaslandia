@@ -42,13 +42,11 @@ public class TiendaView extends VBox {
     }
 
     private void construirUI() {
-        /* ── Título ── */
-        Label titulo = new Label("🛒 Tienda");
+        Label titulo = new Label("Tienda");
         titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #e6f0f8;");
 
-        /* ── Barra buscador + filtros ── */
         busqueda = new TextField();
-        busqueda.setPromptText("🔍  Buscar juego...");
+        busqueda.setPromptText("Buscar juego...");
         busqueda.getStyleClass().add("search-bar");
         busqueda.textProperty().addListener((o, old, nv) -> filtrar());
 
@@ -66,7 +64,6 @@ public class TiendaView extends VBox {
         HBox barra = new HBox(12, busqueda, filtroCategoria, filtroPrecio);
         barra.setAlignment(Pos.CENTER_LEFT);
 
-        /* ── Grid de juegos ── */
         juegosGrid = new FlowPane();
         juegosGrid.setHgap(20);
         juegosGrid.setVgap(20);
@@ -86,7 +83,6 @@ public class TiendaView extends VBox {
             try {
                 juegosGlobal = juegoService.obtenerTodos();
 
-                // Compras del usuario
                 try {
                     List<Juego> compras = juegoService.obtenerBiblioteca(usuario.getId());
                     compradosSet = compras.stream().map(Juego::getId).collect(Collectors.toSet());
@@ -95,7 +91,6 @@ public class TiendaView extends VBox {
                 }
 
                 Platform.runLater(() -> {
-                    // Categorías dinámicas
                     List<String> cats = juegosGlobal.stream()
                             .map(Juego::getCategoria)
                             .filter(c -> c != null && !c.isEmpty())
@@ -156,7 +151,6 @@ public class TiendaView extends VBox {
     private VBox crearTarjeta(Juego j) {
         boolean comprado = compradosSet != null && compradosSet.contains(j.getId());
 
-        /* ── Imagen con fallback ── */
         ImageView img = new ImageView();
         img.setFitWidth(220);
         img.setFitHeight(124);
@@ -175,7 +169,6 @@ public class TiendaView extends VBox {
             imgPane.getChildren().add(badge);
         }
 
-        /* ── Datos ── */
         Label titulo = new Label(j.getTitulo());
         titulo.getStyleClass().add("store-card-title");
         titulo.setWrapText(false);
@@ -225,7 +218,6 @@ public class TiendaView extends VBox {
         void mostrarJuegoDetalle(Juego juego);
     }
 
-    // ── Helper imágenes con fallback ──────────────────────
     private void setImagenConFallback(ImageView iv, String imagenUrl, String variante) {
         String base   = Config.IMG_BASE_URL + "/" + imagenUrl.replaceAll("(?i)\\.png$", "");
         String urlVar = base + variante + ".png";

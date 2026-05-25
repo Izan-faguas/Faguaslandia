@@ -22,13 +22,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-/**
- * Vista de perfil de un amigo (solo lectura).
- * Se muestra en el panel derecho de AmigosView al hacer clic en "Ver perfil".
- */
 public class PerfilAmigoView extends VBox {
 
-    // ── DTOs ────────────────────────────────────────────
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class LogroDTO {
         public String nombre;
@@ -44,14 +39,12 @@ public class PerfilAmigoView extends VBox {
         public String imagen_url;
     }
 
-    // ── Campos ──────────────────────────────────────────
-    private final Usuario usuarioActual;        // el usuario logueado (para el botón "Chatear")
-    private final AmigosView.AmigoDTO amigo;    // el amigo cuyo perfil mostramos
+    private final Usuario usuarioActual;
+    private final AmigosView.AmigoDTO amigo;
     private final ObjectMapper mapper;
     private Runnable onVolver;
     private Runnable onChatear;
 
-    // Labels que se rellenan al cargar
     private Label lblNivel;
     private Label lblHoras;
     private Label lblJuegos;
@@ -77,40 +70,30 @@ public class PerfilAmigoView extends VBox {
     public void setOnVolver(Runnable r)   { this.onVolver = r; }
     public void setOnChatear(Runnable r)  { this.onChatear = r; }
 
-    // ════════════════════════════════════════════════════
-    //  CONSTRUCCIÓN UI
-    // ════════════════════════════════════════════════════
-
     private void construir() {
         VBox contenido = new VBox(0);
         contenido.setMaxWidth(Double.MAX_VALUE);
 
-        // ── Cabecera hero ────────────────────────────────
         VBox hero = new VBox(16);
         hero.getStyleClass().add("perfil-hero");
         hero.setPadding(new Insets(32, 40, 28, 40));
         hero.setAlignment(Pos.TOP_LEFT);
 
-        // Botón volver
         Button btnVolver = new Button("← Volver");
         btnVolver.getStyleClass().add("btn-secondary");
         btnVolver.setOnAction(e -> { if (onVolver != null) onVolver.run(); });
 
-        // Avatar
         StackPane avatar = crearAvatar(48);
 
-        // Nombre y estado
         Label lblNombre = new Label(amigo.nombre);
         lblNombre.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #e6f0f8;");
 
         Label lblEstado = new Label(formatearEstado(amigo.estado));
         lblEstado.setStyle("-fx-font-size: 13px; -fx-text-fill: #9fb3c8;");
 
-        // Nivel
         lblNivel = new Label("Nivel —");
         lblNivel.getStyleClass().add("perfil-nivel-badge");
 
-        // Barra de nivel
         StackPane barraStack = new StackPane();
         barraStack.getStyleClass().add("nivel-barra-bg");
         barraStack.setMaxWidth(180);
@@ -130,25 +113,22 @@ public class PerfilAmigoView extends VBox {
         HBox avatarInfo = new HBox(20, avatar, infoBox);
         avatarInfo.setAlignment(Pos.CENTER_LEFT);
 
-        // Stats rápidas
         lblHoras  = new Label("—");
         lblJuegos = new Label("—");
         lblLogros = new Label("—");
 
         HBox statsRow = new HBox(20,
-                crearStat("🕐", lblHoras,  "Horas"),
-                crearStat("🎮", lblJuegos, "Juegos"),
-                crearStat("🏆", lblLogros, "Logros")
+                crearStat("", lblHoras,  "Horas"),
+                crearStat("", lblJuegos, "Juegos"),
+                crearStat("", lblLogros, "Logros")
         );
 
-        // Botón chatear
         Button btnChatear = new Button("💬  Enviar mensaje");
         btnChatear.getStyleClass().add("btn-play");
         btnChatear.setOnAction(e -> { if (onChatear != null) onChatear.run(); });
 
         hero.getChildren().addAll(btnVolver, avatarInfo, statsRow, btnChatear);
 
-        // ── Secciones ────────────────────────────────────
         VBox secJuegos = crearSeccionJuegos();
         VBox secLogros = crearSeccionLogros();
 
@@ -167,7 +147,7 @@ public class PerfilAmigoView extends VBox {
         VBox sec = new VBox(12);
         sec.setPadding(new Insets(24, 40, 8, 40));
 
-        Label titulo = new Label("🎮 Biblioteca");
+        Label titulo = new Label("Biblioteca");
         titulo.getStyleClass().add("perfil-section-title");
 
         listaJuegosBox = new VBox(8);
@@ -183,7 +163,7 @@ public class PerfilAmigoView extends VBox {
         VBox sec = new VBox(12);
         sec.setPadding(new Insets(24, 40, 40, 40));
 
-        Label titulo = new Label("🏆 Logros");
+        Label titulo = new Label("Logros");
         titulo.getStyleClass().add("perfil-section-title");
 
         listaLogrosBox = new VBox(8);
@@ -195,9 +175,6 @@ public class PerfilAmigoView extends VBox {
         return sec;
     }
 
-    // ════════════════════════════════════════════════════
-    //  CARGA DE DATOS
-    // ════════════════════════════════════════════════════
 
     private void cargarDatos() {
         cargarStats();
@@ -257,9 +234,6 @@ public class PerfilAmigoView extends VBox {
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  RENDERIZADO
-    // ════════════════════════════════════════════════════
 
     private void renderizarJuegos(List<JuegoDTO> juegos) {
         listaJuegosBox.getChildren().clear();
@@ -269,7 +243,6 @@ public class PerfilAmigoView extends VBox {
             listaJuegosBox.getChildren().add(empty);
             return;
         }
-        // Mostrar en grid de 3 columnas con miniatura + título
         FlowPane grid = new FlowPane(10, 10);
         grid.setMaxWidth(Double.MAX_VALUE);
         for (JuegoDTO j : juegos) {
@@ -279,10 +252,17 @@ public class PerfilAmigoView extends VBox {
             card.setPrefWidth(130);
 
             if (j.imagen_url != null) {
-                ImageView img = new ImageView(new Image(Config.IMG_BASE_URL + "/" + j.imagen_url, 120, 70, false, true, true));
+                String base = Config.IMG_BASE_URL + "/" + j.imagen_url.replaceAll("(?i)\\.png$", "");
+                Image imgPortada = new Image(base + "920.png", true);
+                ImageView img = new ImageView(imgPortada);
                 img.setFitWidth(120);
                 img.setFitHeight(70);
                 img.setSmooth(true);
+                imgPortada.errorProperty().addListener((obs, o, err) -> {
+                    if (err) Platform.runLater(() ->
+                            img.setImage(new Image(Config.IMG_BASE_URL + "/" + j.imagen_url, true))
+                    );
+                });
                 card.getChildren().add(img);
             }
 
@@ -311,8 +291,19 @@ public class PerfilAmigoView extends VBox {
             fila.setAlignment(Pos.CENTER_LEFT);
             fila.setPadding(new Insets(12, 16, 12, 16));
 
-            Label icono = new Label(l.icono != null ? l.icono : "🏆");
-            icono.setStyle("-fx-font-size: 28px;");
+            ImageView icono = new ImageView();
+            icono.setFitWidth(36); icono.setFitHeight(36);
+            icono.setSmooth(true); icono.setPreserveRatio(true);
+            String iconoUrl = (l.icono != null && !l.icono.isBlank())
+                    ? Config.IMG_BASE_URL + "/logros/" + l.icono
+                    : Config.IMG_BASE_URL + "/logros/default.png";
+            Image iconoImg = new Image(iconoUrl, true);
+            iconoImg.errorProperty().addListener((obs, o, err) -> {
+                if (err) Platform.runLater(() ->
+                        icono.setImage(new Image(Config.IMG_BASE_URL + "/logros/default.png", true))
+                );
+            });
+            icono.setImage(iconoImg);
 
             VBox info = new VBox(3);
             Label nombre = new Label(l.nombre);
@@ -336,9 +327,6 @@ public class PerfilAmigoView extends VBox {
         }
     }
 
-    // ════════════════════════════════════════════════════
-    //  HELPERS UI
-    // ════════════════════════════════════════════════════
 
     private StackPane crearAvatar(double size) {
         StackPane av = new StackPane();
@@ -364,7 +352,6 @@ public class PerfilAmigoView extends VBox {
             av.getChildren().add(letraAvatar(size));
         }
 
-        // Dot de estado
         Label dot = new Label();
         dot.getStyleClass().add("estado-dot");
         dot.getStyleClass().add("estado-dot-" + estadoDotClass(amigo.estado));

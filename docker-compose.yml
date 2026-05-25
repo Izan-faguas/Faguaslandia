@@ -29,6 +29,9 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       DB_USER: izan
       DB_PASSWORD: 1234
+    volumes:
+      - /home/izan/Faguaslandia/backend/uploads:/app/uploads
+
     ports:
       - "8081:8081"
     networks:

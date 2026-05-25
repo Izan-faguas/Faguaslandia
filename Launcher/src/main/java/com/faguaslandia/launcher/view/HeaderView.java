@@ -117,7 +117,6 @@ public class HeaderView extends HBox {
             lblPerfil.setOnMouseClicked(e -> { setActive(lblPerfil); perfilAction.run(); });
     }
 
-    /** Compatibilidad con firma antigua de 3 parámetros */
     public void setActions(Runnable bibliotecaAction, Runnable tiendaAction, Runnable perfilAction) {
         setActions(bibliotecaAction, tiendaAction, null, perfilAction);
     }

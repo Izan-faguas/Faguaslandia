@@ -26,7 +26,6 @@
 
         if (usuario) {
 
-            // quitar login/registro
             menu.innerHTML = `
                 <a href="index.html">Biblioteca</a>
                 <a href="tienda.html">Tienda</a>
@@ -38,7 +37,6 @@
 
         } else {
 
-            // usuario no logueado
             menu.innerHTML = `
                 <a href="index.html">Biblioteca</a>
                 <a href="tienda.html">Tienda</a>
@@ -56,6 +54,7 @@
         <input type="email" name="email" placeholder="Correo" required>
         <input type="password" name="password" placeholder="Contraseña" required>
         <button type="submit">Registrar</button>
+        <p class="form-link">¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
         <div class="mensaje" id="mensaje"></div>
     </form>
 </div>

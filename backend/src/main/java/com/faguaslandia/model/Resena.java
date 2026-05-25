@@ -22,7 +22,7 @@ public class Resena {
     private Juego juego;
 
     @Column(nullable = false)
-    private int puntuacion; // 1-5
+    private int puntuacion;
 
     @Column(columnDefinition = "TEXT")
     private String comentario;

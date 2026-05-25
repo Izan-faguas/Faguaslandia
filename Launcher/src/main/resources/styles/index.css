@@ -1,22 +1,12 @@
-/* ══════════════════════════════════════
-       FAGUASLANDIA LAUNCHER — index.css
-       Misma paleta y estructura que la web
-       ══════════════════════════════════════ */
-
-/* ─── VARIABLES ─── */
 * {
     -fx-font-family: "Segoe UI";
 }
 
-/* ─── ROOT / FONDO ─── */
 .root {
     -fx-background-color: #0b1118;
     -fx-font-family: "Segoe UI";
 }
 
-/* ════════════════════════
-   HEADER
-   ════════════════════════ */
 .header {
     -fx-background-color: rgba(15, 23, 34, 0.97);
     -fx-border-color: transparent transparent rgba(102, 192, 244, 0.2) transparent;
@@ -46,9 +36,6 @@
     -fx-border-width: 0 0 2 0;
 }
 
-/* ════════════════════════
-   LAYOUT TRES COLUMNAS
-   ════════════════════════ */
 .panel-left {
     -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
     -fx-border-color: transparent rgba(102, 192, 244, 0.2) transparent transparent;
@@ -77,10 +64,6 @@
     -fx-pref-width: 220;
     -fx-min-width: 180;
 }
-
-/* ════════════════════════════════════════════════════
-   BIBLIOTECA — SIDEBAR IZQUIERDA
-   ════════════════════════════════════════════════════ */
 
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
@@ -124,9 +107,6 @@
     -fx-font-size: 12px;
 }
 
-/* ════════════════════════════════════════════════════
-   BIBLIOTECA — PANEL AMIGOS (derecha)
-   ════════════════════════════════════════════════════ */
 
 .friends-panel {
     -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
@@ -171,10 +151,6 @@
     -fx-font-size: 11px;
 }
 
-/* ════════════════════════════════════════════════════
-   BIBLIOTECA — HERO (imagen superior del detalle)
-   ════════════════════════════════════════════════════ */
-
 .hero-container {
     -fx-background-color: #0b1118;
     -fx-alignment: center;
@@ -203,10 +179,6 @@
     -fx-font-size: 11px;
     -fx-text-fill: #66c0f4;
 }
-
-/* ════════════════════════════════════════════════════
-   BIBLIOTECA — BARRA DE ACCIONES
-   ════════════════════════════════════════════════════ */
 
 .action-bar {
     -fx-padding: 14 20 14 20;
@@ -279,10 +251,6 @@
     -fx-text-fill: #e6f0f8;
 }
 
-/* ════════════════════════════════════════════════════
-   BIBLIOTECA — STAT CARDS
-   ════════════════════════════════════════════════════ */
-
 .stats-row {
     -fx-padding: 14 20 14 20;
     -fx-background-color: rgba(15, 23, 34, 0.5);
@@ -314,10 +282,6 @@
     -fx-text-fill: #5b7a99;
 }
 
-/* ════════════════════════════════════════════════════
-   BIBLIOTECA — CUERPO DE DETALLE (secciones)
-   ════════════════════════════════════════════════════ */
-
 .detalle-body {
     -fx-background-color: transparent;
     -fx-spacing: 0;
@@ -340,8 +304,6 @@
     -fx-border-color: transparent transparent rgba(102, 192, 244, 0.08) transparent;
     -fx-border-width: 0 0 1 0;
 }
-
-/* ── Sección Actualizaciones ── */
 
 .update-item {
     -fx-background-color: transparent;
@@ -372,8 +334,6 @@
     -fx-padding: 0 20 0 0;
 }
 
-/* ── Sección Logros ── */
-
 .logros-barra-bg {
     -fx-background-color: rgba(255, 255, 255, 0.08);
     -fx-background-radius: 4;
@@ -390,8 +350,6 @@
     -fx-min-height: 6px;
     -fx-max-height: 6px;
 }
-
-/* ── Sección Amigos con este juego ── */
 
 .amigo-juego-card {
     -fx-background-color: rgba(255, 255, 255, 0.03);
@@ -420,9 +378,6 @@
     -fx-text-fill: #5b7a99;
 }
 
-/* ════════════════════════
-   TARJETAS BIBLIOTECA (columna izq)
-   ════════════════════════ */
 .game-card {
     -fx-cursor: hand;
     -fx-background-color: transparent;
@@ -444,9 +399,6 @@
     -fx-background-color: rgba(102, 192, 244, 0.05);
 }
 
-/* ════════════════════════
-   DETALLE CENTRAL
-   ════════════════════════ */
 .detalle-img {
     -fx-effect: none;
 }
@@ -474,9 +426,6 @@
     -fx-font-size: 12px;
 }
 
-/* ════════════════════════
-   BOTÓN JUGAR
-   ════════════════════════ */
 .btn-play {
     -fx-background-color: linear-gradient(to right, #66c0f4, #4aa3df);
     -fx-text-fill: white;
@@ -498,9 +447,6 @@
     -fx-background-color: #3a8abf;
 }
 
-/* ════════════════════════
-   BOTONES GENÉRICOS
-   ════════════════════════ */
 .btn-secondary {
     -fx-background-color: rgba(102, 192, 244, 0.12);
     -fx-text-fill: #66c0f4;
@@ -545,9 +491,6 @@
     -fx-cursor: default;
 }
 
-/* ════════════════════════
-   PANEL AMIGOS (derecha)
-   ════════════════════════ */
 .amigos-titulo {
     -fx-font-size: 14px;
     -fx-text-fill: #9fb3c8;
@@ -594,9 +537,6 @@
     -fx-text-alignment: CENTER;
 }
 
-/* ════════════════════════
-   TIENDA
-   ════════════════════════ */
 .tienda-container {
     -fx-background-color: linear-gradient(to bottom, #121a24, #0b1118);
     -fx-padding: 30;
@@ -656,9 +596,6 @@
     -fx-text-fill: #4caf50;
 }
 
-/* ════════════════════════
-   BUSCADOR TIENDA
-   ════════════════════════ */
 .search-bar {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-border-color: rgba(102, 192, 244, 0.2);
@@ -690,9 +627,6 @@
     -fx-cursor: hand;
 }
 
-/* ════════════════════════
-   LOGIN
-   ════════════════════════ */
 .login-container {
     -fx-background-color: linear-gradient(to bottom right, #1b2838, #0b1118);
     -fx-alignment: CENTER;
@@ -772,9 +706,6 @@
     -fx-alignment: CENTER;
 }
 
-/* ════════════════════════
-   BADGE / TAG
-   ════════════════════════ */
 .badge-comprado {
     -fx-background-color: rgba(76, 175, 80, 0.2);
     -fx-text-fill: #4caf50;
@@ -798,9 +729,6 @@
     -fx-border-radius: 4;
 }
 
-/* ════════════════════════
-   SCROLLPANE
-   ════════════════════════ */
 .scroll-pane {
     -fx-background: transparent;
     -fx-background-color: transparent;
@@ -839,27 +767,17 @@
     -fx-pref-height: 0;
 }
 
-/* ════════════════════════
-   SEPARADOR
-   ════════════════════════ */
 .separator {
     -fx-background-color: rgba(102, 192, 244, 0.15);
     -fx-pref-height: 1;
     -fx-max-height: 1;
 }
 
-/* ════════════════════════
-   TEXTOS GENERALES
-   ════════════════════════ */
 .text-main   { -fx-text-fill: #e6f0f8; }
 .text-muted  { -fx-text-fill: #9fb3c8; }
 .text-accent { -fx-text-fill: #66c0f4; }
 .text-online  { -fx-text-fill: #4caf50; }
 .text-offline { -fx-text-fill: #5b7a99; }
-
-/* ════════════════════════════════════════
-   PERFIL
-   ════════════════════════════════════════ */
 
 .perfil-banner {
     -fx-background-color: linear-gradient(to right, #1b2838, #16202d);
@@ -944,7 +862,6 @@
     -fx-font-weight: bold;
 }
 
-/* Botones de estado (toggle) */
 .estado-toggle {
     -fx-background-color: rgba(255,255,255,0.05);
     -fx-text-fill: #9fb3c8;
@@ -968,10 +885,6 @@
     -fx-border-color: rgba(102, 192, 244, 0.6);
     -fx-font-weight: bold;
 }
-
-/* ════════════════════════════════════════
-   AMIGOS — PANEL IZQUIERDO
-   ════════════════════════════════════════ */
 
 .amigos-left-panel {
     -fx-background-color: linear-gradient(to bottom, #0f1722, #0b1118);
@@ -1050,7 +963,6 @@
     -fx-alignment: CENTER;
 }
 
-/* Dot de estado */
 .estado-dot {
     -fx-background-radius: 50;
     -fx-border-color: #0b1118;
@@ -1063,7 +975,6 @@
 .estado-dot-no-molestar { -fx-background-color: #e53935; }
 .estado-dot-offline     { -fx-background-color: #5b7a99; }
 
-/* Botón chat pequeño */
 .amigo-btn-chat {
     -fx-background-color: rgba(102, 192, 244, 0.1);
     -fx-text-fill: #c7d5e0;
@@ -1081,7 +992,6 @@
     -fx-text-fill: #ffffff;
 }
 
-/* Botón agregar amigo */
 .btn-agregar-amigo {
     -fx-background-color: rgba(102, 192, 244, 0.12);
     -fx-text-fill: #66c0f4;
@@ -1099,7 +1009,6 @@
     -fx-background-color: rgba(102, 192, 244, 0.22);
 }
 
-/* Solicitudes */
 .solicitud-card {
     -fx-background-color: rgba(255,255,255,0.03);
     -fx-border-color: rgba(102, 192, 244, 0.12);
@@ -1140,10 +1049,6 @@
 .btn-rechazar:hover {
     -fx-background-color: rgba(229, 57, 53, 0.28);
 }
-
-/* ════════════════════════════════════════
-   CHAT
-   ════════════════════════════════════════ */
 
 .chat-placeholder-area {
     -fx-background-color: #0b1118;

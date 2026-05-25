@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
 
-    // Conversación entre dos usuarios (en ambos sentidos), ordenada por fecha
     @Query("""
         SELECT m FROM Mensaje m
         WHERE (m.emisor.id = :id1 AND m.receptor.id = :id2)
@@ -18,9 +17,7 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
     """)
     List<Mensaje> findConversacion(@Param("id1") Long id1, @Param("id2") Long id2);
 
-    // Mensajes no leídos recibidos por un usuario
     List<Mensaje> findByReceptorIdAndLeidoFalse(Long receptorId);
 
-    // Conteo de mensajes no leídos de un emisor concreto
     long countByEmisorIdAndReceptorIdAndLeidoFalse(Long emisorId, Long receptorId);
 }

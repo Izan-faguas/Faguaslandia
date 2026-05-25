@@ -22,11 +22,6 @@ public class PresenciaController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    /**
-     * POST /presencia/heartbeat
-     * El frontend lo llama cada 60 s mientras el usuario tiene la web abierta.
-     * Actualiza ultimaActividad y pone estado online si venía de ausente.
-     */
     @PostMapping("/heartbeat")
     public void heartbeat(HttpSession session) {
         Usuario sesion = (Usuario) session.getAttribute("usuario");
@@ -36,21 +31,14 @@ public class PresenciaController {
         if (u == null) return;
 
         u.setUltimaActividad(LocalDateTime.now());
-
-        // Si estaba ausente, volvemos a online automáticamente
-        if (u.getEstado() == EstadoUsuario.ausente) {
+        if (u.getEstado() == EstadoUsuario.ausente || u.getEstado() == EstadoUsuario.offline) {
             u.setEstado(EstadoUsuario.online);
         }
-
         usuarioRepository.save(u);
+
+        session.setAttribute("usuario", u);
     }
 
-    /**
-     * PUT /presencia/estado
-     * Body: { "estado": "ocupado" }
-     * Permite al usuario cambiar su estado manualmente (online / ocupado / ausente).
-     * No permite poner offline manualmente (eso solo lo hace el logout o el scheduler).
-     */
     @PutMapping("/estado")
     public void cambiarEstado(
             @RequestBody Map<String, String> body,

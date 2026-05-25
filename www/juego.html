@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Juego</title>
   <link rel="stylesheet" href="index.css">
 </head>
@@ -39,7 +40,6 @@
 import CONFIG from "./config.js";
 import { getSessionUser } from "./session.js";
 
-// ── Helper imágenes ───────────────────────────────────
 function imgUrl(imagen_url, variante) {
   if (!imagen_url) return `${CONFIG.API_BASE_URL}/uploads/img/default.png`;
   const base = `${CONFIG.API_BASE_URL}/uploads/${imagen_url.replace(/\.png$/i, '')}`;
@@ -57,16 +57,12 @@ if (!juegoId) {
 
 let puntuacionSeleccionada = 0;
 
-/* =========================
-   CARGAR JUEGO
-========================= */
 async function cargarJuego() {
   try {
     const res = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}`);
     if (!res.ok) throw new Error();
     const juego = await res.json();
 
-    // ¿Lo tiene comprado?
     let comprado = false;
     try {
       const usuario = await getSessionUser();
@@ -79,7 +75,6 @@ async function cargarJuego() {
       }
     } catch (e) {}
 
-    // Render
     container.innerHTML = `
       <div class="game-page">
 
@@ -101,21 +96,21 @@ async function cargarJuego() {
             <div class="game-card">
               <h3 class="price">${juego.precio ? juego.precio + "€" : "Gratis"}</h3>
               <button id="comprarBtn" ${comprado ? "disabled" : ""}>
-                ${comprado ? "Comprado ✔" : "Comprar"}
+                ${comprado ? "Comprado" : "Comprar"}
               </button>
             </div>
             <div class="game-card info">
               <p><strong>Categoría:</strong> ${juego.categoria ?? "No definida"}</p>
               <p><strong>Desarrollador:</strong> ${juego.desarrollador ?? "Desconocido"}</p>
               <p><strong>Fecha:</strong> ${juego.fecha_lanzamiento ?? "???"}</p>
-              <p><strong>Valoración:</strong> ⭐ <span id="valoracionMedia">${juego.valoracion_promedio ?? "0"}</span></p>
+              <p><strong>Valoración:</strong> <span id="valoracionMedia">${juego.valoracion_promedio ?? "0"}</span></p>
             </div>
           </div>
         </div>
 
         <!-- RESEÑAS -->
         <div class="game-resenas">
-          <h2>📝 Reseñas</h2>
+          <h2>Reseñas</h2>
 
           <div class="resena-form" id="resenaForm" style="display:none">
             <h3 id="resenaFormTitulo">Escribe tu reseña</h3>
@@ -140,7 +135,6 @@ async function cargarJuego() {
       </div>
     `;
 
-    // Botón comprar
     const btn = document.getElementById("comprarBtn");
     if (comprado) {
       btn.style.opacity = "0.5";
@@ -156,9 +150,7 @@ async function cargarJuego() {
   }
 }
 
-/* =========================
-   COMPRAR
-========================= */
+
 async function comprar() {
   try {
     const res = await fetch(`${CONFIG.API_BASE_URL}/compras`, {
@@ -169,32 +161,24 @@ async function comprar() {
     });
     if (res.status === 401) { alert("Tienes que iniciar sesión"); return; }
     if (!res.ok) throw new Error();
-    alert("Juego comprado ✅");
+    alert("Juego comprado");
     location.reload();
   } catch {
     alert("Error al comprar");
   }
 }
 
-/* =========================
-   RESEÑAS
-========================= */
 async function cargarResenas(comprado) {
   const usuario = await getSessionUser();
 
-  // Decidir qué mostrar encima de la lista
   if (!usuario) {
-    // No hay sesión — aviso
     mostrarMensajeResena('<a href="login.html">Inicia sesión</a> para dejar una reseña.');
   } else if (!comprado) {
-    // Sesión sí, pero no tiene el juego
     mostrarMensajeResena("Compra el juego para poder dejar una reseña.");
   } else {
-    // Tiene sesión y juego comprado → mostrar formulario
     const form = document.getElementById("resenaForm");
     form.style.display = "block";
 
-    // ¿Ya tiene reseña?
     try {
       const r = await fetch(`${CONFIG.API_BASE_URL}/resenas/juego/${juegoId}/mia`, { credentials: "include" });
       if (r.ok) {
@@ -206,12 +190,10 @@ async function cargarResenas(comprado) {
       }
     } catch(_) {}
 
-    // Estrellas
     document.querySelectorAll(".estrella").forEach(el => {
       el.onclick = () => seleccionarEstrella(parseInt(el.dataset.v));
     });
 
-    // Guardar / actualizar
     document.getElementById("btnGuardarResena").onclick = async () => {
       if (!puntuacionSeleccionada) { alert("Selecciona una puntuación"); return; }
       const comentario = document.getElementById("comentarioInput").value.trim();
@@ -230,7 +212,6 @@ async function cargarResenas(comprado) {
       } catch(e) { alert("Error guardando reseña"); }
     };
 
-    // Eliminar
     document.getElementById("btnEliminarResena").onclick = async () => {
       if (!confirm("¿Eliminar tu reseña?")) return;
       await fetch(`${CONFIG.API_BASE_URL}/resenas/juego/${juegoId}`, { method: "DELETE", credentials: "include" });
@@ -299,9 +280,6 @@ async function actualizarMedia() {
   if (el) el.textContent = juego.valoracion_promedio ?? "0";
 }
 
-/* =========================
-   INIT
-========================= */
 document.addEventListener("DOMContentLoaded", cargarJuego);
 </script>
 

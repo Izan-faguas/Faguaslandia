@@ -59,10 +59,9 @@ public class JuegoDetailView extends VBox {
     public void setJuego(Juego juego) {
         getChildren().clear();
 
-        // ── Hero con imagen 1232 — más alto ──────────────
         ImageView portada = new ImageView();
         portada.setFitHeight(320);
-        portada.setPreserveRatio(true);  // sin estiramiento
+        portada.setPreserveRatio(true);
         portada.setSmooth(true);
         setImagenConFallback(portada, juego.getImagen_url(), "1232");
 
@@ -70,19 +69,16 @@ public class JuegoDetailView extends VBox {
         hero.setMinHeight(320); hero.setMaxHeight(320);
         hero.getStyleClass().add("hero-container");
         hero.setStyle("-fx-background-color: #0a0f16;");
-        // Centrar la imagen sin estirarla
         portada.fitWidthProperty().bind(hero.widthProperty());
-        portada.setPreserveRatio(false); // llenar el ancho, recortar alto si hace falta
+        portada.setPreserveRatio(false);
         hero.getChildren().add(portada);
 
-        // Botón volver
-        Button volver = new Button("← Volver a la tienda");
+        Button volver = new Button("Volver a la tienda");
         volver.getStyleClass().add("btn-action-gray");
         volver.setOnAction(e -> { if (callbackVolver != null) callbackVolver.run(); });
         StackPane.setAlignment(volver, Pos.TOP_LEFT);
         StackPane.setMargin(volver, new Insets(14, 0, 0, 18));
 
-        // Overlay degradado
         VBox overlay = new VBox(6);
         overlay.getStyleClass().add("hero-overlay");
         overlay.setAlignment(Pos.BOTTOM_LEFT);
@@ -108,7 +104,6 @@ public class JuegoDetailView extends VBox {
             metaBox.getChildren().add(meta);
         }
 
-        // Rating calculado desde reseñas (se actualiza al cargarlas)
         Label ratingLbl = new Label("★★★★★");
         ratingLbl.getStyleClass().add("hero-rating");
         ratingLbl.setText("Sin valoraciones aún");
@@ -117,7 +112,6 @@ public class JuegoDetailView extends VBox {
         overlay.getChildren().addAll(heroTitulo, metaBox);
         hero.getChildren().addAll(volver, overlay);
 
-        // ── Stats cards ───────────────────────────────────
         String precioTxt = (juego.getPrecio() == null || juego.getPrecio().doubleValue() == 0)
                 ? "Gratis" : juego.getPrecio() + "€";
 
@@ -128,13 +122,11 @@ public class JuegoDetailView extends VBox {
         );
         statsRow.getStyleClass().add("stats-row");
 
-        // ── Descripción ───────────────────────────────────
         Label desc = new Label(juego.getDescripcion() != null ? juego.getDescripcion() : "Sin descripción disponible.");
         desc.setWrapText(true);
         desc.getStyleClass().add("detalle-desc");
         desc.setPadding(new Insets(0, 32, 0, 32));
 
-        // ── Bloque compra ─────────────────────────────────
         Label precioBig = new Label(precioTxt);
         precioBig.getStyleClass().add("price-big");
 
@@ -153,11 +145,8 @@ public class JuegoDetailView extends VBox {
         buyBlock.getStyleClass().add("buy-block");
         buyBlock.setPadding(new Insets(14, 32, 14, 32));
 
-        // ── Sección reseñas ────────────────────────────────
-        // Formulario arriba, lista abajo
         VBox resenasSection = crearSeccionResenas(juego, comprarBtn, ratingLbl);
 
-        // ── Ensamblar ─────────────────────────────────────
         VBox contenido = new VBox(0, statsRow, desc, buyBlock, resenasSection);
         VBox.setVgrow(resenasSection, Priority.ALWAYS);
 
@@ -169,18 +158,17 @@ public class JuegoDetailView extends VBox {
 
         getChildren().add(scroll);
 
-        // Cargar estado compra
         new Thread(() -> {
             try {
                 boolean comprado = juegoService.estaComprado(usuario.getId(), juego.getId());
                 Platform.runLater(() -> {
                     if (comprado) {
-                        comprarBtn.setText("✔ En tu biblioteca");
+                        comprarBtn.setText("En tu biblioteca");
                         comprarBtn.getStyleClass().remove("btn-play-green");
                         comprarBtn.getStyleClass().add("btn-comprado");
                         comprarBtn.setDisable(true);
                     } else {
-                        comprarBtn.setText("🛒  Comprar — " + precioTxt);
+                        comprarBtn.setText("Comprar — " + precioTxt);
                         comprarBtn.setDisable(false);
                         comprarBtn.setOnAction(e -> {
                             comprarBtn.setDisable(true);
@@ -189,7 +177,7 @@ public class JuegoDetailView extends VBox {
                                 try {
                                     juegoService.comprarJuego(usuario.getId(), juego.getId());
                                     Platform.runLater(() -> {
-                                        comprarBtn.setText("✔ En tu biblioteca");
+                                        comprarBtn.setText("En tu biblioteca");
                                         comprarBtn.getStyleClass().remove("btn-play-green");
                                         comprarBtn.getStyleClass().add("btn-comprado");
                                         if (callbackActualizarBiblioteca != null)
@@ -211,25 +199,19 @@ public class JuegoDetailView extends VBox {
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  SECCIÓN RESEÑAS — formulario arriba, lista abajo
-    // ════════════════════════════════════════════════════
 
     private VBox crearSeccionResenas(Juego juego, Button comprarBtn, Label ratingLbl) {
         VBox section = new VBox(0);
         section.setPadding(new Insets(16, 32, 24, 32));
         section.setMaxWidth(Double.MAX_VALUE);
 
-        // ── Formulario (arriba, visible solo si tiene el juego) ──
         VBox formulario = crearFormularioResena(juego);
         formulario.setVisible(false);
         formulario.setManaged(false);
 
-        // ── Cabecera lista ────────────────────────────────
         Label headerLista = new Label("RESEÑAS DE LA COMUNIDAD");
         headerLista.setStyle("-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #5b7a99; -fx-padding: 16 0 8 0;");
 
-        // ── Lista reseñas ─────────────────────────────────
         VBox listaResenas = new VBox(0);
         listaResenas.setStyle("-fx-background-color: #0f1520; -fx-border-color: rgba(102,192,244,0.12); -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;");
 
@@ -246,7 +228,6 @@ public class JuegoDetailView extends VBox {
         Label formTitulo = new Label("Tu reseña");
         formTitulo.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #66c0f4;");
 
-        // Estrellas
         HBox estrellas = new HBox(4);
         estrellas.setAlignment(Pos.CENTER_LEFT);
         Label[] stars = new Label[5];
@@ -261,7 +242,6 @@ public class JuegoDetailView extends VBox {
             estrellas.getChildren().add(stars[i]);
         }
 
-        // Área de texto — fondo oscuro
         TextArea comentario = new TextArea();
         comentario.setPromptText("Escribe tu opinión...");
         comentario.setWrapText(true);
@@ -290,7 +270,7 @@ public class JuegoDetailView extends VBox {
         cargarMiResena(juego.getId(), stars, puntuacion, comentario, eliminar);
 
         guardar.setOnAction(e -> {
-            if (puntuacion[0] == 0) { msg.setText("⚠ Selecciona una puntuación"); return; }
+            if (puntuacion[0] == 0) { msg.setText("Selecciona una puntuación"); return; }
             guardar.setDisable(true); guardar.setText("Guardando...");
             String com = comentario.getText().trim();
             int pun = puntuacion[0];
@@ -304,17 +284,16 @@ public class JuegoDetailView extends VBox {
                     Platform.runLater(() -> {
                         guardar.setDisable(false); guardar.setText("Publicar reseña");
                         if (resp.statusCode() == 200) {
-                            msg.setText("✔ Reseña guardada");
+                            msg.setText("Reseña guardada");
                             msg.setStyle("-fx-font-size: 12px; -fx-text-fill: #4caf50;");
                             eliminar.setVisible(true); eliminar.setManaged(true);
-                            // Refrescar lista buscando el VBox padre de la sección
                             VBox section = (VBox) form.getParent();
                             if (section != null) {
                                 VBox lista = (VBox) section.getProperties().get("listaResenas");
                                 Label rating = (Label) section.getProperties().get("ratingLbl");
                                 if (lista != null) recargarListaResenas(juego.getId(), lista, rating);
                             }
-                        } else { msg.setText("❌ Error al guardar"); }
+                        } else { msg.setText("Error al guardar"); }
                     });
                 } catch (Exception ex) { ex.printStackTrace(); Platform.runLater(() -> { guardar.setDisable(false); guardar.setText("Publicar reseña"); }); }
             }).start();
@@ -384,11 +363,9 @@ public class JuegoDetailView extends VBox {
                         HttpResponse.BodyHandlers.ofString());
                 List<ResenaDTO> resenas = mapper.readValue(resp.body(), new TypeReference<>() {});
 
-                // Calcular media de valoraciones
                 double media = resenas.stream().mapToInt(r -> r.puntuacion).average().orElse(0);
 
                 Platform.runLater(() -> {
-                    // Actualizar rating en el hero
                     if (ratingLbl != null) {
                         if (resenas.isEmpty()) {
                             ratingLbl.setText("Sin valoraciones aún");
@@ -440,9 +417,6 @@ public class JuegoDetailView extends VBox {
         return card;
     }
 
-    // ════════════════════════════════════════════════════
-    //  HELPERS
-    // ════════════════════════════════════════════════════
 
     private VBox crearStatCard(String valor, String etiqueta) {
         Label val = new Label(valor);

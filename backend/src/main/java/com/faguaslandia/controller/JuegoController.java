@@ -86,11 +86,6 @@ public class JuegoController {
                 .body(resource);
     }
 
-    // -------------------------------------------------------
-    // 1. LOGROS DEL JUEGO
-    // GET /juegos/{id}/logros
-    // Devuelve los logros del juego indicando si el usuario los tiene
-    // -------------------------------------------------------
     @GetMapping("/{id}/logros")
     public List<Map<String, Object>> getLogrosJuego(
             @PathVariable Long id,
@@ -117,10 +112,6 @@ public class JuegoController {
         )).collect(Collectors.toList());
     }
 
-    // -------------------------------------------------------
-    // 2. HORAS JUGADAS POR EL USUARIO EN ESTE JUEGO
-    // GET /juegos/{id}/mis-horas
-    // -------------------------------------------------------
     @GetMapping("/{id}/mis-horas")
     public Map<String, Object> getMisHoras(
             @PathVariable Long id,
@@ -133,10 +124,6 @@ public class JuegoController {
         return Map.of("horas", horas != null ? Math.round(horas * 10.0) / 10.0 : 0.0);
     }
 
-    // -------------------------------------------------------
-    // 3. AMIGOS QUE TIENEN EL JUEGO
-    // GET /juegos/{id}/amigos-con-juego
-    // -------------------------------------------------------
     @GetMapping("/{id}/amigos-con-juego")
     public List<Map<String, Object>> getAmigosConJuego(
             @PathVariable Long id,
@@ -145,7 +132,6 @@ public class JuegoController {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario == null) return Collections.emptyList();
 
-        // IDs de amigos aceptados
         Set<Long> amigosIds = amigoRepository
                 .findByUsuario1IdOrUsuario2Id(usuario.getId(), usuario.getId())
                 .stream()
@@ -155,7 +141,6 @@ public class JuegoController {
                         : a.getUsuario1().getId())
                 .collect(Collectors.toSet());
 
-        // De esos amigos, los que tienen el juego comprado
         return compraRepository.findByJuegoId(id).stream()
                 .filter(c -> amigosIds.contains(c.getUsuario().getId()))
                 .map(c -> {
@@ -172,10 +157,6 @@ public class JuegoController {
                 .collect(Collectors.toList());
     }
 
-    // -------------------------------------------------------
-    // 4. % DE JUGADORES QUE HAN DESBLOQUEADO CADA LOGRO
-    // GET /juegos/{id}/logros-estadisticas
-    // -------------------------------------------------------
     @GetMapping("/{id}/logros-estadisticas")
     public List<Map<String, Object>> getLogrosEstadisticas(@PathVariable Long id) {
 
@@ -195,10 +176,6 @@ public class JuegoController {
         }).collect(Collectors.toList());
     }
 
-    // -------------------------------------------------------
-    // ACTUALIZACIONES DEL JUEGO
-    // GET /juegos/{id}/actualizaciones
-    // -------------------------------------------------------
     @GetMapping("/{id}/actualizaciones")
     public List<Map<String, Object>> getActualizaciones(@PathVariable Long id) {
         return actualizacionRepository.findByJuegoIdOrderByFechaDesc(id).stream()

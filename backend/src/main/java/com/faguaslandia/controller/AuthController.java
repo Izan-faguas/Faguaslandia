@@ -44,10 +44,8 @@ public class AuthController {
 
         session.setAttribute("usuario", usuario);
 
-        // Comprobar logros — los pendientes se consultarán desde el perfil
         logroService.comprobarTodos(usuario.getId());
 
-        // Devolver datos del usuario (el launcher necesita el id y nombre)
         Map<String, Object> usuarioData = new java.util.HashMap<>();
         usuarioData.put("id",     usuario.getId());
         usuarioData.put("nombre", usuario.getNombre());

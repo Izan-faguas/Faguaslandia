@@ -41,10 +41,6 @@ public class SesionJuegoController {
         this.logroService = logroService;
     }
 
-    /**
-     * POST /sesiones/iniciar
-     * Body: { "usuarioId": 1, "juegoId": 2 }
-     */
     @PostMapping("/iniciar")
     public SesionJuego iniciar(@RequestBody Map<String, Long> body) {
         Long usuarioId = body.get("usuarioId");
@@ -55,7 +51,6 @@ public class SesionJuegoController {
         Juego juego = juegoRepository.findById(juegoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Juego no encontrado"));
 
-        // Si ya hay una sesión activa, la cerramos antes
         sesionRepository.findByUsuarioIdAndJuegoIdAndFinIsNull(usuarioId, juegoId)
                 .ifPresent(s -> {
                     s.setFin(LocalDateTime.now());
@@ -68,9 +63,6 @@ public class SesionJuegoController {
         return sesionRepository.save(sesion);
     }
 
-    /**
-     * PUT /sesiones/finalizar/{id}
-     */
     @PutMapping("/finalizar/{id}")
     public SesionJuego finalizar(@PathVariable Long id) {
         SesionJuego sesion = sesionRepository.findById(id)
@@ -89,10 +81,6 @@ public class SesionJuegoController {
         return guardada;
     }
 
-    /**
-     * GET /sesiones/usuario/{usuarioId}/juego/{juegoId}
-     * Horas totales de un usuario en un juego concreto
-     */
     @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
     public Map<String, Object> horasPorJuego(
             @PathVariable Long usuarioId,
@@ -101,8 +89,6 @@ public class SesionJuegoController {
         return Map.of("usuarioId", usuarioId, "juegoId", juegoId, "horas", horas);
     }
 
-    // POST /logros/conceder
-// Body: { "usuarioId": 1, "logroId": 5 }
     @PostMapping("/logros/conceder")
     public ResponseEntity<?> concederDesdeJuego(@RequestBody Map<String, Long> body) {
         Long usuarioId = body.get("usuarioId");
@@ -111,7 +97,7 @@ public class SesionJuegoController {
         Logro logro = logroRepository.findById(logroId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Logro no encontrado"));
 
-        logroService.concederLogro(usuarioId, logro); // ver paso 2
+        logroService.concederLogro(usuarioId, logro);
         return ResponseEntity.ok(Map.of("mensaje", "Logro concedido"));
     }
 }

@@ -23,9 +23,6 @@ public class GameInstallerService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // ════════════════════════════════════════════════════
-    //  INSTALACIÓN
-    // ════════════════════════════════════════════════════
 
     public boolean isInstalled(String gameName) {
         File folder = new File(BASE_DIR + gameName);
@@ -46,7 +43,6 @@ public class GameInstallerService {
             unzip(zipPath, gameDir.getAbsolutePath());
             zip.delete();
 
-            // Crear acceso directo en el escritorio al terminar
             crearAccesoDirecto(gameName);
 
         } catch (Exception e) {
@@ -63,21 +59,12 @@ public class GameInstallerService {
         }
     }
 
-    // ════════════════════════════════════════════════════
-    //  LANZAMIENTO CON REGISTRO DE SESIÓN
-    // ════════════════════════════════════════════════════
-
-    /**
-     * Lanza el juego y registra la sesión en el backend.
-     * Requiere usuarioId y juegoId para poder llamar a /sesiones/iniciar.
-     */
     public void launch(String gameName, Long usuarioId, Long juegoId) {
         try {
             File dir = new File(BASE_DIR + gameName);
             System.out.println("Buscando en: " + dir.getAbsolutePath());
             System.out.println("Existe: " + dir.exists());
 
-            // Listar todos los archivos recursivamente
             listarArchivos(dir, "");
 
             File exe = findExe(dir);
@@ -87,10 +74,8 @@ public class GameInstallerService {
                 return;
             }
 
-            // Iniciar sesión en el backend
             Long sesionId = iniciarSesion(usuarioId, juegoId);
 
-            // Lanzar el proceso del juego
             Process proceso = new ProcessBuilder(
                     exe.getAbsolutePath(),
                     "--usuarioId=" + usuarioId,
@@ -98,7 +83,6 @@ public class GameInstallerService {
                     .directory(exe.getParentFile())
                     .start();
 
-            // Vigilar el proceso en background para finalizar la sesión al cerrar
             if (sesionId != null) {
                 final long sid = sesionId;
                 Thread watcher = new Thread(() -> {
@@ -118,16 +102,10 @@ public class GameInstallerService {
         }
     }
 
-    /**
-     * Sobrecarga sin sesión — compatibilidad con llamadas antiguas.
-     */
     public void launch(String gameName) {
         launch(gameName, null, null);
     }
 
-    // ════════════════════════════════════════════════════
-    //  SESIONES
-    // ════════════════════════════════════════════════════
 
     private Long iniciarSesion(Long usuarioId, Long juegoId) {
         if (usuarioId == null || juegoId == null) return null;
@@ -161,9 +139,6 @@ public class GameInstallerService {
         }
     }
 
-    // ════════════════════════════════════════════════════
-    //  ACCESO DIRECTO
-    // ════════════════════════════════════════════════════
 
     private void crearAccesoDirecto(String gameName) {
         try {
@@ -183,7 +158,6 @@ public class GameInstallerService {
                     .setWorkingDir(new File(LAUNCHER_EXE).getParent())
                     .setCMDArgs("--launch " + gameName);
 
-            // Intentar usar el .exe del juego como icono
             File gameDir = new File(BASE_DIR + gameName);
             File exe = findExe(gameDir);
             if (exe != null) {
@@ -199,9 +173,6 @@ public class GameInstallerService {
         }
     }
 
-    // ════════════════════════════════════════════════════
-    //  DESCARGA Y DESCOMPRESIÓN
-    // ════════════════════════════════════════════════════
 
     private void downloadFile(String url, String outputPath) throws IOException {
         try (InputStream in = new URL(url).openStream()) {
@@ -236,9 +207,6 @@ public class GameInstallerService {
         zipFile.close();
     }
 
-    // ════════════════════════════════════════════════════
-    //  UTILS
-    // ════════════════════════════════════════════════════
 
     private File findExe(File dir) {
         File[] files = dir.listFiles();

@@ -1,4 +1,4 @@
-package com.faguaslandia.controller; // ⚠️ cambia esto por tu paquete
+package com.faguaslandia.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +23,12 @@ public class BibliotecaController {
     @GetMapping
     public List<Juego> obtenerBiblioteca(HttpSession session) {
 
-        // 🔐 Obtener usuario desde la sesión (cookie)
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         if (usuario == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No logueado");
         }
 
-        // 🎮 Devolver juegos del usuario
         return bibliotecaService.obtenerPorUsuario(usuario.getId());
     }
 }

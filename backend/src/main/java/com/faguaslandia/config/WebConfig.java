@@ -10,7 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${app.frontend-url}")
     private String frontendUrl;
 
-    // permitir cookies y CORS
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 

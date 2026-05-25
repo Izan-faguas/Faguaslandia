@@ -25,7 +25,6 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private EstadoUsuario estado = EstadoUsuario.offline;
 
-    // Última vez que el frontend hizo ping (heartbeat)
     @Column(name = "ultima_actividad")
     private LocalDateTime ultimaActividad;
 

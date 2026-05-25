@@ -42,48 +42,34 @@ public class BibliotecaView {
 
     public HBox getView() { return root; }
 
-    // ════════════════════════════════════════════════════
-    //  ESTRUCTURA PRINCIPAL
-    // ════════════════════════════════════════════════════
 
     private void crearVista() {
         root = new HBox();
         root.getStyleClass().add("root");
 
-        // ── Sidebar izquierda ─────────────────────────
         sidebarPanel = new VBox(0);
         sidebarPanel.getStyleClass().add("sidebar");
 
-        Label sidebarLabel = new Label("MIS JUEGOS");
-        sidebarLabel.getStyleClass().add("sidebar-section-label");
-        sidebarPanel.getChildren().add(sidebarLabel);
-
-        // ── Panel central ─────────────────────────────
         detallePanel = new VBox();
         detallePanel.getStyleClass().add("panel-center");
-        HBox.setHgrow(detallePanel, Priority.ALWAYS);
 
-        Label placeholder = new Label("Selecciona un juego");
-        placeholder.setStyle("-fx-text-fill: #4a6580; -fx-font-size: 14px;");
-        placeholder.setPadding(new Insets(40));
-        detallePanel.getChildren().add(placeholder);
-
-        // ── Panel amigos derecha ──────────────────────
         amigosPanel = new VBox(0);
         amigosPanel.getStyleClass().add("friends-panel");
-
-        Label friendsHeader = new Label("AMIGOS");
-        friendsHeader.getStyleClass().add("friends-panel-header");
-        amigosPanel.getChildren().add(friendsHeader);
 
         cargarAmigosPanel();
 
         root.getChildren().addAll(sidebarPanel, detallePanel, amigosPanel);
+
+        HBox.setHgrow(detallePanel, Priority.ALWAYS);
+        root.widthProperty().addListener((obs, oldW, newW) -> {
+            double total = newW.doubleValue();
+            double sidebar = Math.max(200, Math.min(320, total * 0.20));
+            double amigos  = Math.max(200, Math.min(300, total * 0.18));
+            sidebarPanel.setPrefWidth(sidebar);
+            amigosPanel.setPrefWidth(amigos);
+        });
     }
 
-    // ════════════════════════════════════════════════════
-    //  PANEL DE AMIGOS (derecha)
-    // ════════════════════════════════════════════════════
 
     private void cargarAmigosPanel() {
         new Thread(() -> {
@@ -116,21 +102,39 @@ public class BibliotecaView {
                                 default            -> "Desconectado";
                             };
 
-                            // Avatar
                             Label letra = new Label(otro.nombre.substring(0, 1).toUpperCase());
                             letra.setStyle("-fx-text-fill: #8b9db0; -fx-font-weight: bold; -fx-font-size: 11px;");
                             StackPane av = new StackPane(letra);
                             av.setMinSize(26, 26); av.setMaxSize(26, 26);
                             av.getStyleClass().add("friend-avatar");
 
-                            // Dot estado
+                            if (otro.foto != null && !otro.foto.isBlank()
+                                    && !otro.foto.equalsIgnoreCase("default.png")
+                                    && !otro.foto.equalsIgnoreCase("default")) {
+                                String fotoUrl = Config.IMG_BASE_URL + "/avatars/" + otro.foto;
+                                Image fotoImg = new Image(fotoUrl, true);
+                                ImageView fotoIv = new ImageView(fotoImg);
+                                fotoIv.setFitWidth(26); fotoIv.setFitHeight(26);
+                                fotoIv.setSmooth(true);
+                                fotoIv.setClip(new Circle(13, 13, 13));
+                                fotoImg.errorProperty().addListener((obs, o, err) -> {
+                                    if (err) Platform.runLater(() -> {
+                                        av.getChildren().remove(fotoIv);
+                                    });
+                                });
+                                fotoImg.progressProperty().addListener((obs, o, progress) -> {
+                                    if (progress.doubleValue() == 1.0 && !fotoImg.isError()) {
+                                        Platform.runLater(() -> av.getChildren().add(fotoIv));
+                                    }
+                                });
+                            }
+
                             Label dot = new Label();
                             dot.setMinSize(7, 7); dot.setMaxSize(7, 7);
                             dot.setStyle("-fx-background-color: " + dotColor + "; -fx-background-radius: 50; -fx-border-color: #131a23; -fx-border-width: 1; -fx-border-radius: 50;");
                             StackPane.setAlignment(dot, Pos.BOTTOM_RIGHT);
                             av.getChildren().add(dot);
 
-                            // Info
                             Label nombre = new Label(otro.nombre);
                             nombre.getStyleClass().add("friend-name");
                             Label estado = new Label(estadoTxt);
@@ -162,9 +166,6 @@ public class BibliotecaView {
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  SIDEBAR — lista de juegos
-    // ════════════════════════════════════════════════════
 
     private void cargarBiblioteca() {
         try {
@@ -205,13 +206,11 @@ public class BibliotecaView {
     }
 
     private HBox crearSidebarCard(Juego juego) {
-        // Thumbnail
         ImageView thumb = new ImageView();
         thumb.setFitWidth(42); thumb.setFitHeight(26);
         thumb.setPreserveRatio(true); thumb.setSmooth(true);
         setImagenConFallback(thumb, juego.getImagen_url(), "Logo");
 
-        // Nombre
         Label nombre = new Label(juego.getTitulo());
         nombre.getStyleClass().add("sidebar-game-name");
 
@@ -229,19 +228,13 @@ public class BibliotecaView {
         return card;
     }
 
-    // ════════════════════════════════════════════════════
-    //  PANEL CENTRAL — detalle del juego
-    // ════════════════════════════════════════════════════
 
     private void mostrarJuego(Juego juego) {
         detallePanel.getChildren().clear();
 
-        // ─────────────────────────────────────────────
-        // HERO (PORTADA)
-        // ─────────────────────────────────────────────
         ImageView portada = new ImageView();
         portada.setSmooth(true);
-        portada.setPreserveRatio(false); // COVER real
+        portada.setPreserveRatio(false);
 
         StackPane heroContainer = new StackPane();
         heroContainer.getStyleClass().add("hero-container");
@@ -252,14 +245,10 @@ public class BibliotecaView {
         portada.fitWidthProperty().bind(heroContainer.widthProperty());
         portada.fitHeightProperty().bind(heroContainer.heightProperty());
 
-        // Mantener tu fallback original
         setImagenConFallback(portada, juego.getImagen_url(), "1232");
 
         heroContainer.getChildren().add(portada);
 
-        // ─────────────────────────────────────────────
-        // OVERLAY
-        // ─────────────────────────────────────────────
         VBox heroOverlay = new VBox(4);
         heroOverlay.getStyleClass().add("hero-overlay");
         heroOverlay.setAlignment(Pos.BOTTOM_LEFT);
@@ -275,15 +264,12 @@ public class BibliotecaView {
         );
         heroMeta.getStyleClass().add("hero-meta");
 
-        Label heroHoras = new Label("⏱ Cargando horas...");
+        Label heroHoras = new Label("Cargando horas...");
         heroHoras.getStyleClass().add("hero-horas");
 
         heroOverlay.getChildren().addAll(heroTitulo, heroMeta, heroHoras);
         heroContainer.getChildren().add(heroOverlay);
 
-        // ─────────────────────────────────────────────
-        // HORAS (THREAD)
-        // ─────────────────────────────────────────────
         Label statHorasVal = new Label("Cargando...");
         Label statLogrosVal = new Label("Cargando...");
 
@@ -305,7 +291,7 @@ public class BibliotecaView {
                     double h = node.path("horas").asDouble();
 
                     Platform.runLater(() -> {
-                        heroHoras.setText("⏱ " + h + "h jugadas");
+                        heroHoras.setText( h + "h jugadas");
                         statHorasVal.setText(h + "h");
                     });
                 }
@@ -314,16 +300,13 @@ public class BibliotecaView {
             }
         }).start();
 
-        // ─────────────────────────────────────────────
-        // BOTONES
-        // ─────────────────────────────────────────────
-        Button jugar = new Button("▶  JUGAR");
+        Button jugar = new Button("JUGAR");
         jugar.getStyleClass().add("btn-play-green");
 
-        Button actualizar = new Button("↻  ACTUALIZAR");
+        Button actualizar = new Button("ACTUALIZAR");
         actualizar.getStyleClass().add("btn-action-blue");
 
-        Button gestionar = new Button("⚙  Gestionar");
+        Button gestionar = new Button("Gestionar");
         gestionar.getStyleClass().add("btn-action-gray");
 
         String gameName = juego.getTitulo().replace(" ", "_");
@@ -331,18 +314,18 @@ public class BibliotecaView {
 
         jugar.setOnAction(e -> {
             jugar.setDisable(true);
-            jugar.setText("⏳  Cargando...");
+            jugar.setText("Cargando...");
 
             new Thread(() -> {
                 try {
                     if (!installer.isInstalled(gameName)) {
-                        Platform.runLater(() -> jugar.setText("⬇  Instalando..."));
+                        Platform.runLater(() -> jugar.setText("Instalando..."));
                         installer.install(gameName, downloadUrl);
                     }
 
                     Platform.runLater(() -> {
                         jugar.setDisable(false);
-                        jugar.setText("▶  JUGAR");
+                        jugar.setText("JUGAR");
                         installer.launch(gameName, usuarioId, juego.getId());
                     });
 
@@ -350,7 +333,7 @@ public class BibliotecaView {
                     ex.printStackTrace();
                     Platform.runLater(() -> {
                         jugar.setDisable(false);
-                        jugar.setText("▶  JUGAR");
+                        jugar.setText("JUGAR");
                     });
                 }
             }).start();
@@ -358,7 +341,7 @@ public class BibliotecaView {
 
         actualizar.setOnAction(e -> {
             actualizar.setDisable(true);
-            actualizar.setText("⏳  Actualizando...");
+            actualizar.setText("Actualizando...");
 
             new Thread(() -> {
                 try {
@@ -366,14 +349,14 @@ public class BibliotecaView {
 
                     Platform.runLater(() -> {
                         actualizar.setDisable(false);
-                        actualizar.setText("✅  Actualizado");
+                        actualizar.setText("Actualizado");
                     });
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Platform.runLater(() -> {
                         actualizar.setDisable(false);
-                        actualizar.setText("↻  ACTUALIZAR");
+                        actualizar.setText("ACTUALIZAR");
                     });
                 }
             }).start();
@@ -383,23 +366,14 @@ public class BibliotecaView {
         actionBar.setAlignment(Pos.CENTER_LEFT);
         actionBar.getStyleClass().add("action-bar");
 
-        // ─────────────────────────────────────────────
-        // STATS (SIN VALORACIÓN)
-        // ─────────────────────────────────────────────
-        Label statPrecioVal = new Label(
-                juego.getPrecio() != null ? juego.getPrecio() + "€" : "Gratis"
-        );
+
 
         HBox statsRow = new HBox(10,
-                crearStatCard(statPrecioVal, "Precio"),
                 crearStatCard(statHorasVal, "Horas jugadas"),
                 crearStatCard(statLogrosVal, "Logros")
         );
         statsRow.getStyleClass().add("stats-row");
 
-        // ─────────────────────────────────────────────
-        // SECCIONES
-        // ─────────────────────────────────────────────
         VBox secActualizaciones = crearSeccionActualizaciones(juego.getId());
         VBox secLogros = crearSeccionLogros(juego.getId(), statLogrosVal);
         VBox secAmigos = crearSeccionAmigosJuego(juego.getId());
@@ -434,9 +408,6 @@ public class BibliotecaView {
         return card;
     }
 
-    // ════════════════════════════════════════════════════
-    //  SECCIONES INFERIORES
-    // ════════════════════════════════════════════════════
 
     private VBox crearSeccionActualizaciones(Long juegoId) {
         VBox sec = new VBox(0);
@@ -514,7 +485,6 @@ public class BibliotecaView {
         iconos.setAlignment(Pos.CENTER_LEFT);
         iconos.setPadding(new Insets(10, 16, 6, 16));
 
-        // Barra de progreso
         Region barraBg = new Region();
         barraBg.getStyleClass().add("logros-barra-bg");
 
@@ -534,9 +504,6 @@ public class BibliotecaView {
 
         sec.getChildren().addAll(header, iconos, barraBox);
 
-        // ─────────────────────────────────────────────
-        // THREAD: cargar logros
-        // ─────────────────────────────────────────────
         new Thread(() -> {
             try {
                 var resp = com.faguaslandia.launcher.service.AuthService.getClient().send(
@@ -562,7 +529,6 @@ public class BibliotecaView {
                             .filter(l -> Boolean.TRUE.equals(l.get("desbloqueado")))
                             .count();
 
-                    // Iconos
                     for (var l : logros) {
                         boolean bloqueado = !Boolean.TRUE.equals(l.get("desbloqueado"));
                         ImageView ico = cargarIconoLogro(
@@ -573,7 +539,6 @@ public class BibliotecaView {
                         iconos.getChildren().add(ico);
                     }
 
-                    // Barra de progreso
                     double pct = (double) desbloqueados / logros.size() * 100;
                     barraBg.setPrefWidth(300);
                     barraFill.setPrefWidth(300 * pct / 100);
@@ -581,7 +546,6 @@ public class BibliotecaView {
 
                     progTxt.setText(desbloqueados + " / " + logros.size() + " desbloqueados · " + (int) pct + "%");
 
-                    // 🔥 Actualizar la tarjeta de stats
                     statLogrosVal.setText(desbloqueados + " / " + logros.size());
                 });
 
@@ -660,7 +624,6 @@ public class BibliotecaView {
                         av.setMinSize(28, 28); av.setMaxSize(28, 28);
                         av.getStyleClass().add("friend-avatar");
 
-                        // Cargar foto
                         String fotoUrl = Config.IMG_BASE_URL + "/avatars/" + a.get("foto");
                         javafx.scene.image.Image img = new javafx.scene.image.Image(fotoUrl, true);
                         ImageView iv = new ImageView(img);
@@ -690,9 +653,6 @@ public class BibliotecaView {
         return sec;
     }
 
-    // ════════════════════════════════════════════════════
-    //  HELPERS
-    // ════════════════════════════════════════════════════
 
     private void marcarSeleccion(HBox card) {
 
@@ -707,7 +667,6 @@ public class BibliotecaView {
     }
 
 
-    // Sobrecarga para compatibilidad con StackPane (no se usa en el nuevo layout)
     private void marcarSeleccion(StackPane card) {}
 
     private void setImagenConFallback(ImageView iv, String imagenUrl, String variante) {

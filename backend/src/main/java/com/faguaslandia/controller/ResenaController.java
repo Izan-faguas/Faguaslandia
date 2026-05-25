@@ -40,19 +40,11 @@ public class ResenaController {
         this.logroService      = logroService;
     }
 
-    /**
-     * GET /resenas/juego/{juegoId}
-     * Lista todas las reseñas de un juego, ordenadas de más reciente a más antigua.
-     */
     @GetMapping("/juego/{juegoId}")
     public List<Resena> listarPorJuego(@PathVariable Long juegoId) {
         return resenaRepository.findByJuegoIdOrderByFechaDesc(juegoId);
     }
 
-    /**
-     * GET /resenas/juego/{juegoId}/mia
-     * Devuelve la reseña del usuario en sesión para ese juego, o 404 si no existe.
-     */
     @GetMapping("/juego/{juegoId}/mia")
     public Resena miResena(@PathVariable Long juegoId, HttpSession session) {
         Usuario sesion = (Usuario) session.getAttribute("usuario");
@@ -62,11 +54,6 @@ public class ResenaController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    /**
-     * POST /resenas/juego/{juegoId}
-     * Crea o actualiza la reseña del usuario en sesión para ese juego.
-     * Solo se puede reseñar si el juego está comprado.
-     */
     @PostMapping("/juego/{juegoId}")
     public Resena guardar(@PathVariable Long juegoId,
                           @RequestBody ResenaRequest req,
@@ -85,7 +72,6 @@ public class ResenaController {
         Juego juego = juegoRepository.findById(juegoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Juego no encontrado"));
 
-        // Crear o actualizar
         Optional<Resena> existente = resenaRepository.findByUsuarioIdAndJuegoId(sesion.getId(), juegoId);
         Resena resena = existente.orElseGet(() -> new Resena(usuario, juego, req.getPuntuacion(), req.getComentario()));
 
@@ -97,7 +83,6 @@ public class ResenaController {
         resenaRepository.save(resena);
         logroService.onResena(sesion.getId());
 
-        // Actualizar valoración promedio del juego
         Double promedio = resenaRepository.calcularPromedio(juegoId);
         if (promedio != null) {
             juego.setValoracion_promedio(
@@ -109,10 +94,6 @@ public class ResenaController {
         return resena;
     }
 
-    /**
-     * DELETE /resenas/juego/{juegoId}
-     * Elimina la reseña del usuario en sesión para ese juego.
-     */
     @DeleteMapping("/juego/{juegoId}")
     public Map<String, String> eliminar(@PathVariable Long juegoId, HttpSession session) {
         Usuario sesion = (Usuario) session.getAttribute("usuario");
@@ -123,7 +104,6 @@ public class ResenaController {
 
         resenaRepository.delete(resena);
 
-        // Recalcular promedio tras borrar
         Double promedio = resenaRepository.calcularPromedio(juegoId);
         Juego juego = juegoRepository.findById(juegoId).orElseThrow();
         juego.setValoracion_promedio(

@@ -17,7 +17,6 @@ public class DownloaderService {
         this.client = HttpClient.newHttpClient();
     }
 
-    // Descarga un archivo desde URL y lo guarda en destino
     public void downloadFile(String url, Path destino) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -33,7 +32,6 @@ public class DownloaderService {
         Files.write(destino, response.body());
     }
 
-    // Descomprime un ZIP en la carpeta destino
     public void unzip(Path zipFile, Path destDir) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile.toFile()))) {
             ZipEntry entry;

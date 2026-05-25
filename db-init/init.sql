@@ -154,15 +154,16 @@ INSERT INTO usuarios (id, nombre, email, password, avatar_url, fecha_registro, e
 (4,  'RedNex',     'toni@gmail.com',              'Texmex',          'default_avatar.png', '2026-03-08 11:07:29', 'offline', NULL),
 (8,  'Starinja02', 'ratonpoeta@gmail.com',        'Contrasena',      'default_avatar.png', '2026-05-10 15:30:32', 'offline', NULL),
 (9,  'Paunav3D',   'gillgrunt@gmail.com',         'WildFireLaCabra', 'default_avatar.png', '2026-05-12 13:41:58', 'offline', NULL),
-(10, 'Hiban',      'panadero@gmail.com',          'Panpan',          'user_10.jpg',        '2026-05-17 11:14:20', 'offline', NULL);
+(10, 'Hiban',      'panadero@gmail.com',          'Panpan',          'user_10.jpg',        '2026-05-17 11:14:20', 'offline', NULL),
+(11, 'Jorge',      'jfaguas@hotmail.com',          '1234abcd',          'user_11.jpg',        '2026-05-25 12:05:30', 'offline', NULL);
 
 -- ==============================
 -- DATOS: JUEGOS
 -- ==============================
 INSERT INTO juegos (id, titulo, descripcion, precio, imagen_url, categoria, desarrollador, fecha_lanzamiento, valoracion_promedio) VALUES
-(1, 'Eternal Orbit', 'Un juego simple sin mucho esfuerzo realizado.', 30.00, 'img/Eternal_Orbit.png', 'Rogue-like', 'Antonio Novejarque Escamilla', '2026-02-17', 0.00),
-(2, 'Mini Golf',     'Un juego de minigolf 2D.',                       7.99,  'img/MiniGolf.png',          'Estrategia', 'FaguasStudio',                '2026-01-22', 0.00),
-(3, 'Smashy Road',     'Un juego de minigolf 2D.',                       29.99,  'img/SmashyRoad.png',          'Acción', 'FaguasStudio',                '2026-05-22', 0.00),
+(1, 'Eternal Orbit', 'Eternal Orbit es un juego de supervivencia en el que debes resistir oleadas de monstruos cada vez más intensas. Pon a prueba tus reflejos y aguanta todo lo que puedas.', 30.00, 'img/Eternal_Orbit.png', 'Rogue-like', 'Antonio Novejarque Escamilla', '2026-02-17', 0.00),
+(2, 'Mini Golf', 'Un juego de minigolf 2D con 15 niveles llenos de desafíos, físicas precisas y escenarios coloridos.', 7.99, 'img/MiniGolf.png', 'Estrategia', 'FaguasStudio', '2026-01-22', 0.00),
+(3, 'Smashy Road', 'Un juego low poly de conducción en el que debes escapar de la policía mientras sobrevives el mayor tiempo posible.', 29.99, 'img/SmashyRoad.png', 'Acción', 'FaguasStudio', '2026-05-22', 0.00),
 (4, 'Dodge Rush', 'Eres un cuadrado blanco atrapado en una arena caótica. Bloques de colores se lanzan hacia ti desde todos los ángulos: rápidos, gigantes, en zigzag, en onda... Tu único objetivo es sobrevivir el mayor tiempo posible. Sin armas, sin atajos. Solo tú, tus reflejos y el caos.', 15.00, 'img/DodgeRush.png', 'Arcade', 'FaguasStudio', '2026-05-23', 0.00);
 
 -- ==============================
@@ -185,7 +186,8 @@ INSERT INTO amigos (id, id_usuario1, id_usuario2, estado, fecha_solicitud) VALUE
 (4, 8,  1,  'aceptado', '2026-05-10 17:36:02'),
 (5, 1,  3,  'aceptado', '2026-05-10 23:05:18'),
 (6, 9,  1,  'aceptado', '2026-05-12 13:42:47'),
-(7, 1,  10, 'aceptado', '2026-05-17 11:14:20');
+(7, 1,  10, 'aceptado', '2026-05-17 11:14:20'),
+(8, 1,  11, 'aceptado', '2026-05-17 14:50:31');
 
 -- ==============================
 -- DATOS: RESEÑAS

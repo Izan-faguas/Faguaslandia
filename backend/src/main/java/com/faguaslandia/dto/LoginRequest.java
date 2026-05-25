@@ -4,7 +4,6 @@ public class LoginRequest {
     private String username;
     private String password;
 
-    // Constructor vacío obligatorio para JSON
     public LoginRequest() {}
 
     public LoginRequest(String username, String password) {
@@ -12,7 +11,6 @@ public class LoginRequest {
         this.password = password;
     }
 
-    // Getters y setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 

@@ -26,7 +26,6 @@
 
         if (usuario) {
 
-            // quitar login/registro
             menu.innerHTML = `
                 <a href="index.html">Biblioteca</a>
                 <a href="tienda.html">Tienda</a>
@@ -38,7 +37,6 @@
 
         } else {
 
-            // usuario no logueado
             menu.innerHTML = `
                 <a href="index.html">Biblioteca</a>
                 <a href="tienda.html">Tienda</a>
@@ -75,7 +73,6 @@
   import CONFIG from "./config.js";
   import { getSessionUser } from "./session.js";
 
-  // ── Helper imágenes ───────────────────────────────────
   function imgUrl(imagen_url, variante) {
     if (!imagen_url) return `${CONFIG.API_BASE_URL}/uploads/img/default.png`;
     const base = `${CONFIG.API_BASE_URL}/uploads/${imagen_url.replace(/\.png$/i, '')}`;
@@ -90,9 +87,8 @@
   const filtroPrecio    = document.getElementById("filtroPrecio");
 
   let juegosGlobal  = [];
-  let compradosSet  = new Set(); // IDs de juegos que tiene el usuario
+  let compradosSet  = new Set(); 
 
-  // 🎮 cargar juegos
   async function cargarJuegos() {
     try {
       const response = await fetch(`${CONFIG.API_BASE_URL}/juegos`);
@@ -100,7 +96,6 @@
 
       juegosGlobal = await response.json();
 
-      // Cargar compras del usuario si hay sesión
       const usuario = await getSessionUser();
       if (usuario) {
         try {
@@ -123,7 +118,6 @@
     }
   }
 
-  // 📂 rellenar categorías dinámicamente
   function cargarCategorias(juegos) {
     const categorias = [...new Set(juegos.map(j => j.categoria))];
 
@@ -135,43 +129,47 @@
     });
   }
 
-  // 🎨 render juegos
-  function mostrarJuegos(juegos) {
+function mostrarJuegos(juegos) {
     listaJuegosDiv.innerHTML = "";
 
     juegos.forEach(juego => {
-      const comprado = compradosSet.has(juego.id);
+        const comprado = compradosSet.has(juego.id);
+        const precioTxt = comprado ? "En tu biblioteca"
+            : (juego.precio ? juego.precio + "€" : "Gratis");
 
-      const juegoSection = document.createElement("section");
-      juegoSection.className = "hero juego";
+        const estrellas = juego.valoracion_promedio
+            ? "★".repeat(Math.round(juego.valoracion_promedio)) +
+              "☆".repeat(5 - Math.round(juego.valoracion_promedio))
+            : "";
 
-      juegoSection.innerHTML = `
-        <div class="hero-media">
-          <img src="${imgUrl(juego.imagen_url, '920')}" onerror="this.onerror=null;this.src='${imgUrl(juego.imagen_url, null)}'">
-          ${comprado ? '<span class="badge-comprado">✔ En tu biblioteca</span>' : ""}
-        </div>
+        const juegoSection = document.createElement("section");
+        juegoSection.className = "hero juego";
+        juegoSection.innerHTML = `
+            <div class="hero-media">
+                <img src="${imgUrl(juego.imagen_url, '920')}"
+                     onerror="this.onerror=null;this.src='${imgUrl(juego.imagen_url, null)}'">
+                ${comprado ? '<span class="badge-comprado">En tu biblioteca</span>' : ""}
+            </div>
+            <div class="hero-info">
+                <div>
+                    <h2>${juego.titulo}</h2>
+                    <div class="hero-tags" style="margin: 6px 0 8px">
+                        ${juego.categoria ? `<span class="hero-tag">${juego.categoria}</span>` : ""}
+                        ${juego.desarrollador ? `<span class="hero-tag dev">${juego.desarrollador}</span>` : ""}
+                    </div>
+                    <p>${juego.descripcion ?? "Sin descripción"}</p>
+                </div>
+                <div class="hero-footer">
+                    <span class="price ${comprado ? 'comprado' : ''}">${precioTxt}</span>
+                    ${estrellas ? `<span class="hero-rating">${estrellas} ${juego.valoracion_promedio}</span>` : ""}
+                </div>
+            </div>`;
 
-        <div class="hero-info">
-          <h2>${juego.titulo}</h2>
-          <p>${juego.descripcion ?? 'Sin descripción'}</p>
-
-          <div class="hero-price">
-            <span class="price ${comprado ? 'comprado' : ''}">
-              ${comprado ? 'Comprado' : (juego.precio ? juego.precio + '€' : 'Gratis')}
-            </span>
-          </div>
-        </div>
-      `;
-
-      juegoSection.onclick = () => {
-        window.location.href = `juego.html?id=${juego.id}`;
-      };
-
-      listaJuegosDiv.appendChild(juegoSection);
+        juegoSection.onclick = () => window.location.href = `juego.html?id=${juego.id}`;
+        listaJuegosDiv.appendChild(juegoSection);
     });
-  }
+}
 
-  // 🔍 FILTRADO
   function filtrar() {
     const texto = inputBusqueda.value.toLowerCase();
     const categoria = filtroCategoria.value;
@@ -179,16 +177,13 @@
 
     let filtrados = juegosGlobal.filter(juego => {
 
-      // nombre
       const coincideTexto =
         juego.titulo.toLowerCase().includes(texto) ||
         juego.descripcion.toLowerCase().includes(texto);
 
-      // categoría
       const coincideCategoria =
         !categoria || juego.categoria === categoria;
 
-      // precio
       let coincidePrecio = true;
 
       if (precio === "gratis") {
@@ -207,7 +202,6 @@
     mostrarJuegos(filtrados);
   }
 
-  // 🎧 eventos
   inputBusqueda.addEventListener("input", filtrar);
   filtroCategoria.addEventListener("change", filtrar);
   filtroPrecio.addEventListener("change", filtrar);

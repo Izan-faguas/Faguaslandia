@@ -4,7 +4,6 @@ public class CompraRequest {
     private Long usuarioId;
     private Long juegoId;
 
-    // Getters y setters
     public Long getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
 

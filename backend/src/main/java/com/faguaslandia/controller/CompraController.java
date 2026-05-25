@@ -20,9 +20,6 @@ public class CompraController {
         this.compraService = compraService;
     }
 
-    // =========================
-    // COMPRAR
-    // =========================
     @PostMapping
     public ResponseEntity<?> comprar(@RequestBody CompraRequest request, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -33,17 +30,11 @@ public class CompraController {
         return ResponseEntity.ok().build();
     }
 
-    // =========================
-    // BIBLIOTECA
-    // =========================
     @GetMapping("/usuario/{usuarioId}")
     public List<Juego> obtenerBiblioteca(@PathVariable Long usuarioId) {
         return compraService.obtenerBiblioteca(usuarioId);
     }
 
-    // =========================
-    // COMPROBAR COMPRA
-    // =========================
     @GetMapping("/usuario/{usuarioId}/juego/{juegoId}")
     public boolean estaCompradoUsuario(@PathVariable Long usuarioId,
                                        @PathVariable Long juegoId) {

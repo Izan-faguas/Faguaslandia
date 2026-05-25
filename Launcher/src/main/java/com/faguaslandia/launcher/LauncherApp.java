@@ -25,11 +25,9 @@ public class LauncherApp extends Application {
     private AuthService authService;
     private Scene scene;
 
-    // Argumento --launch pasado desde el acceso directo
     private static String juegoAutoLanzar = null;
 
     public static void main(String[] args) {
-        // Parsear --launch NombreJuego antes de arrancar JavaFX
         for (int i = 0; i < args.length - 1; i++) {
             if ("--launch".equals(args[i])) {
                 juegoAutoLanzar = args[i + 1];
@@ -55,7 +53,6 @@ public class LauncherApp extends Application {
         stage.setMaximized(true);
         stage.show();
 
-        // ── Intentar login automático primero ──
         mostrarCargando("Iniciando sesión...");
 
         new Thread(() -> {
@@ -71,16 +68,13 @@ public class LauncherApp extends Application {
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  PANTALLA DE CARGA
-    // ════════════════════════════════════════════════════
 
     private void mostrarCargando(String mensaje) {
         VBox cargando = new VBox(16);
         cargando.setAlignment(Pos.CENTER);
         cargando.setStyle("-fx-background-color: #0b1118;");
 
-        Label logo = new Label("🎮 Faguáslandia");
+        Label logo = new Label("Faguáslandia");
         logo.getStyleClass().add("login-title");
 
         Label msg = new Label(mensaje);
@@ -90,9 +84,6 @@ public class LauncherApp extends Application {
         scene.setRoot(cargando);
     }
 
-    // ════════════════════════════════════════════════════
-    //  LOGIN MANUAL
-    // ════════════════════════════════════════════════════
 
     private void mostrarLogin() {
         LoginView loginView = new LoginView();
@@ -142,26 +133,20 @@ public class LauncherApp extends Application {
         loginView.getUsuario().setOnAction(e  -> loginView.getPassword().requestFocus());
     }
 
-    // ════════════════════════════════════════════════════
-    //  LAUNCHER PRINCIPAL
-    // ════════════════════════════════════════════════════
 
     private void mostrarLauncher(Usuario usuario) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #0b1118;");
 
-        // ── Header ──
         HeaderView header = new HeaderView();
         root.setTop(header);
 
-        // ── Vistas ──
         BibliotecaView  bibliotecaView  = new BibliotecaView(usuario.getId());
         TiendaView      tiendaView      = new TiendaView(usuario);
         JuegoDetailView juegoDetailView = new JuegoDetailView(usuario);
         AmigosView      amigosView      = new AmigosView(usuario);
         PerfilView      perfilView      = new PerfilView(usuario);
 
-        // Callbacks cruzados
         juegoDetailView.setCallbackActualizarBiblioteca(bibliotecaView::actualizarBiblioteca);
 
         bibliotecaView.setCallbackAbrirChat(amigoId -> {
@@ -184,7 +169,6 @@ public class LauncherApp extends Application {
             mostrarLogin();
         });
 
-        // ── Polling badge mensajes ──
         ObjectMapper _mapper = new ObjectMapper();
         Thread badgeThread = new Thread(() -> {
             while (true) {
@@ -233,7 +217,6 @@ public class LauncherApp extends Application {
         badgeThread.setDaemon(true);
         badgeThread.start();
 
-        // ── Navegación header ──
         header.setActions(
                 () -> {
                     perfilView.detenerPollingLogros();
@@ -256,21 +239,15 @@ public class LauncherApp extends Application {
                 }
         );
 
-        // ── Pantalla inicial ──
         root.setCenter(bibliotecaView.getView());
         scene.setRoot(root);
 
-        // ── Auto-lanzar juego si viene de acceso directo ──
         if (juegoAutoLanzar != null) {
             String nombreJuego = juegoAutoLanzar;
-            juegoAutoLanzar = null; // solo una vez
+            juegoAutoLanzar = null;
             Platform.runLater(() -> bibliotecaView.lanzarJuegoPorNombre(nombreJuego));
         }
     }
-
-    // ════════════════════════════════════════════════════
-    //  HEARTBEAT
-    // ════════════════════════════════════════════════════
 
     private void arrancarHeartbeat() {
         Thread heartbeat = new Thread(() -> {

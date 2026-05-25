@@ -139,9 +139,9 @@ public class PerfilView extends VBox {
         lblStatLogros = new Label("—");
 
         HBox statsRow = new HBox(20,
-                crearStatCard("🎮", "Juegos", lblStatJuegos),
-                crearStatCard("⏱️", "Horas", lblStatHoras),
-                crearStatCard("🏆", "Logros", lblStatLogros)
+                crearStatCard("", "Juegos", lblStatJuegos),
+                crearStatCard("", "Horas", lblStatHoras),
+                crearStatCard("", "Logros", lblStatLogros)
         );
         statsRow.setAlignment(Pos.CENTER);
         statsRow.setPadding(new Insets(0, 40, 20, 40));
@@ -191,14 +191,14 @@ public class PerfilView extends VBox {
         VBox tarjeta = new VBox(14);
         tarjeta.getStyleClass().add("perfil-card");
         tarjeta.getChildren().addAll(
-                filaDato("👤  Nombre de usuario", usuario.getNombre()),
+                filaDato("Nombre de usuario", usuario.getNombre()),
                 separador(),
-                filaDato("✉️  Correo electrónico", usuario.getEmail()),
+                filaDato("✉Correo electrónico", usuario.getEmail()),
                 separador(),
-                filaDato("🆔  Código amigo", usuario.getNombre() + "#" + usuario.getId())
+                filaDato("Código amigo", usuario.getNombre() + "#" + usuario.getId())
         );
 
-        Button btnEditar = new Button("✏️  Editar perfil");
+        Button btnEditar = new Button("✏Editar perfil");
         btnEditar.getStyleClass().add("btn-play");
         btnEditar.setOnAction(e -> mostrarModalEditar());
 
@@ -210,7 +210,7 @@ public class PerfilView extends VBox {
         VBox sec = new VBox(14);
         sec.setPadding(new Insets(24, 40, 24, 40));
 
-        Label titulo = new Label("🏆 Logros");
+        Label titulo = new Label("Logros");
         titulo.getStyleClass().add("perfil-section-title");
 
         listaLogrosBox = new VBox(10);
@@ -226,7 +226,7 @@ public class PerfilView extends VBox {
         VBox sec = new VBox(16);
         sec.setPadding(new Insets(24, 40, 40, 40));
 
-        Label titulo = new Label("👥 Amigos");
+        Label titulo = new Label("Amigos");
         titulo.getStyleClass().add("perfil-section-title");
 
         TextField codigoField = new TextField();
@@ -255,9 +255,6 @@ public class PerfilView extends VBox {
         return sec;
     }
 
-    // ════════════════════════════════════════════════════
-    //  CARGAR DATOS
-    // ════════════════════════════════════════════════════
 
     private void cargarStats() {
         new Thread(() -> {
@@ -340,9 +337,6 @@ public class PerfilView extends VBox {
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  RENDERIZADO
-    // ════════════════════════════════════════════════════
 
     private void renderizarLogros(List<LogroDTO> logros) {
         listaLogrosBox.getChildren().clear();
@@ -383,7 +377,6 @@ public class PerfilView extends VBox {
         }
     }
 
-    // ── Carga asíncrona (para listas) ────────────────────
     private ImageView cargarIconoLogro(String ruta, double size) {
         ImageView iv = new ImageView();
         iv.setFitWidth(size);
@@ -395,7 +388,7 @@ public class PerfilView extends VBox {
                 ? Config.IMG_BASE_URL + "/" + ruta
                 : Config.IMG_BASE_URL + "/logros/default.png";
 
-        Image img = new Image(url, true); // asíncrono está bien en listas
+        Image img = new Image(url, true);
         img.errorProperty().addListener((obs, o, err) -> {
             if (err) Platform.runLater(() ->
                     iv.setImage(new Image(Config.IMG_BASE_URL + "/logros/default.png", true)));
@@ -404,7 +397,6 @@ public class PerfilView extends VBox {
         return iv;
     }
 
-    // ── Carga síncrona (para el toast, que ya está en el hilo FX) ──
     private ImageView cargarIconoLogroSync(String ruta, double size) {
         ImageView iv = new ImageView();
         iv.setFitWidth(size);
@@ -417,7 +409,7 @@ public class PerfilView extends VBox {
                 : Config.IMG_BASE_URL + "/logros/default.png";
 
         try {
-            Image img = new Image(url); // SIN true → síncrono
+            Image img = new Image(url);
             if (img.isError()) {
                 img = new Image(Config.IMG_BASE_URL + "/logros/default.png");
             }
@@ -498,9 +490,6 @@ public class PerfilView extends VBox {
         }
     }
 
-    // ════════════════════════════════════════════════════
-    //  ACCIONES AMIGOS
-    // ════════════════════════════════════════════════════
 
     private void enviarSolicitud(String codigo, TextField campo) {
         if (!codigo.contains("#")) {
@@ -582,9 +571,6 @@ public class PerfilView extends VBox {
         });
     }
 
-    // ════════════════════════════════════════════════════
-    //  MODAL EDITAR PERFIL
-    // ════════════════════════════════════════════════════
 
     private void mostrarModalEditar() {
         Dialog<Void> dialog = new Dialog<>();
@@ -610,7 +596,7 @@ public class PerfilView extends VBox {
         lblFotoElegida.setStyle("-fx-text-fill: #9fb3c8; -fx-font-size: 12px;");
         final File[] fotoElegida = {null};
 
-        Button btnFoto = new Button("📁 Elegir foto");
+        Button btnFoto = new Button("Elegir foto");
         btnFoto.getStyleClass().add("btn-secondary");
         btnFoto.setOnAction(e -> {
             FileChooser fc = new FileChooser();
@@ -652,7 +638,7 @@ public class PerfilView extends VBox {
             String nombre = nombreField.getText().trim();
             String correo = correoField.getText().trim();
             if (nombre.isEmpty() || correo.isEmpty()) {
-                msgEditar.setText("⚠️ Nombre y correo no pueden estar vacíos");
+                msgEditar.setText("Nombre y correo no pueden estar vacíos");
                 e.consume();
                 return;
             }
@@ -716,26 +702,23 @@ public class PerfilView extends VBox {
                             avatarWrapper.getChildren().clear();
                             cargarAvatarEn(avatarWrapper, avatarInitial, filename, 100);
                         }
-                        msgLabel.setText("✅ Perfil actualizado");
+                        msgLabel.setText("Perfil actualizado");
                         msgLabel.setStyle("-fx-text-fill: #4caf50;");
                     } else {
-                        msgLabel.setText("⚠️ Error al guardar: " + resp.statusCode());
+                        msgLabel.setText("Error al guardar: " + resp.statusCode());
                         msgLabel.setStyle("-fx-text-fill: #f47f7f;");
                     }
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Platform.runLater(() -> {
-                    msgLabel.setText("⚠️ Error de conexión");
+                    msgLabel.setText("Error de conexión");
                     msgLabel.setStyle("-fx-text-fill: #f47f7f;");
                 });
             }
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  HELPERS
-    // ════════════════════════════════════════════════════
 
     private void cargarAvatarEn(StackPane wrapper, Label fallback, String nombreFoto, double size) {
         try {
@@ -856,9 +839,6 @@ public class PerfilView extends VBox {
         a.showAndWait();
     }
 
-    // ════════════════════════════════════════════════════
-    //  REFRESCO PÚBLICO
-    // ════════════════════════════════════════════════════
 
     public void refrescar() {
         cargarStats();
@@ -867,9 +847,6 @@ public class PerfilView extends VBox {
         cargarAmigos();
     }
 
-    // ════════════════════════════════════════════════════
-    //  POLLING DE LOGROS PENDIENTES
-    // ════════════════════════════════════════════════════
 
     private javafx.animation.Timeline logroPolling;
 
@@ -963,7 +940,7 @@ public class PerfilView extends VBox {
                 icono.setPreserveRatio(true);
                 icono.setSmooth(true);
 
-                Label titulo = new Label("🏆 Logro desbloqueado");
+                Label titulo = new Label("Logro desbloqueado");
                 titulo.setStyle("-fx-text-fill: #66c0f4; -fx-font-size: 11px; -fx-font-weight: bold;");
 
                 Label nombre = new Label(logro.nombre);

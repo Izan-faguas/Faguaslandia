@@ -34,27 +34,23 @@ if (u) {
 <main>
 <div class="catalogo">
 
-  <!-- 📚 LISTA -->
   <div class="juego">
-    <h1>🎮 Biblioteca</h1>
+    <h1>Biblioteca</h1>
     <div class="juegos" id="juegosGrid"></div>
   </div>
 
-  <!-- 🎮 DETALLE -->
   <div class="detalle-juego" id="detalleJuego">
     <h2 style="padding:30px;color:var(--text-muted)">Selecciona un juego</h2>
   </div>
 
-  <!-- 👥 AMIGOS -->
   <div class="amigos-panel" id="amigosPanel">
-    <h2>👥 Amigos</h2>
+    <h2>Amigos</h2>
     <div id="listaAmigosIndex"><p class="amigos-vacio">Cargando...</p></div>
   </div>
 
 </div>
 </main>
 
-<!-- CHAT FLOTANTE -->
 <div id="chatFloat">
   <div class="chat-float-header" id="chatFloatHeader">
     <span id="chatFloatNombre">Chat</span>
@@ -76,9 +72,7 @@ let chatAmigoId = null;
 let chatPollInterval = null;
 let amigosPollInterval = null;
 
-// ── Helper imágenes ───────────────────────────────────
 function imgUrl(imagen_url, variante) {
-  // variante: "920" | "1232" | "Logo" | null (original)
   if (!imagen_url) return `${CONFIG.API_BASE_URL}/uploads/img/default.png`;
   const base = `${CONFIG.API_BASE_URL}/uploads/${imagen_url.replace(/\.png$/i, '')}`;
   if (!variante) return `${CONFIG.API_BASE_URL}/uploads/${imagen_url}`;
@@ -89,9 +83,6 @@ function imgConFallback(el, imagen_url, variante) {
   el.onerror = () => { el.onerror = null; el.src = imgUrl(imagen_url, null); };
 }
 
-// ─────────────────────────────────────────
-// BIBLIOTECA
-// ─────────────────────────────────────────
 async function actualizarBiblioteca() {
   const juegosGrid = document.getElementById("juegosGrid");
   const detalle    = document.getElementById("detalleJuego");
@@ -132,15 +123,15 @@ function seleccionar(img) {
 }
 
 function mostrarJuego(juego, detalle) {
-  const img1232 = imgUrl(juego.imagen_url, "1232");
+  const img2048 = imgUrl(juego.imagen_url, "2048");
   const imgFallback = imgUrl(juego.imagen_url, null);
   detalle.innerHTML = `
     <div class="detalle-container">
-      <img src="${img1232}" onerror="this.onerror=null;this.src='${imgFallback}'" class="detalle-img">
+      <img src="${img2048}" onerror="this.onerror=null;this.src='${imgFallback}'" class="detalle-img">
       <div class="detalle-info">
         <h1>${juego.titulo}</h1>
         <p class="detalle-desc">${juego.descripcion || "Sin descripción disponible"}</p>
-        <p class="detalle-horas" id="detalle-horas">⏱️ Cargando horas...</p>
+        <p class="detalle-horas" id="detalle-horas"> Cargando horas...</p>
       </div>
     </div>
 
@@ -168,15 +159,13 @@ function mostrarJuego(juego, detalle) {
 }
 
 async function cargarDetalleJuego(juegoId) {
-  // Horas jugadas
   try {
     const res  = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/mis-horas`, { credentials: "include" });
     const data = await res.json();
     const el   = document.getElementById("detalle-horas");
-    if (el) el.textContent = `⏱️ ${data.horas}h jugadas`;
+    if (el) el.textContent = ` ${data.horas}h jugadas`;
   } catch(e) {}
 
-  // Actualizaciones
   try {
     const res  = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/actualizaciones`);
     const acts = await res.json();
@@ -196,7 +185,6 @@ async function cargarDetalleJuego(juegoId) {
     }
   } catch(e) {}
 
-  // Logros + estadísticas
   try {
     const [resLogros, resStats] = await Promise.all([
       fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/logros`, { credentials: "include" }),
@@ -213,11 +201,13 @@ async function cargarDetalleJuego(juegoId) {
       const desbloqueados = logros.filter(l => l.desbloqueado).length;
       cont.innerHTML = `
         <div class="steam-logros-iconos">
-          ${logros.map(l => `
-            <div class="steam-logro-icono ${l.desbloqueado ? '' : 'bloqueado'}" title="${l.nombre}: ${l.descripcion} (${statsMap[l.id] ?? 0}% jugadores)">
-              <span>${l.icono}</span>
-            </div>`).join("")}
-        </div>
+        ${logros.map(l => `
+          <div class="steam-logro-icono ${l.desbloqueado ? '' : 'bloqueado'}" title="${l.nombre}: ${l.descripcion} (${statsMap[l.id] ?? 0}% jugadores)">
+            <img src="${CONFIG.API_BASE_URL}/uploads/${l.icono}"
+                onerror="this.onerror=null;this.src='${CONFIG.API_BASE_URL}/uploads/logros/default.png'"
+                alt="${l.nombre}">
+          </div>`).join("")}
+        </div>  
         <div class="steam-logros-barra-wrap">
           <div class="steam-logros-barra-bg">
             <div class="steam-logros-barra-fill" style="width:${logros.length ? Math.round(desbloqueados/logros.length*100) : 0}%"></div>
@@ -227,7 +217,6 @@ async function cargarDetalleJuego(juegoId) {
     }
   } catch(e) {}
 
-  // Amigos con el juego
   try {
     const res    = await fetch(`${CONFIG.API_BASE_URL}/juegos/${juegoId}/amigos-con-juego`, { credentials: "include" });
     const amigos = await res.json();
@@ -244,9 +233,6 @@ async function cargarDetalleJuego(juegoId) {
   } catch(e) {}
 }
 
-// ─────────────────────────────────────────
-// PANEL AMIGOS
-// ─────────────────────────────────────────
 async function cargarAmigosPanel() {
   if (!usuario) return;
   const cont = document.getElementById("listaAmigosIndex");
@@ -325,10 +311,6 @@ async function renderAmigoRow(amigo, cont) {
   cont.appendChild(div);
 }
 
-// ─────────────────────────────────────────
-// CHAT FLOTANTE
-// ─────────────────────────────────────────
-// Listener delegado — un único handler en el contenedor para todos los amigos
 document.getElementById("listaAmigosIndex").addEventListener("click", (e) => {
   const row = e.target.closest(".amigo-row");
   if (!row) return;
@@ -337,7 +319,7 @@ document.getElementById("listaAmigosIndex").addEventListener("click", (e) => {
 
 async function abrirChatFlotante(amigoId, amigoNombre) {
   chatAmigoId = amigoId;
-  document.getElementById("chatFloatNombre").textContent = "💬 " + amigoNombre;
+  document.getElementById("chatFloatNombre").textContent =  amigoNombre;
   document.getElementById("chatFloat").classList.add("open");
   document.getElementById("chatFloatInput").focus();
   await cargarMensajesFloat();
@@ -351,7 +333,7 @@ document.getElementById("cerrarChatFloat").onclick = (e) => {
   document.getElementById("chatFloat").classList.remove("open");
   clearInterval(chatPollInterval);
   chatAmigoId = null;
-  cargarAmigosPanel(); // Refrescar badges
+  cargarAmigosPanel(); 
 };
 
 async function cargarMensajesFloat() {
@@ -409,12 +391,9 @@ async function enviarMensajeFloat() {
   }
 }
 
-// ─────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────
+
 document.addEventListener("DOMContentLoaded", async () => {
   await actualizarBiblioteca();
-  // Refrescar panel amigos cada 20s
   amigosPollInterval = setInterval(cargarAmigosPanel, 20000);
 });
 </script>

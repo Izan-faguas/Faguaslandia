@@ -23,7 +23,6 @@ import java.util.List;
 
 public class AmigosView extends HBox {
 
-    // ── Modelo interno ──────────────────────────────────
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class AmigoDTO {
         public Long id;
@@ -58,7 +57,6 @@ public class AmigosView extends HBox {
         public String estado;
     }
 
-    // ── Campos ──────────────────────────────────────────
     private final Usuario usuarioActual;
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -87,9 +85,6 @@ public class AmigosView extends HBox {
         cargarDatos();
     }
 
-    // ════════════════════════════════════════════════════
-    //  CONSTRUCCIÓN UI
-    // ════════════════════════════════════════════════════
 
     private void construir() {
         setSpacing(0);
@@ -101,7 +96,7 @@ public class AmigosView extends HBox {
         cabeceraLeft.getStyleClass().add("amigos-left-header");
         cabeceraLeft.setAlignment(Pos.CENTER_LEFT);
 
-        Label tituloLeft = new Label("👥  Amigos");
+        Label tituloLeft = new Label("Amigos");
         tituloLeft.getStyleClass().add("amigos-panel-title");
         HBox.setHgrow(tituloLeft, Priority.ALWAYS);
 
@@ -112,7 +107,7 @@ public class AmigosView extends HBox {
         cabeceraLeft.getChildren().addAll(tituloLeft, btnAgregar);
 
         buscadorField = new TextField();
-        buscadorField.setPromptText("🔍  Buscar amigo...");
+        buscadorField.setPromptText("Buscar amigo...");
         buscadorField.getStyleClass().add("amigos-search");
         buscadorField.textProperty().addListener((obs, o, n) -> filtrarAmigos(n));
         HBox buscadorBox = new HBox(buscadorField);
@@ -186,9 +181,6 @@ public class AmigosView extends HBox {
         return btn;
     }
 
-    // ════════════════════════════════════════════════════
-    //  CARGAR DATOS DESDE BACKEND
-    // ════════════════════════════════════════════════════
 
     public void cargarDatos() {
         new Thread(() -> {
@@ -249,9 +241,6 @@ public class AmigosView extends HBox {
         return new ArrayList<>();
     }
 
-    // ════════════════════════════════════════════════════
-    //  RENDERIZAR LISTA AMIGOS
-    // ════════════════════════════════════════════════════
 
     private void renderizarAmigos(List<AmigoDTO> lista) {
         listaContainer.getChildren().clear();
@@ -299,7 +288,6 @@ public class AmigosView extends HBox {
 
         info.getChildren().addAll(nombre, estadoTxt);
 
-        // Badge mensajes no leídos
         Label badge = new Label("");
         badge.getStyleClass().add("nav-badge");
         badge.setVisible(false);
@@ -308,7 +296,7 @@ public class AmigosView extends HBox {
         Button btnChat = new Button("Chat");
         btnChat.getStyleClass().add("amigo-btn-chat");
         btnChat.setOnAction(e -> {
-            e.consume(); // evitar que el click llegue al setOnMouseClicked de la fila
+            e.consume();
             abrirChat(amigo);
         });
 
@@ -319,7 +307,6 @@ public class AmigosView extends HBox {
             fila.getStyleClass().add("amigo-row-selected");
         }
 
-        // Consultar no leídos en background
         new Thread(() -> {
             try {
                 String url = Config.API_BASE_URL + "/mensajes/no-leidos/"
@@ -412,9 +399,6 @@ public class AmigosView extends HBox {
         return base;
     }
 
-    // ════════════════════════════════════════════════════
-    //  RENDERIZAR SOLICITUDES
-    // ════════════════════════════════════════════════════
 
     private void renderizarSolicitudes(List<AmigoDTO> lista) {
         solicitudesContainer.getChildren().clear();
@@ -459,9 +443,9 @@ public class AmigosView extends HBox {
         HBox botones = new HBox(10);
         botones.setAlignment(Pos.CENTER_RIGHT);
 
-        Button btnAceptar  = new Button("✔ Aceptar");
+        Button btnAceptar  = new Button("Aceptar");
         btnAceptar.getStyleClass().add("btn-aceptar");
-        Button btnRechazar = new Button("✖ Rechazar");
+        Button btnRechazar = new Button("Rechazar");
         btnRechazar.getStyleClass().add("btn-rechazar");
 
         btnAceptar.setOnAction(e -> responderSolicitud(sol, true, card));
@@ -492,9 +476,6 @@ public class AmigosView extends HBox {
         }).start();
     }
 
-    // ════════════════════════════════════════════════════
-    //  FILTRO DE BÚSQUEDA
-    // ════════════════════════════════════════════════════
 
     private void filtrarAmigos(String texto) {
         if (texto == null || texto.isBlank()) {
@@ -508,9 +489,6 @@ public class AmigosView extends HBox {
         renderizarAmigos(filtrados);
     }
 
-    // ════════════════════════════════════════════════════
-    //  CHAT
-    // ════════════════════════════════════════════════════
 
     private void abrirChat(AmigoDTO amigo) {
         amigoSeleccionado = amigo;
@@ -693,9 +671,6 @@ public class AmigosView extends HBox {
         return row;
     }
 
-    // ════════════════════════════════════════════════════
-    //  POLLING
-    // ════════════════════════════════════════════════════
 
     private void iniciarPolling(Long amigoId) {
         pollingActivo = true;
@@ -730,9 +705,6 @@ public class AmigosView extends HBox {
         if (pollingThread != null) pollingThread.interrupt();
     }
 
-    // ════════════════════════════════════════════════════
-    //  DIÁLOGO AGREGAR AMIGO
-    // ════════════════════════════════════════════════════
 
     private void mostrarDialogoAgregar() {
         Dialog<String> dialog = new Dialog<>();
@@ -773,7 +745,7 @@ public class AmigosView extends HBox {
 
         btnEnviar.setOnAction(e -> {
             String email = emailField.getText().trim();
-            if (email.isEmpty()) { msg.setText("⚠️ Introduce un email"); e.consume(); return; }
+            if (email.isEmpty()) { msg.setText("Introduce un email"); e.consume(); return; }
             enviarSolicitudAmistad(email, msg, dialog);
             e.consume();
         });
@@ -796,20 +768,20 @@ public class AmigosView extends HBox {
                 );
                 Platform.runLater(() -> {
                     if (resp.statusCode() == 200 || resp.statusCode() == 201) {
-                        msg.setText("✅ Solicitud enviada a " + email);
+                        msg.setText("Solicitud enviada a " + email);
                         msg.setStyle("-fx-text-fill: #4caf50;");
                     } else if (resp.statusCode() == 404) {
-                        msg.setText("❌ Usuario no encontrado");
+                        msg.setText("Usuario no encontrado");
                         msg.setStyle("-fx-text-fill: #f47f7f;");
                     } else {
-                        msg.setText("⚠️ Error al enviar: " + resp.statusCode());
+                        msg.setText("Error al enviar: " + resp.statusCode());
                         msg.setStyle("-fx-text-fill: #f47f7f;");
                     }
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Platform.runLater(() -> {
-                    msg.setText("⚠️ Error de conexión");
+                    msg.setText("Error de conexión");
                     msg.setStyle("-fx-text-fill: #f47f7f;");
                 });
             }

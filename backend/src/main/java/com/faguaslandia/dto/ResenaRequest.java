@@ -1,7 +1,7 @@
 package com.faguaslandia.dto;
 
 public class ResenaRequest {
-    private int puntuacion;   // 1-5
+    private int puntuacion;
     private String comentario;
 
     public ResenaRequest() {}

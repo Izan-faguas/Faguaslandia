@@ -9,7 +9,6 @@
 
 <body>
 
-<!-- TOAST LOGROS -->
 <div id="toastContainer"></div>
 
 <header>
@@ -66,30 +65,28 @@
 
       <div class="perfil-stats">
         <div class="stat-card">
-          <h3>🎮 Juegos</h3>
+          <h3>Juegos</h3>
           <p id="statJuegos">—</p>
         </div>
         <div class="stat-card">
-          <h3>⏱️ Horas</h3>
+          <h3>Horas</h3>
           <p id="statHoras">—</p>
         </div>
         <div class="stat-card">
-          <h3>🏆 Logros</h3>
+          <h3>Logros</h3>
           <p id="statLogros">—</p>
         </div>
       </div>
 
     </div>
 
-    <!-- ── SECCIÓN LOGROS ── -->
     <div class="perfil-amigos">
-      <h2>🏆 Logros</h2>
+      <h2>Logros</h2>
       <div id="listaLogros"><p class="empty-state">Cargando logros...</p></div>
     </div>
-    <!-- ── SECCIÓN AMIGOS ── -->
     <div class="perfil-amigos">
 
-      <h2>👥 Amigos</h2>
+      <h2>Amigos</h2>
 
       <div class="agregar-amigo">
         <input type="text" id="codigoAmigo" placeholder="Buscar por Nombre#id"> 
@@ -107,7 +104,6 @@
   </div>
 </main>
 
-<!-- ── MODAL EDITAR PERFIL ── -->
 <div id="editarPerfilModal">
   <div class="modal-content">
     <h2>Editar Perfil</h2>
@@ -129,9 +125,6 @@ import CONFIG from "./config.js";
 
 let usuario = null;
 
-// ─────────────────────────────────────────
-// CARGAR PERFIL
-// ─────────────────────────────────────────
 async function cargarPerfil() {
   try {
     const res = await fetch(`${CONFIG.API_BASE_URL}/auth/me?t=${Date.now()}`, {
@@ -160,21 +153,16 @@ async function cargarPerfil() {
   }
 }
 
-// ─────────────────────────────────────────
-// STATS REALES
-// ─────────────────────────────────────────
 async function cargarStats() {
   try {
     const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/stats`, { credentials: "include" });
     if (!res.ok) return;
     const stats = await res.json();
 
-    // Tarjetas
     document.getElementById("statJuegos").textContent = stats.juegos;
     document.getElementById("statHoras").textContent  = stats.horas + "h";
     document.getElementById("statLogros").textContent = stats.logros;
 
-    // Nivel y progreso
     document.getElementById("nivelBadge").textContent    = "Nivel " + stats.nivel;
     document.getElementById("nivelPuntos").textContent   = stats.puntos + " pts";
     document.getElementById("nivelBarraFill").style.width = Math.min(stats.progreso, 100) + "%";
@@ -201,7 +189,11 @@ async function cargarLogros() {
       const div = document.createElement("div");
       div.className = "logro-item";
       div.innerHTML = `
-        <div class="logro-icono">${l.icono}</div>
+        <div class="logro-icono">
+          <img src="${CONFIG.API_BASE_URL}/uploads/${l.icono}" 
+              onerror="this.onerror=null;this.src='${CONFIG.API_BASE_URL}/uploads/logros/default.png'"
+              alt="${l.nombre}">
+        </div>
         <div class="logro-info">
           <strong>${l.nombre}</strong>
           <span>${l.descripcion}</span>
@@ -214,9 +206,6 @@ async function cargarLogros() {
   }
 }
 
-// ─────────────────────────────────────────
-// SOLICITUDES
-// ─────────────────────────────────────────
 async function cargarSolicitudes() {
   const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/solicitudes`, { credentials: "include" });
   const solicitudes = await res.json();
@@ -241,9 +230,6 @@ async function cargarSolicitudes() {
   });
 }
 
-// ─────────────────────────────────────────
-// AMIGOS
-// ─────────────────────────────────────────
 async function cargarAmigos() {
   const res = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/amigos`, { credentials: "include" });
   const amigos = await res.json();
@@ -283,9 +269,6 @@ async function cargarAmigos() {
   }
 }
 
-// ─────────────────────────────────────────
-// ACCIONES SOLICITUDES
-// ─────────────────────────────────────────
 window.aceptarSolicitud = async function(id) {
   await fetch(`${CONFIG.API_BASE_URL}/usuarios/solicitud/${id}/aceptar`, { method: "PUT", credentials: "include" });
   await cargarSolicitudes();
@@ -297,9 +280,6 @@ window.rechazarSolicitud = async function(id) {
   await cargarSolicitudes();
 };
 
-// ─────────────────────────────────────────
-// ELIMINAR AMIGO
-// ─────────────────────────────────────────
 window.eliminarAmigo = async function(relacionId, amigoUserId) {
   if (!confirm("¿Seguro que quieres eliminar a este amigo?")) return;
   await fetch(
@@ -309,9 +289,6 @@ window.eliminarAmigo = async function(relacionId, amigoUserId) {
   await cargarAmigos();
 };
 
-// ─────────────────────────────────────────
-// ENVIAR SOLICITUD POR CÓDIGO
-// ─────────────────────────────────────────
 document.getElementById("btnAgregarAmigo").onclick = async () => {
   const codigo = document.getElementById("codigoAmigo").value.trim();
   if (!codigo.includes("#")) {
@@ -328,7 +305,7 @@ document.getElementById("btnAgregarAmigo").onclick = async () => {
       { method: "POST", credentials: "include" }
     );
     if (res.ok) {
-      alert("Solicitud enviada ✓");
+      alert("Solicitud enviada");
       document.getElementById("codigoAmigo").value = "";
     } else {
       const msg = await res.text();
@@ -339,9 +316,6 @@ document.getElementById("btnAgregarAmigo").onclick = async () => {
   }
 };
 
-// ─────────────────────────────────────────
-// EDITAR PERFIL
-// ─────────────────────────────────────────
 const modal = document.getElementById("editarPerfilModal");
 
 document.getElementById("editarPerfilBtn").onclick = () => {
@@ -373,7 +347,7 @@ document.getElementById("guardarCambios").onclick = async () => {
       { method: "PUT", body: formData, credentials: "include" }
     );
     if (!res.ok) throw new Error("Error actualizando perfil");
-    alert("Perfil actualizado ✓");
+    alert("Perfil actualizado");
     modal.style.display = "none";
     document.getElementById("editarFoto").value = "";
     await cargarPerfil();
@@ -384,26 +358,24 @@ document.getElementById("guardarCambios").onclick = async () => {
   }
 };
 
-// ─────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────
 await cargarPerfil();
 await cargarStats();
 await cargarSolicitudes();
 await cargarAmigos();
 await cargarLogros();
 
-// ─────────────────────────────────────────
-// TOAST DE LOGROS
-// ─────────────────────────────────────────
 function mostrarToastLogro(logro, delay = 0) {
   setTimeout(() => {
     const toast = document.createElement("div");
     toast.className = "toast-logro";
     toast.innerHTML = `
-      <div class="toast-icono">${logro.icono}</div>
+      <div class="toast-icono">
+        <img src="${CONFIG.API_BASE_URL}/uploads/${logro.icono}"
+            onerror="this.onerror=null;this.src='${CONFIG.API_BASE_URL}/uploads/logros/default.png'"
+            alt="logro">
+      </div>
       <div class="toast-texto">
-        <span class="toast-titulo">🏆 Logro desbloqueado</span>
+        <span class="toast-titulo">Logro desbloqueado</span>
         <span class="toast-nombre">${logro.nombre}</span>
         <span class="toast-desc">${logro.descripcion}</span>
       </div>`;
@@ -418,7 +390,6 @@ function mostrarToastLogro(logro, delay = 0) {
   }, delay);
 }
 
-// Consultar logros pendientes de notificar directamente desde la BD
 try {
   const resPendientes = await fetch(`${CONFIG.API_BASE_URL}/usuarios/${usuario.id}/logros-pendientes`, {
     credentials: "include"

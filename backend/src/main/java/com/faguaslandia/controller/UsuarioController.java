@@ -46,9 +46,6 @@ public class UsuarioController {
         this.logroService           = logroService;
     }
 
-    // -------------------------------------------------------
-    // CREAR USUARIO
-    // -------------------------------------------------------
     @PostMapping("/crear")
     public Usuario crearUsuario(@RequestBody Usuario usuario) {
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
@@ -64,9 +61,6 @@ public class UsuarioController {
         return usuarioRepository.findAll();
     }
 
-    // -------------------------------------------------------
-    // ACTUALIZAR PERFIL
-    // -------------------------------------------------------
     @PutMapping(value = "/actualizar/{id}", consumes = {"multipart/form-data"})
     public Usuario actualizarUsuario(
             @PathVariable Long id,
@@ -93,7 +87,6 @@ public class UsuarioController {
                 File directory = new File(folder);
                 if (!directory.exists()) directory.mkdirs();
 
-                // Borrar solo el archivo anterior de este usuario, no listar toda la carpeta
                 File archivoAnterior = new File(folder + "user_" + id + ".jpg");
                 if (archivoAnterior.exists()) archivoAnterior.delete();
 
@@ -126,10 +119,6 @@ public class UsuarioController {
         return usuarioRepository.save(usuario);
     }
 
-    // -------------------------------------------------------
-    // STATS REALES DEL PERFIL
-    // GET /usuarios/{id}/stats
-    // -------------------------------------------------------
     @GetMapping("/{id}/stats")
     public Map<String, Object> getStats(@PathVariable Long id) {
         long   numJuegos = compraRepository.findByUsuarioId(id).size();
@@ -173,10 +162,6 @@ public class UsuarioController {
         );
     }
 
-    // -------------------------------------------------------
-    // LOGROS DEL PERFIL
-    // GET /usuarios/{id}/logros
-    // -------------------------------------------------------
     @GetMapping("/{id}/logros")
     public List<Map<String, Object>> getLogros(@PathVariable Long id) {
         try {
@@ -196,16 +181,10 @@ public class UsuarioController {
         }
     }
 
-    // -------------------------------------------------------
-    // LOGROS PENDIENTES DE NOTIFICAR
-    // GET /usuarios/{id}/logros-pendientes
-    // Devuelve los logros no notificados y los marca como notificados
-    // -------------------------------------------------------
     @GetMapping("/{id}/logros-pendientes")
     public List<Map<String, Object>> getLogrosPendientes(@PathVariable Long id) {
         List<LogroUsuario> pendientes = logroUsuarioRepository.findByUsuarioIdAndNotificadoFalse(id);
 
-        // Marcar todos como notificados
         pendientes.forEach(lu -> lu.setNotificado(true));
         logroUsuarioRepository.saveAll(pendientes);
 
@@ -218,9 +197,6 @@ public class UsuarioController {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — ENVIAR SOLICITUD
-    // -------------------------------------------------------
     @PostMapping("/{id1}/agregar/{id2}")
     public String enviarSolicitud(@PathVariable Long id1, @PathVariable Long id2) {
         if (id1.equals(id2)) {
@@ -242,17 +218,11 @@ public class UsuarioController {
         return "Solicitud enviada";
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — VER SOLICITUDES PENDIENTES
-    // -------------------------------------------------------
     @GetMapping("/{id}/solicitudes")
     public List<Amigo> verSolicitudes(@PathVariable Long id) {
         return amigoRepository.findByUsuario2IdAndEstado(id, EstadoAmigo.pendiente);
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — ACEPTAR SOLICITUD
-    // -------------------------------------------------------
     @PutMapping("/solicitud/{id}/aceptar")
     public String aceptarSolicitud(@PathVariable Long id) {
         Amigo sol = amigoRepository.findById(id)
@@ -264,9 +234,6 @@ public class UsuarioController {
         return "Solicitud aceptada";
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — RECHAZAR SOLICITUD
-    // -------------------------------------------------------
     @DeleteMapping("/solicitud/{id}/rechazar")
     public String rechazarSolicitud(@PathVariable Long id) {
         Amigo sol = amigoRepository.findById(id)
@@ -275,9 +242,6 @@ public class UsuarioController {
         return "Solicitud rechazada";
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — ELIMINAR AMIGO
-    // -------------------------------------------------------
     @DeleteMapping("/{id}/amigos/{amigoId}")
     public String eliminarAmigo(@PathVariable Long id, @PathVariable Long amigoId) {
         List<Amigo> relaciones = amigoRepository.findByUsuario1IdOrUsuario2Id(id, id);
@@ -290,9 +254,6 @@ public class UsuarioController {
         return "Amigo eliminado";
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — BLOQUEAR
-    // -------------------------------------------------------
     @PutMapping("/{id}/bloquear/{amigoId}")
     public String bloquearAmigo(@PathVariable Long id, @PathVariable Long amigoId) {
         List<Amigo> relaciones = amigoRepository.findByUsuario1IdOrUsuario2Id(id, id);
@@ -307,9 +268,6 @@ public class UsuarioController {
         return "Usuario bloqueado";
     }
 
-    // -------------------------------------------------------
-    // AMIGOS — LISTAR AMIGOS ACEPTADOS
-    // -------------------------------------------------------
     @GetMapping("/{id}/amigos")
     public List<Amigo> verAmigos(@PathVariable Long id) {
         return amigoRepository.findByUsuario1IdOrUsuario2Id(id, id);

@@ -18,10 +18,6 @@ public class AuthService {
 
     public static HttpClient getClient() { return client; }
 
-    /**
-     * Login manual con email y contraseña.
-     * Si tiene éxito guarda la sesión en disco.
-     */
     public Usuario login(String email, String password) throws Exception {
         Usuario usuario = doLogin(email, password);
         if (usuario != null) {
@@ -30,10 +26,6 @@ public class AuthService {
         return usuario;
     }
 
-    /**
-     * Intenta login automático con las credenciales guardadas en disco.
-     * Devuelve el usuario si sigue siendo válido, null si no.
-     */
     public Usuario loginAutomatico() {
         Map<String, String> sesion = SessionManager.cargar();
         if (sesion == null) return null;
@@ -41,19 +33,14 @@ public class AuthService {
         try {
             Usuario usuario = doLogin(sesion.get("email"), sesion.get("password"));
             if (usuario == null) {
-                // Credenciales ya no válidas — borramos sesión
                 SessionManager.borrar();
             }
             return usuario;
         } catch (Exception e) {
-            // Sin conexión o error — no borramos la sesión, puede ser temporal
             return null;
         }
     }
 
-    /**
-     * Cierra sesión: notifica al backend y borra la sesión local.
-     */
     public void logout() {
         SessionManager.borrar();
         try {
@@ -69,13 +56,11 @@ public class AuthService {
         }
     }
 
-    // ── Interno ──────────────────────────────────────
 
     private Usuario doLogin(String email, String password) throws Exception {
         String url  = Config.API_BASE_URL + "/auth/login";
         String json = String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
 
-        // Crear cliente nuevo con cookie manager para mantener la sesión HTTP
         client = HttpClient.newBuilder()
                 .cookieHandler(new java.net.CookieManager())
                 .build();

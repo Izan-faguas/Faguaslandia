@@ -16,19 +16,16 @@ public class LoginView extends StackPane {
         getStyleClass().add("login-container");
         setAlignment(Pos.CENTER);
 
-        // Fondo con gradiente — simulado con capas
         VBox box = new VBox(16);
         box.getStyleClass().add("login-box");
         box.setAlignment(Pos.CENTER);
 
-        // Logo / título
-        Label logo = new Label("🎮 Faguáslandia");
+        Label logo = new Label("Faguáslandia");
         logo.getStyleClass().add("login-title");
 
         Label sub = new Label("Inicia sesión para acceder a tu biblioteca");
         sub.getStyleClass().add("login-subtitle");
 
-        // Campos
         usuario = new TextField();
         usuario.setPromptText("Correo electrónico");
         usuario.getStyleClass().add("login-field");
