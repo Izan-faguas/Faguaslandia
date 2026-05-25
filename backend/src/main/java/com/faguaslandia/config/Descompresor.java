@@ -13,7 +13,6 @@ public class Descompresor {
                 if (entry.isDirectory()) {
                     Files.createDirectories(newFile);
                 } else {
-                    // Crear carpetas padre
                     if (newFile.getParent() != null) {
                         Files.createDirectories(newFile.getParent());
                     }
