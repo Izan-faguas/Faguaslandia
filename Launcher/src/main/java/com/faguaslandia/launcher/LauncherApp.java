@@ -47,6 +47,9 @@ public class LauncherApp extends Application {
         );
 
         stage.setTitle("Faguáslandia");
+        stage.getIcons().add(new javafx.scene.image.Image(
+                getClass().getResourceAsStream("/faguaslandia_logo.png")
+        ));
         stage.setScene(scene);
         stage.setMinWidth(900);
         stage.setMinHeight(600);

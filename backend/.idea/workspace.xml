@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="" />
+    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/juego.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/juego.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/perfil.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/registro.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/registro.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../www/tienda.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/tienda.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,7 +138,7 @@
       <workItem from="1779611626196" duration="918000" />
       <workItem from="1779620367343" duration="7464000" />
       <workItem from="1779651920643" duration="4851000" />
-      <workItem from="1779708002885" duration="4703000" />
+      <workItem from="1779708002885" duration="6215000" />
     </task>
     <servers />
   </component>
