@@ -4,36 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit1232.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit1915.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit2048.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit920.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_OrbitLogo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/BibliotecaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/BibliotecaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/Descompresor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/Descompresor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/LogroScheduler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/LogroScheduler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/PresenciaScheduler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/PresenciaScheduler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/WebConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/WebConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/BibliotecaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/BibliotecaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/CompraController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/CompraController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/JuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/JuegoController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/MensajeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/MensajeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/PresenciaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/PresenciaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/ResenaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/ResenaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/UsuarioController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/CompraRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/CompraRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/LoginRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/LoginRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Juego.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Juego.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Usuario.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Usuario.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/LogroService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/LogroService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/juegos_desca/Smashy_Road.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/avatars/default_avatar.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatars/default_avatar.png" afterDir="false" />
-    </list>
+    <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +40,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.FaguaslandiaApplication.executor": "Run",
-    "git-widget-placeholder": "Rebasing main",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/izan/Faguaslandia/backend/uploads/img",
     "node.js.detected.package.eslint": "true",
@@ -158,7 +129,7 @@
       <workItem from="1779611626196" duration="918000" />
       <workItem from="1779620367343" duration="7464000" />
       <workItem from="1779651920643" duration="4851000" />
-      <workItem from="1779708002885" duration="4095000" />
+      <workItem from="1779708002885" duration="4703000" />
     </task>
     <servers />
   </component>

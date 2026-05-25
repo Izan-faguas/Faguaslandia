@@ -30,7 +30,7 @@ services:
       DB_USER: izan
       DB_PASSWORD: 1234
     volumes:
-      - /home/izan/Faguaslandia/backend/uploads:/app/uploads
+      - .backend/uploads:/app/uploads
 
     ports:
       - "8081:8081"
