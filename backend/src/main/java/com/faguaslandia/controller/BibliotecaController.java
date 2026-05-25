@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
-import com.faguaslandia.model.Juego;     // ⚠️ ajusta imports
+import com.faguaslandia.model.Juego;    
 import com.faguaslandia.model.Usuario;
 import com.faguaslandia.service.BibliotecaService;
 
