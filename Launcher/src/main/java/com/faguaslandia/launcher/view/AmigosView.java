@@ -546,7 +546,7 @@ public class AmigosView extends HBox {
         msgField.getStyleClass().add("chat-input");
         HBox.setHgrow(msgField, Priority.ALWAYS);
 
-        enviarBtn = new Button("Enviar ▶");
+        enviarBtn = new Button("Enviar");
         enviarBtn.getStyleClass().add("btn-play");
         enviarBtn.setStyle("-fx-padding: 10 20 10 20; -fx-font-size: 13px;");
 

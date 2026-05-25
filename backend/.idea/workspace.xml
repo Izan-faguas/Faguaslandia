@@ -5,61 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71ed78d3-2ed0-422c-8f3e-552cf5e53c39" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/uploads/img/DodgeRush1915.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/DodgeRush2048.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/MiniGolf1915.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/MiniGolf2048.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/SmashyRoad1915.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uploads/img/SmashyRoad2048.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/LauncherApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/DownloaderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/DownloaderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/GameInstallerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/GameInstallerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/SessionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/service/SessionManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit1232.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit1915.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit2048.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_Orbit920.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uploads/img/Eternal_OrbitLogo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/AmigosView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/BibliotecaView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/HeaderView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/HeaderView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/JuegoDetailView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/JuegoDetailView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/LoginView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/LoginView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilAmigoView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilAmigoView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/PerfilView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/TiendaView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/java/com/faguaslandia/launcher/view/TiendaView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Launcher/src/main/resources/styles/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Launcher/src/main/resources/styles/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/LogroScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/LogroScheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/PresenciaScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/PresenciaScheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/BibliotecaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/BibliotecaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/CompraController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/CompraController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/JuegoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/JuegoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/MensajeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/MensajeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/PresenciaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/PresenciaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/ResenaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/ResenaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/SesionJuegoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/SesionJuegoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/controller/UsuarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/dto/CompraRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/dto/CompraRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/dto/LoginRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/dto/ResenaRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/dto/ResenaRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Juego.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Juego.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Resena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Resena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/model/Usuario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/MensajeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/MensajeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/SesionJuegoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/repository/SesionJuegoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/LogroService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/faguaslandia/service/LogroService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/juegos_desca/Smashy_Road.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/Descompresor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/Descompresor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/LogroScheduler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/LogroScheduler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/PresenciaScheduler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/PresenciaScheduler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/WebConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/config/WebConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/BibliotecaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/BibliotecaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/CompraController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/CompraController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/JuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/JuegoController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/MensajeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/MensajeController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/PresenciaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/PresenciaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../db-init/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../db-init/init.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/juego.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/juego.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/perfil.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/perfil.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/registro.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/registro.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/session.js" beforeDir="false" afterPath="$PROJECT_DIR$/../www/session.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../www/tienda.html" beforeDir="false" afterPath="$PROJECT_DIR$/../www/tienda.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/ResenaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/ResenaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/SesionJuegoController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/controller/UsuarioController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/CompraRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/CompraRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/LoginRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/dto/LoginRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Juego.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Juego.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Usuario.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/model/Usuario.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/LogroService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/faguaslandia/service/LogroService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/juegos_desca/Smashy_Road.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/avatars/default_avatar.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatars/default_avatar.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,34 +57,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.FaguaslandiaApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/izan/Faguaslandia/backend/uploads/img&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.FaguaslandiaApplication.executor": "Run",
+    "git-widget-placeholder": "Rebasing main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/izan/Faguaslandia/backend/uploads/img",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/uploads/img" />
-      <recent name="$PROJECT_DIR$/games" />
       <recent name="$PROJECT_DIR$/uploads/avatars" />
+      <recent name="$PROJECT_DIR$/games" />
       <recent name="$PROJECT_DIR$/uploads" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -185,7 +158,7 @@
       <workItem from="1779611626196" duration="918000" />
       <workItem from="1779620367343" duration="7464000" />
       <workItem from="1779651920643" duration="4851000" />
-      <workItem from="1779708002885" duration="1294000" />
+      <workItem from="1779708002885" duration="4095000" />
     </task>
     <servers />
   </component>
